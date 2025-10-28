@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Members - Party Membership System{% endblock %}
+
+{% block content %}
+<div class="py-4">
+    <h2 class="mb-4">Member Directory</h2>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" action="{{ url_for('members') }}" class="row g-3">
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="constituency" placeholder="Constituency"
+                           value="{{ request.args.get('constituency', '') }}">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="ward" placeholder="Ward"
+                           value="{{ request.args.get('ward', '') }}">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="branch" placeholder="Branch"
+                           value="{{ request.args.get('branch', '') }}">
+                </div>
+                <div class="col-md-2">
+                    <select class="form-control" name="status">
+                        <option value="">All Status</option>
+                        <option value="active" {% if request.args.get('status') == 'active' %}selected{% endif %}>Active</option>
+                        <option value="pending" {% if request.args.get('status') == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="suspended" {% if request.args.get('status') == 'suspended' %}selected{% endif %}>Suspended</option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Members List</h5>
+        </div>
+        <div class="card-body">
+            {% if members %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Membership #</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Constituency</th>
+                            <th>Ward</th>
+                            <th>Branch</th>
+                            <th>Status</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in members %}
+                        <tr>
+                            <td>{{ member.membership_number }}</td>
+                            <td>{{ member.first_name }} {{ member.last_name }}</td>
+                            <td>{{ member.phone_number }}</td>
+                            <td>{{ member.email or '-' }}</td>
+                            <td>{{ member.constituency }}</td>
+                            <td>{{ member.ward }}</td>
+                            <td>{{ member.branch }}</td>
+                            <td>
+                                <span class="badge bg-{{ 'success' if member.membership_status == 'active' else 'warning' }}">
+                                    {{ member.membership_status|title }}
+                                </span>
+                            </td>
+                            <td>{{ member.membership_type|title }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No members found matching your criteria.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

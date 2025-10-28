@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}Register Member - Member Registry System{% endblock %}
+
+{% block page_title %}Register Member for Event{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2 class="mb-2"><i class="fas fa-user-plus me-2"></i>Register Member</h2>
+                            <p class="text-muted mb-0">Register a member for this event</p>
+                        </div>
+                        <a href="{{ url_for('events.view_event', event_id=event.id) }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Back
+                        </a>
+                    </div>
+
+                    <!-- Event Information -->
+                    <div class="alert alert-primary border-0 mb-4">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-calendar-alt fa-2x"></i>
+                            </div>
+                            <div class="ms-3 flex-grow-1">
+                                <h5 class="mb-1">{{ event.title }}</h5>
+                                <p class="mb-0">
+                                    <i class="fas fa-calendar me-2"></i>{{ event.start_date[:10] }}
+                                    {% if event.location %}
+                                    • <i class="fas fa-map-marker-alt me-2"></i>{{ event.location }}
+                                    {% endif %}
+                                </p>
+                                {% if event.max_attendees %}
+                                <p class="mb-0">
+                                    <i class="fas fa-users me-2"></i>{{ event.registration_count }} / {{ event.max_attendees }} registered
+                                </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="post" action="{{ url_for('events.register_for_event', event_id=event.id) }}" id="registrationForm">
+                        <div class="mb-4">
+                            <label for="member_search" class="form-label fw-semibold">Search Member <span class="text-danger">*</span></label>
+                            <div class="position-relative">
+                                <input type="text" class="form-control" id="member_search"
+                                       placeholder="Type member name or contact..." autocomplete="off"
+                                       oninput="searchMembers(this.value)">
+                                <div class="position-absolute w-100 bg-white border rounded shadow-sm"
+                                     id="searchResults" style="display: none; max-height: 300px; overflow-y: auto; z-index: 1000; top: 100%;"></div>
+                            </div>
+                            <input type="hidden" id="member_id" name="member_id" required>
+                            <div id="selectedMember" class="mt-2"></div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="notes" class="form-label fw-semibold">Notes (Optional)</label>
+                            <textarea class="form-control" id="notes" name="notes"
+                                      placeholder="Any special notes or requirements..." rows="3"></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{{ url_for('events.view_event', event_id=event.id) }}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
+                                <i class="fas fa-check me-1"></i> Register Member
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const members = {{ members | tojson }};
+    let searchTimeout;
+
+    function searchMembers(query) {
+        clearTimeout(searchTimeout);
+
+        if (query.length < 2) {
+            document.getElementById('searchResults').style.display = 'none';
+            return;
+        }
+
+        searchTimeout = setTimeout(() => {
+            const results = members.filter(member => {
+                const searchStr = `${member.name} ${member.contact || ''} ${member.email || ''}`.toLowerCase();
+                return searchStr.includes(query.toLowerCase());
+            });
+
+            displayResults(results);
+        }, 300);
+    }
+
+    function displayResults(results) {
+        const resultsDiv = document.getElementById('searchResults');
+
+        if (results.length === 0) {
+            resultsDiv.innerHTML = '<div class="p-3 text-muted">No members found</div>';
+            resultsDiv.style.display = 'block';
+            return;
+        }
+
+        resultsDiv.innerHTML = results.map(member => `
+            <div class="p-3 border-bottom cursor-pointer hover-bg-light"
+                 onclick="selectMember(${member.id}, '${member.name}', '${member.contact || ''}', '${member.email || ''}')"
+                 style="cursor: pointer;">
+                <div class="fw-semibold">${member.name}</div>
+                <div class="small text-muted">
+                    ${member.contact ? `<i class="fas fa-phone me-1"></i>${member.contact}` : ''}
+                    ${member.email ? ` • <i class="fas fa-envelope me-1"></i>${member.email}` : ''}
+                </div>
+            </div>
+        `).join('');
+
+        resultsDiv.style.display = 'block';
+    }
+
+    function selectMember(id, name, contact, email) {
+        document.getElementById('member_id').value = id;
+        document.getElementById('member_search').value = name;
+        document.getElementById('searchResults').style.display = 'none';
+        document.getElementById('submitBtn').disabled = false;
+
+        document.getElementById('selectedMember').innerHTML = `
+            <div class="alert alert-success d-flex justify-content-between align-items-center mb-0">
+                <div>
+                    <strong>${name}</strong><br>
+                    <small>${contact ? `<i class="fas fa-phone me-1"></i>${contact}` : ''} ${email ? ` • <i class="fas fa-envelope me-1"></i>${email}` : ''}</small>
+                </div>
+                <button type="button" class="btn-close" onclick="clearSelection()"></button>
+            </div>
+        `;
+    }
+
+    function clearSelection() {
+        document.getElementById('member_id').value = '';
+        document.getElementById('member_search').value = '';
+        document.getElementById('selectedMember').innerHTML = '';
+        document.getElementById('submitBtn').disabled = true;
+    }
+
+    // Close search results when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#member_search') && !e.target.closest('#searchResults')) {
+            document.getElementById('searchResults').style.display = 'none';
+        }
+    });
+
+    // Form validation
+    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+        if (!document.getElementById('member_id').value) {
+            e.preventDefault();
+            alert('Please select a member from the search results');
+            return false;
+        }
+    });
+</script>
+
+<style>
+    .hover-bg-light:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}

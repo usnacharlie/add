@@ -1,0 +1,427 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Permissions - {{ role.name }}{% endblock %}
+
+{% block page_title %}Manage Permissions{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.03) 0%, rgba(245, 158, 11, 0.08) 100%);">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-circle me-3">
+                                <i class="fas fa-key fa-2x text-warning"></i>
+                            </div>
+                            <div>
+                                <h2 class="mb-1 fw-bold">Manage Permissions</h2>
+                                <p class="text-muted mb-0">Assign permissions to <strong>{{ role.name }}</strong></p>
+                            </div>
+                        </div>
+                        <a href="{{ url_for('roles.view_role', role_id=role.id) }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Role
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="POST" id="permissionsForm">
+        <div class="row g-4">
+            <!-- Permissions Selection -->
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm modern-card">
+                    <div class="card-header bg-white border-0 p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 fw-bold">
+                                <i class="fas fa-check-double text-warning me-2"></i>Available Permissions
+                            </h5>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-outline-success" onclick="selectAll()">
+                                    <i class="fas fa-check-circle me-1"></i>Select All
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="deselectAll()">
+                                    <i class="fas fa-times-circle me-1"></i>Deselect All
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+                        {% for resource, perms in permissions_by_resource.items() %}
+                        <div class="resource-section mb-4">
+                            <div class="resource-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-folder-open text-primary me-2"></i>
+                                        <strong>{{ resource.title() }}</strong>
+                                    </h6>
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-outline-success btn-sm" onclick="selectResource('{{ resource }}')">
+                                            <i class="fas fa-check me-1"></i>All
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="deselectResource('{{ resource }}')">
+                                            <i class="fas fa-times me-1"></i>None
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="permissions-grid">
+                                {% for perm in perms %}
+                                <div class="permission-checkbox">
+                                    <input type="checkbox"
+                                           class="form-check-input permission-check"
+                                           id="perm_{{ perm.id }}"
+                                           name="permissions"
+                                           value="{{ perm.id }}"
+                                           data-resource="{{ resource }}"
+                                           {% if perm.id in current_permission_ids %}checked{% endif %}>
+                                    <label class="form-check-label" for="perm_{{ perm.id }}">
+                                        <div class="permission-info">
+                                            <strong>{{ perm.name }}</strong>
+                                            <div class="permission-meta">
+                                                <span class="badge bg-secondary">{{ perm.action }}</span>
+                                                <span class="text-muted small">{{ perm.description }}</span>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Panel -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm modern-card sticky-top" style="top: 20px;">
+                    <div class="card-header bg-white border-0 pb-0">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="fas fa-info-circle text-info me-2"></i>Permission Summary
+                        </h5>
+                    </div>
+                    <div class="card-body pt-3">
+                        <!-- Stats -->
+                        <div class="stat-box mb-3">
+                            <div class="stat-icon-small bg-primary-light">
+                                <i class="fas fa-hashtag text-primary"></i>
+                            </div>
+                            <div>
+                                <div class="stat-label">Total Permissions</div>
+                                <div class="stat-value" id="totalCount">0</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-box mb-3">
+                            <div class="stat-icon-small bg-success-light">
+                                <i class="fas fa-check-circle text-success"></i>
+                            </div>
+                            <div>
+                                <div class="stat-label">Selected</div>
+                                <div class="stat-value text-success" id="selectedCount">0</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-box mb-4">
+                            <div class="stat-icon-small bg-warning-light">
+                                <i class="fas fa-exclamation-circle text-warning"></i>
+                            </div>
+                            <div>
+                                <div class="stat-label">Unselected</div>
+                                <div class="stat-value text-warning" id="unselectedCount">0</div>
+                            </div>
+                        </div>
+
+                        <!-- Info -->
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Tip:</strong> Select only the permissions this role needs to perform its duties.
+                        </div>
+
+                        {% if role.is_system_role %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-lock me-2"></i>
+                            <strong>System Role:</strong> Changes to system roles should be made carefully.
+                        </div>
+                        {% endif %}
+
+                        <!-- Save Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="fas fa-save me-2"></i>Save Permissions
+                            </button>
+                            <a href="{{ url_for('roles.view_role', role_id=role.id) }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+/* Icon Circle */
+.icon-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Modern Card */
+.modern-card {
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Resource Section */
+.resource-section {
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 2px solid #e5e7eb;
+    transition: all 0.3s ease;
+}
+
+.resource-section:hover {
+    border-color: #f59e0b;
+    background: #fffbeb;
+}
+
+.resource-header {
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+/* Permissions Grid */
+.permissions-grid {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.permission-checkbox {
+    padding: 1rem;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.permission-checkbox:hover {
+    border-color: #f59e0b;
+    background: #fffbeb;
+    transform: translateX(5px);
+}
+
+.permission-checkbox input[type="checkbox"]:checked ~ label {
+    color: #059669;
+    font-weight: 600;
+}
+
+.form-check-input {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    cursor: pointer;
+}
+
+.form-check-label {
+    cursor: pointer;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.permission-checkbox {
+    display: flex;
+    align-items: flex-start;
+}
+
+.permission-info {
+    flex: 1;
+}
+
+.permission-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+/* Stat Box */
+.stat-box {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+.stat-icon-small {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.bg-primary-light {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+.bg-success-light {
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.bg-warning-light {
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+/* Alert */
+.alert-info, .alert-warning {
+    border-radius: 12px;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border: none;
+    color: white;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Badge */
+.badge {
+    font-size: 11px;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Stagger Animation */
+.col-lg-8 .modern-card {
+    animation-delay: 0.1s;
+}
+
+.col-lg-4 .modern-card {
+    animation-delay: 0.2s;
+}
+</style>
+
+<script>
+// Update permission counts
+function updateCounts() {
+    const checkboxes = document.querySelectorAll('.permission-check');
+    const total = checkboxes.length;
+    const selected = document.querySelectorAll('.permission-check:checked').length;
+    const unselected = total - selected;
+
+    document.getElementById('totalCount').textContent = total;
+    document.getElementById('selectedCount').textContent = selected;
+    document.getElementById('unselectedCount').textContent = unselected;
+}
+
+// Select all permissions
+function selectAll() {
+    document.querySelectorAll('.permission-check').forEach(cb => {
+        cb.checked = true;
+    });
+    updateCounts();
+}
+
+// Deselect all permissions
+function deselectAll() {
+    document.querySelectorAll('.permission-check').forEach(cb => {
+        cb.checked = false;
+    });
+    updateCounts();
+}
+
+// Select all permissions in a resource
+function selectResource(resource) {
+    document.querySelectorAll(`.permission-check[data-resource="${resource}"]`).forEach(cb => {
+        cb.checked = true;
+    });
+    updateCounts();
+}
+
+// Deselect all permissions in a resource
+function deselectResource(resource) {
+    document.querySelectorAll(`.permission-check[data-resource="${resource}"]`).forEach(cb => {
+        cb.checked = false;
+    });
+    updateCounts();
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Update counts on load
+    updateCounts();
+
+    // Update counts on change
+    document.querySelectorAll('.permission-check').forEach(cb => {
+        cb.addEventListener('change', updateCounts);
+    });
+
+    // Form submission
+    const form = document.getElementById('permissionsForm');
+    form.addEventListener('submit', function(e) {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+    });
+});
+</script>
+{% endblock %}

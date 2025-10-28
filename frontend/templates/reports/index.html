@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+
+{% block title %}Reports - Member Registry System{% endblock %}
+
+{% block page_title %}Reports{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="mb-2"><i class="fas fa-file-export me-2"></i>Generate Reports</h2>
+                    <p class="text-muted mb-0">Export member data in CSV or PDF format with custom filters</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Generation Form -->
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white p-4">
+                    <h4 class="mb-0"><i class="fas fa-filter me-2"></i>Report Filters</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form id="reportForm">
+                        <!-- Location Filters -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Location Filters
+                                </h5>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="province" class="form-label">Province</label>
+                                <select class="form-select" id="province" name="province_id">
+                                    <option value="">All Provinces</option>
+                                    {% for province in provinces %}
+                                    <option value="{{ province.id }}">{{ province.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="district" class="form-label">District</label>
+                                <select class="form-select" id="district" name="district_id" disabled>
+                                    <option value="">All Districts</option>
+                                    {% for district in districts %}
+                                    <option value="{{ district.id }}" data-province="{{ district.province_id }}">{{ district.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="constituency" class="form-label">Constituency</label>
+                                <select class="form-select" id="constituency" name="constituency_id" disabled>
+                                    <option value="">All Constituencies</option>
+                                    {% for constituency in constituencies %}
+                                    <option value="{{ constituency.id }}" data-district="{{ constituency.district_id }}">{{ constituency.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="ward" class="form-label">Ward</label>
+                                <select class="form-select" id="ward" name="ward_id" disabled>
+                                    <option value="">All Wards</option>
+                                    {% for ward in wards %}
+                                    <option value="{{ ward.id }}" data-constituency="{{ ward.constituency_id }}">{{ ward.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Other Filters -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-users me-2"></i>Demographic Filters
+                                </h5>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="gender" class="form-label">Gender</label>
+                                <select class="form-select" id="gender" name="gender">
+                                    <option value="">All Genders</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Export Buttons -->
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-download me-2"></i>Export Format
+                                </h5>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-success btn-lg w-100 py-3" onclick="generateReport('csv')">
+                                    <i class="fas fa-file-csv fa-2x d-block mb-2"></i>
+                                    <span class="fw-bold">Download CSV</span>
+                                    <small class="d-block mt-1">Excel-compatible spreadsheet</small>
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-danger btn-lg w-100 py-3" onclick="generateReport('pdf')">
+                                    <i class="fas fa-file-pdf fa-2x d-block mb-2"></i>
+                                    <span class="fw-bold">Download PDF</span>
+                                    <small class="d-block mt-1">Printable document</small>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Report Info Card -->
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-body p-4">
+                    <h5 class="mb-3"><i class="fas fa-info-circle me-2 text-info"></i>Report Information</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>CSV Format:</strong> Best for data analysis, Excel, Google Sheets
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>PDF Format:</strong> Best for printing, official documents, presentations
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Reports include: Name, Gender, Age, NRC, Voter ID, Contact, Location details
+                        </li>
+                        <li class="mb-0">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Use filters to generate specific reports (e.g., all members in a constituency)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+.btn-lg {
+    transition: all 0.3s ease;
+}
+
+.btn-lg:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.form-select:focus, .form-control:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.1);
+}
+</style>
+
+<script>
+// Cascading dropdown logic
+document.getElementById('province').addEventListener('change', function() {
+    const provinceId = this.value;
+    const districtSelect = document.getElementById('district');
+    const constituencySelect = document.getElementById('constituency');
+    const wardSelect = document.getElementById('ward');
+
+    districtSelect.value = '';
+    constituencySelect.value = '';
+    wardSelect.value = '';
+    constituencySelect.disabled = true;
+    wardSelect.disabled = true;
+
+    if (provinceId) {
+        districtSelect.disabled = false;
+        Array.from(districtSelect.options).forEach(option => {
+            if (option.value === '') {
+                option.style.display = 'block';
+            } else {
+                option.style.display = option.dataset.province === provinceId ? 'block' : 'none';
+            }
+        });
+    } else {
+        districtSelect.disabled = true;
+    }
+});
+
+document.getElementById('district').addEventListener('change', function() {
+    const districtId = this.value;
+    const constituencySelect = document.getElementById('constituency');
+    const wardSelect = document.getElementById('ward');
+
+    constituencySelect.value = '';
+    wardSelect.value = '';
+    wardSelect.disabled = true;
+
+    if (districtId) {
+        constituencySelect.disabled = false;
+        Array.from(constituencySelect.options).forEach(option => {
+            if (option.value === '') {
+                option.style.display = 'block';
+            } else {
+                option.style.display = option.dataset.district === districtId ? 'block' : 'none';
+            }
+        });
+    } else {
+        constituencySelect.disabled = true;
+    }
+});
+
+document.getElementById('constituency').addEventListener('change', function() {
+    const constituencyId = this.value;
+    const wardSelect = document.getElementById('ward');
+
+    wardSelect.value = '';
+
+    if (constituencyId) {
+        wardSelect.disabled = false;
+        Array.from(wardSelect.options).forEach(option => {
+            if (option.value === '') {
+                option.style.display = 'block';
+            } else {
+                option.style.display = option.dataset.constituency === constituencyId ? 'block' : 'none';
+            }
+        });
+    } else {
+        wardSelect.disabled = true;
+    }
+});
+
+function generateReport(format) {
+    const form = document.getElementById('reportForm');
+    const formData = new FormData(form);
+
+    // Build query string
+    const params = new URLSearchParams();
+    for (const [key, value] of formData.entries()) {
+        if (value) {
+            params.append(key, value);
+        }
+    }
+
+    // Generate URL and download
+    const url = `/reports/generate/${format}?${params.toString()}`;
+    window.location.href = url;
+}
+</script>
+{% endblock %}

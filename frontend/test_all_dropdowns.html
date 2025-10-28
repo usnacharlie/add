@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test All Dropdowns</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { padding: 20px; font-family: Arial; }
+        select { margin: 10px 0; padding: 5px; width: 250px; }
+        label { display: block; margin-top: 15px; font-weight: bold; }
+        .test-status { margin: 20px 0; padding: 10px; background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h2>Complete Location Selection Test</h2>
+
+    <label>1. Province:</label>
+    <select id="province_id">
+        <option value="">Select Province</option>
+        <option value="1">Central Province</option>
+        <option value="2">Copperbelt Province</option>
+        <option value="3">Eastern Province</option>
+        <option value="4">Luapula Province</option>
+        <option value="5">Lusaka Province</option>
+        <option value="6">Muchinga Province</option>
+        <option value="7">Northern Province</option>
+        <option value="8">North-Western Province</option>
+        <option value="9">Southern Province</option>
+        <option value="10">Western Province</option>
+    </select>
+
+    <label>2. District:</label>
+    <select id="district_id" disabled>
+        <option value="">Select Province First</option>
+    </select>
+
+    <label>3. Constituency:</label>
+    <select id="constituency_id" disabled>
+        <option value="">Select District First</option>
+    </select>
+
+    <label>4. Ward:</label>
+    <select id="ward_id" disabled>
+        <option value="">Select Constituency First</option>
+    </select>
+
+    <div class="test-status">
+        <h3>Selection Status:</h3>
+        <div id="status">No selection made</div>
+    </div>
+
+    <script>
+    $(document).ready(function() {
+        const districtData = {
+            '1': ['Kabwe', 'Mumbwa', 'Chibombo', 'Chisamba', 'Kapiri Mposhi', 'Mkushi', 'Luano', 'Chitambo', 'Ngabwe', 'Serenje'],
+            '2': ['Ndola', 'Kitwe', 'Chingola', 'Mufulira', 'Luanshya', 'Chililabombwe', 'Kalulushi', 'Lufwanyama', 'Masaiti', 'Mpongwe'],
+            '3': ['Chipata', 'Petauke', 'Katete', 'Lundazi', 'Nyimba', 'Chadiza', 'Vubwi', 'Mambwe', 'Sinda', 'Kasenengwa'],
+            '4': ['Mansa', 'Kawambwa', 'Nchelenge', 'Mwense', 'Samfya', 'Lunga', 'Mwansabombwe', 'Chipili', 'Chembe', 'Milenge'],
+            '5': ['Lusaka', 'Chongwe', 'Kafue', 'Chilanga', 'Luangwa', 'Rufunsa', 'Shibuyunji'],
+            '6': ['Chinsali', 'Mpika', 'Isoka', 'Nakonde', 'Mafinga', 'Shiwang\'andu', 'Kanchibiya', 'Lavushimanda'],
+            '7': ['Kasama', 'Mbala', 'Mporokoso', 'Mpulungu', 'Mungwi', 'Kaputa', 'Luwingu', 'Chilubi', 'Senga Hill'],
+            '8': ['Solwezi', 'Mwinilunga', 'Kabompo', 'Zambezi', 'Chavuma', 'Kasempa', 'Mufumbwe', 'Ikelenge', 'Mushindamo'],
+            '9': ['Livingstone', 'Choma', 'Kalomo', 'Mazabuka', 'Monze', 'Namwala', 'Siavonga', 'Gwembe', 'Sinazongwe', 'Kazungula'],
+            '10': ['Mongu', 'Senanga', 'Sesheke', 'Kaoma', 'Lukulu', 'Kalabo', 'Shangombo', 'Sioma', 'Mulobezi', 'Mwandi']
+        };
+
+        const constituencyData = {
+            '51': ['Lusaka Central', 'Kabwata', 'Kanyama', 'Matero', 'Chilenje', 'Munali', 'Mandevu', 'Chawama'],
+            '52': ['Chongwe', 'Rufunsa'],
+            '53': ['Kafue', 'Chilanga'],
+            '21': ['Ndola Central', 'Kabushi', 'Kwacha', 'Chifubu', 'Bwana Mkubwa'],
+            '22': ['Kitwe Central', 'Nkana', 'Wusakile', 'Chimwemwe', 'Kwacha', 'Kamfinsa']
+        };
+
+        function updateStatus() {
+            const province = $('#province_id option:selected').text();
+            const district = $('#district_id option:selected').text();
+            const constituency = $('#constituency_id option:selected').text();
+            const ward = $('#ward_id option:selected').text();
+
+            let status = '';
+            if (province && province !== 'Select Province') status += `<strong>Province:</strong> ${province}<br>`;
+            if (district && district !== 'Select District' && district !== 'Select Province First') status += `<strong>District:</strong> ${district}<br>`;
+            if (constituency && constituency !== 'Select Constituency' && constituency !== 'Select District First') status += `<strong>Constituency:</strong> ${constituency}<br>`;
+            if (ward && ward !== 'Select Ward' && ward !== 'Select Constituency First') status += `<strong>Ward:</strong> ${ward}<br>`;
+
+            $('#status').html(status || 'No selection made');
+        }
+
+        $('#province_id').change(function() {
+            const provinceId = $(this).val();
+            if (provinceId) {
+                let options = '<option value="">Select District</option>';
+                const districts = districtData[provinceId] || [];
+                districts.forEach((district, index) => {
+                    options += `<option value="${provinceId}${index+1}">${district}</option>`;
+                });
+                $('#district_id').html(options).prop('disabled', false);
+                $('#constituency_id').html('<option value="">Select District First</option>').prop('disabled', true);
+                $('#ward_id').html('<option value="">Select Constituency First</option>').prop('disabled', true);
+            } else {
+                $('#district_id').html('<option value="">Select Province First</option>').prop('disabled', true);
+                $('#constituency_id').html('<option value="">Select District First</option>').prop('disabled', true);
+                $('#ward_id').html('<option value="">Select Constituency First</option>').prop('disabled', true);
+            }
+            updateStatus();
+        });
+
+        $('#district_id').change(function() {
+            const districtId = $(this).val();
+            if (districtId) {
+                let options = '<option value="">Select Constituency</option>';
+                const constituencies = constituencyData[districtId] || [];
+
+                if (constituencies.length > 0) {
+                    constituencies.forEach((constituency, index) => {
+                        options += `<option value="${districtId}${index+1}">${constituency}</option>`;
+                    });
+                } else {
+                    // Generic constituencies
+                    options += `<option value="${districtId}1">Central</option>`;
+                    options += `<option value="${districtId}2">North</option>`;
+                    options += `<option value="${districtId}3">South</option>`;
+                }
+
+                $('#constituency_id').html(options).prop('disabled', false);
+                $('#ward_id').html('<option value="">Select Constituency First</option>').prop('disabled', true);
+            }
+            updateStatus();
+        });
+
+        $('#constituency_id').change(function() {
+            const constituencyId = $(this).val();
+            if (constituencyId) {
+                let options = '<option value="">Select Ward</option>';
+                for (let i = 1; i <= 5; i++) {
+                    options += `<option value="${constituencyId}${i}">Ward ${i}</option>`;
+                }
+                $('#ward_id').html(options).prop('disabled', false);
+            }
+            updateStatus();
+        });
+
+        $('#ward_id').change(function() {
+            updateStatus();
+        });
+    });
+    </script>
+</body>
+</html>

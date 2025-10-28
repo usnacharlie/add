@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login - Alliance for Democracy and Development</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<style>
+/* Modern Color Palette */
+:root {
+    --primary: #d42c2c;
+    --primary-dark: #b91c1c;
+    --primary-light: #f87171;
+    --accent: #fbbf24;
+    --dark: #1a1a1a;
+    --light: #ffffff;
+    --gray: #64748b;
+    --gray-light: #f8fafc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    min-height: 100vh;
+}
+
+/* Top Navigation */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 12px 0;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.page-logo img {
+    height: 50px;
+    width: auto;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-menu a {
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.nav-menu a:hover {
+    color: var(--primary);
+}
+
+/* Login Section */
+.login-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 24px 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 50%, rgba(212, 44, 44, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(251, 191, 36, 0.03) 0%, transparent 50%);
+}
+
+.login-container {
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
+
+.login-card {
+    background: white;
+    border-radius: 24px;
+    padding: 48px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.login-logo {
+    height: 80px;
+    width: auto;
+    margin-bottom: 24px;
+}
+
+.login-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 8px;
+}
+
+.login-subtitle {
+    font-size: 16px;
+    color: var(--gray);
+    margin: 0;
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.form-control, .form-select {
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(212, 44, 44, 0.1);
+    outline: none;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-group .input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+    z-index: 10;
+}
+
+.input-group .form-control {
+    padding-left: 48px;
+}
+
+.btn-toggle-password {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--gray);
+    cursor: pointer;
+    z-index: 10;
+}
+
+.btn-toggle-password:hover {
+    color: var(--primary);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(212, 44, 44, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(212, 44, 44, 0.4);
+    color: white;
+}
+
+.btn-outline-success {
+    background: white;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    border-radius: 12px;
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-success:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 32px 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.divider span {
+    padding: 0 16px;
+    color: var(--gray);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.ussd-info {
+    background: linear-gradient(135deg, rgba(212, 44, 44, 0.05) 0%, rgba(251, 191, 36, 0.05) 100%);
+    border: 2px solid rgba(212, 44, 44, 0.2);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 24px;
+}
+
+.ussd-code {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: 2px;
+    margin: 8px 0;
+}
+
+.form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.text-primary {
+    color: var(--primary) !important;
+}
+
+.text-primary:hover {
+    color: var(--primary-dark) !important;
+}
+
+.alert {
+    border: none;
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.alert-success {
+    background-color: rgb(16 185 129 / 0.1);
+    color: #059669;
+    border: 1px solid rgb(16 185 129 / 0.2);
+}
+
+.alert-danger {
+    background-color: rgb(239 68 68 / 0.1);
+    color: #dc2626;
+    border: 1px solid rgb(239 68 68 / 0.2);
+}
+
+.alert-info {
+    background-color: rgb(59 130 246 / 0.1);
+    color: #2563eb;
+    border: 1px solid rgb(59 130 246 / 0.2);
+}
+
+/* PIN Input Boxes */
+.pin-input-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.pin-digit {
+    width: 70px;
+    height: 70px;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    padding: 0 !important;
+}
+
+.pin-digit:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(212, 44, 44, 0.1);
+    outline: none;
+}
+
+.pin-digit.filled {
+    border-color: var(--primary);
+    background: rgba(212, 44, 44, 0.05);
+}
+
+@media (max-width: 768px) {
+    .login-card {
+        padding: 32px 24px;
+    }
+
+    .login-title {
+        font-size: 24px;
+    }
+
+    .nav-menu {
+        display: none;
+    }
+
+    .page-logo img {
+        height: 40px;
+    }
+
+    .pin-digit {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+    <div class="nav-container">
+        <a href="{{ url_for('main.index') }}" class="page-logo">
+            <img src="/static/img/logoadd.jpeg" alt="Alliance for Democracy and Development">
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="{{ url_for('main.index') }}"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="#"><i class="fas fa-info-circle"></i> About</a></li>
+            <li><a href="{{ url_for('auth.register') }}"><i class="fas fa-user-plus"></i> Register</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Login Section -->
+<section class="login-section">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="/static/img/logoadd.jpeg" alt="ADD Logo" class="login-logo">
+                <h1 class="login-title">Member Login</h1>
+                <p class="login-subtitle">Enter your phone/email and PIN to access your account</p>
+            </div>
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                            <i class="fas fa-{{ 'exclamation-circle' if category == 'error' else 'check-circle' if category == 'success' else 'info-circle' }} me-2"></i>
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('auth.login') }}">
+                <div class="mb-4">
+                    <label for="identifier" class="form-label">Email / Phone / Membership Number</label>
+                    <div class="input-group">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" class="form-control" id="identifier" name="identifier"
+                               placeholder="e.g., ADD12345, 0977123456, or email@example.com" required>
+                    </div>
+                    <small class="text-muted">
+                        You can login using your membership number, phone, or email
+                    </small>
+                </div>
+
+                <div class="mb-4">
+                    <label for="password" class="form-label">Enter Your 4-Digit PIN</label>
+                    <div class="pin-input-group">
+                        <input type="password" class="pin-digit" id="pin1" maxlength="1" pattern="[0-9]" required inputmode="numeric" autocomplete="off">
+                        <input type="password" class="pin-digit" id="pin2" maxlength="1" pattern="[0-9]" required inputmode="numeric" autocomplete="off">
+                        <input type="password" class="pin-digit" id="pin3" maxlength="1" pattern="[0-9]" required inputmode="numeric" autocomplete="off">
+                        <input type="password" class="pin-digit" id="pin4" maxlength="1" pattern="[0-9]" required inputmode="numeric" autocomplete="off">
+                    </div>
+                    <input type="hidden" id="password" name="password">
+                    <small class="text-muted d-block text-center">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Enter the 4-digit PIN you set during registration
+                    </small>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                        <label class="form-check-label" for="remember">
+                            Remember me
+                        </label>
+                    </div>
+                    <!-- Forgot Password feature will be implemented when backend supports it -->
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mb-3">
+                    <i class="fas fa-sign-in-alt me-2"></i> Login
+                </button>
+
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+
+                <div class="text-center mb-3">
+                    <p class="mb-3" style="color: var(--gray); font-size: 15px;">Don't have an account?</p>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-outline-success w-100">
+                        <i class="fas fa-user-plus me-2"></i> Register Now
+                    </a>
+                </div>
+
+                <div class="ussd-info">
+                    <i class="fas fa-mobile-alt" style="font-size: 24px; color: var(--accent);"></i>
+                    <div style="font-size: 14px; color: var(--gray); margin-top: 8px;">
+                        Quick Registration via USSD
+                    </div>
+                    <div class="ussd-code">*388*3#</div>
+                    <small style="color: var(--gray);">Works on all networks</small>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+$(document).ready(function() {
+    // PIN input handling
+    $('.pin-digit').on('input', function(e) {
+        const $this = $(this);
+        const value = $this.val();
+
+        // Only allow numbers
+        if (!/^\d*$/.test(value)) {
+            $this.val('');
+            return;
+        }
+
+        // Add filled class
+        if (value.length === 1) {
+            $this.addClass('filled');
+            // Auto-focus next input
+            const $next = $this.next('.pin-digit');
+            if ($next.length) {
+                $next.focus();
+            }
+        } else {
+            $this.removeClass('filled');
+        }
+
+        // Update hidden password field
+        updatePinField();
+    });
+
+    // Handle backspace/delete
+    $('.pin-digit').on('keydown', function(e) {
+        const $this = $(this);
+
+        if (e.key === 'Backspace' || e.key === 'Delete') {
+            if ($this.val() === '') {
+                // Move to previous input
+                const $prev = $this.prev('.pin-digit');
+                if ($prev.length) {
+                    $prev.focus();
+                    $prev.val('');
+                    $prev.removeClass('filled');
+                }
+            } else {
+                $this.val('');
+                $this.removeClass('filled');
+            }
+            updatePinField();
+            e.preventDefault();
+        }
+    });
+
+    // Handle paste
+    $('.pin-digit').on('paste', function(e) {
+        e.preventDefault();
+        const pastedData = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
+        const digits = pastedData.replace(/\D/g, '').substring(0, 4).split('');
+
+        $('.pin-digit').each(function(index) {
+            if (digits[index]) {
+                $(this).val(digits[index]).addClass('filled');
+            }
+        });
+
+        updatePinField();
+
+        // Focus last filled digit or first empty
+        if (digits.length === 4) {
+            $('#pin4').focus();
+        } else if (digits.length > 0) {
+            $(`#pin${digits.length + 1}`).focus();
+        }
+    });
+
+    // Update hidden password field with combined PIN
+    function updatePinField() {
+        const pin = $('#pin1').val() + $('#pin2').val() + $('#pin3').val() + $('#pin4').val();
+        $('#password').val(pin);
+    }
+
+    // Form validation
+    $('form').on('submit', function(e) {
+        const pin = $('#pin1').val() + $('#pin2').val() + $('#pin3').val() + $('#pin4').val();
+
+        if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid PIN',
+                text: 'Please enter a complete 4-digit PIN.',
+                confirmButtonColor: '#d42c2c',
+                confirmButtonText: 'OK'
+            });
+            return false;
+        }
+
+        // Update hidden field one more time before submit
+        updatePinField();
+    });
+
+    // Auto focus first PIN box on page load
+    $('#pin1').focus();
+
+    // Auto dismiss alerts after 5 seconds
+    setTimeout(function() {
+        $('.alert').fadeOut('slow');
+    }, 5000);
+});
+</script>
+
+</body>
+</html>

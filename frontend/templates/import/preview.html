@@ -1,0 +1,232 @@
+{% extends "layouts/admin_base.html" %}
+
+{% block page_title %}Preview Import Data{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+<li class="breadcrumb-item"><a href="{{ url_for('import_data.index') }}">Bulk Import</a></li>
+<li class="breadcrumb-item active">Preview</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <!-- Summary Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Import Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="stat-box">
+                            <h3 class="text-primary">{{ total }}</h3>
+                            <p class="text-muted">Total Records</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-box">
+                            <h3 class="text-success">{{ valid }}</h3>
+                            <p class="text-muted">Valid Records</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-box">
+                            <h3 class="text-danger">{{ invalid }}</h3>
+                            <p class="text-muted">Invalid Records</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-box">
+                            <h3 class="text-info">{{ filename }}</h3>
+                            <p class="text-muted">Source File</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Preview Table -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Data Preview</h5>
+                <div>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="toggleInvalid()">
+                        <i class="fas fa-filter"></i> Toggle Invalid
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="previewTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Status</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>NRC Number</th>
+                                <th>Phone</th>
+                                <th>Gender</th>
+                                <th>Age</th>
+                                <th>Voter ID</th>
+                                <th>Issues</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for member in data %}
+                            <tr class="{% if not member.valid %}table-danger invalid-row{% endif %}">
+                                <td>{{ loop.index }}</td>
+                                <td>
+                                    {% if member.valid %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check"></i> Valid
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-danger">
+                                            <i class="fas fa-times"></i> Invalid
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ member.first_name|default('—', true) }}</td>
+                                <td>{{ member.last_name|default('—', true) }}</td>
+                                <td>{{ member.nrc_number|default('—', true) }}</td>
+                                <td>{{ member.phone|default('—', true) }}</td>
+                                <td>{{ member.gender|default('—', true) }}</td>
+                                <td>{{ member.age|default('—', true) }}</td>
+                                <td>{{ member.voter_registration_number|default('—', true) }}</td>
+                                <td>
+                                    {% if member.errors %}
+                                        <ul class="mb-0 small">
+                                            {% for error in member.errors %}
+                                            <li class="text-danger">{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <span class="text-success">None</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <a href="{{ url_for('import_data.upload') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Upload
+                        </a>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-danger me-2" onclick="cancelImport()">
+                            <i class="fas fa-times"></i> Cancel Import
+                        </button>
+                        {% if valid > 0 %}
+                        <button class="btn btn-success" onclick="confirmImport()">
+                            <i class="fas fa-check"></i> Import {{ valid }} Valid Records
+                        </button>
+                        {% else %}
+                        <button class="btn btn-success" disabled>
+                            <i class="fas fa-check"></i> No Valid Records
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.stat-box {
+    padding: 20px;
+    border-right: 1px solid #dee2e6;
+}
+
+.stat-box:last-child {
+    border-right: none;
+}
+
+.stat-box h3 {
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+.invalid-row {
+    background-color: #ffebee !important;
+}
+</style>
+
+<script>
+let showInvalid = true;
+
+function toggleInvalid() {
+    showInvalid = !showInvalid;
+    const invalidRows = document.querySelectorAll('.invalid-row');
+
+    invalidRows.forEach(row => {
+        row.style.display = showInvalid ? '' : 'none';
+    });
+}
+
+function cancelImport() {
+    Swal.fire({
+        title: 'Cancel Import?',
+        text: 'Are you sure you want to cancel this import?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, cancel',
+        cancelButtonText: 'No, continue'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '{{ url_for("import_data.index") }}';
+        }
+    });
+}
+
+function confirmImport() {
+    Swal.fire({
+        title: 'Confirm Import',
+        html: `
+            <p>You are about to import <strong>{{ valid }}</strong> valid records.</p>
+            <p class="text-muted">Invalid records will be skipped.</p>
+            <p><strong>Note:</strong> Default password for each member will be their NRC without slashes.</p>
+        `,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Import',
+        cancelButtonText: 'Cancel',
+        showLoaderOnConfirm: true,
+        preConfirm: () => {
+            return fetch('{{ url_for("import_data.process") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Import failed');
+                }
+                return response;
+            })
+            .catch(error => {
+                Swal.showValidationMessage(`Import failed: ${error}`);
+            });
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Redirect will be handled by the server response
+            window.location.href = '{{ url_for("import_data.index") }}';
+        }
+    });
+}
+</script>
+{% endblock %}

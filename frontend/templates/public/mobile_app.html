@@ -1,0 +1,522 @@
+{% extends "base.html" %}
+
+{% block title %}Mobile App - Alliance for Democracy and Development{% endblock %}
+
+{% block styles %}
+<style>
+    .mobile-app-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .hero-section {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+        border-radius: 12px;
+        padding: 3rem;
+        margin-bottom: 3rem;
+        color: white;
+    }
+
+    .hero-content {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 3rem;
+        align-items: center;
+    }
+
+    .phone-mockup {
+        text-align: center;
+    }
+
+    .phone-frame {
+        background: rgba(255,255,255,0.1);
+        border-radius: 30px;
+        padding: 1.5rem;
+        display: inline-block;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    .phone-screen {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        min-height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .download-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin: 2rem 0;
+    }
+
+    .download-btn {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: white;
+        color: var(--text-primary);
+        padding: 0.875rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: var(--transition);
+        box-shadow: var(--shadow);
+    }
+
+    .download-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+        color: var(--text-primary);
+    }
+
+    .download-btn i {
+        font-size: 32px;
+    }
+
+    .download-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .download-info small {
+        font-size: 11px;
+        opacity: 0.7;
+    }
+
+    .download-info strong {
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .feature-card {
+        background: var(--bg-base);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        transition: var(--transition);
+    }
+
+    .feature-card:hover {
+        border-color: var(--primary);
+        box-shadow: var(--shadow);
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        background: var(--gray-100);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        color: var(--primary);
+        font-size: 24px;
+    }
+
+    .feature-card h4 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: var(--text-primary);
+    }
+
+    .feature-card p {
+        font-size: 13px;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+    .info-section {
+        background: var(--bg-base);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-section h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: var(--text-primary);
+    }
+
+    .requirements-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+
+    .platform-box {
+        text-align: center;
+        padding: 2rem;
+        background: var(--gray-50);
+        border-radius: 8px;
+    }
+
+    .platform-icon {
+        font-size: 60px;
+        margin-bottom: 1rem;
+    }
+
+    .platform-box h4 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+
+    .platform-box ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        text-align: left;
+    }
+
+    .platform-box li {
+        padding: 0.5rem 0;
+        font-size: 14px;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .platform-box li i {
+        color: var(--success);
+    }
+
+    .faq-section {
+        background: var(--bg-base);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .accordion-item {
+        background: var(--bg-base);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        margin-bottom: 0.75rem;
+    }
+
+    .accordion-button {
+        background: var(--bg-base);
+        color: var(--text-primary);
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .accordion-button:not(.collapsed) {
+        background: var(--gray-50);
+        color: var(--primary);
+    }
+
+    .accordion-button:focus {
+        box-shadow: none;
+        border-color: var(--primary);
+    }
+
+    .cta-section {
+        background: linear-gradient(135deg, var(--gray-800) 0%, var(--gray-900) 100%);
+        border-radius: 12px;
+        padding: 3rem;
+        text-align: center;
+        color: white;
+    }
+
+    .cta-section h3 {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+        font-size: 15px;
+        opacity: 0.9;
+        margin-bottom: 2rem;
+    }
+
+    @media (max-width: 992px) {
+        .hero-content {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+
+        .features-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .requirements-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 2rem;
+        }
+
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .download-buttons {
+            flex-direction: column;
+        }
+
+        .download-btn {
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="mobile-app-container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <div>
+                <h1 style="font-size: 36px; font-weight: 700; margin-bottom: 1rem;">ADD Mobile App</h1>
+                <p style="font-size: 18px; opacity: 0.95; margin-bottom: 1.5rem;">
+                    Your political engagement at your fingertips. Manage membership, join events, and stay connected with ADD on the go.
+                </p>
+
+                <div class="download-buttons">
+                    <a href="#" class="download-btn">
+                        <i class="fab fa-google-play"></i>
+                        <div class="download-info">
+                            <small>GET IT ON</small>
+                            <strong>Google Play</strong>
+                        </div>
+                    </a>
+                    <a href="#" class="download-btn">
+                        <i class="fab fa-app-store-ios"></i>
+                        <div class="download-info">
+                            <small>DOWNLOAD ON THE</small>
+                            <strong>App Store</strong>
+                        </div>
+                    </a>
+                </div>
+
+                <p style="font-size: 13px; opacity: 0.85; margin: 0;">
+                    <i class="fas fa-shield-alt me-2"></i>
+                    Secure, fast, and ECZ-compliant mobile application
+                </p>
+            </div>
+
+            <div class="phone-mockup">
+                <div class="phone-frame">
+                    <div class="phone-screen">
+                        <i class="fas fa-mobile-alt fa-10x" style="color: var(--gray-200);"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div style="margin-bottom: 3rem;">
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+            <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 0.75rem;">App Features</h2>
+            <p style="color: var(--text-secondary); font-size: 15px;">Everything you need for ADD membership in one app</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <h4>Digital Membership Card</h4>
+                <p>Access your digital membership card with QR code for instant verification at events</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <h4>Event Registration</h4>
+                <p>Browse upcoming events, register for rallies, and receive timely reminders</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <h4>Push Notifications</h4>
+                <p>Stay informed with real-time updates about party news and announcements</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h4>Mobile Donations</h4>
+                <p>Make voluntary contributions securely using MTN, Airtel, Zanaco, or Zamtel mobile money</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h4>Member Directory</h4>
+                <p>Connect with fellow ADD members and coordinate local activities</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-language"></i>
+                </div>
+                <h4>Multi-Language</h4>
+                <p>Available in English, Bemba, Nyanja, Tonga, Lozi, and more Zambian languages</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Requirements -->
+    <div class="info-section">
+        <h3>System Requirements</h3>
+        <div class="requirements-grid">
+            <div class="platform-box">
+                <div class="platform-icon" style="color: #3DDC84;">
+                    <i class="fab fa-android"></i>
+                </div>
+                <h4>Android</h4>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Android 6.0 or higher</li>
+                    <li><i class="fas fa-check-circle"></i> 100 MB free storage</li>
+                    <li><i class="fas fa-check-circle"></i> Internet connection for syncing</li>
+                    <li><i class="fas fa-check-circle"></i> Camera for QR scanning</li>
+                    <li><i class="fas fa-check-circle"></i> Push notification support</li>
+                </ul>
+            </div>
+
+            <div class="platform-box">
+                <div class="platform-icon" style="color: #000;">
+                    <i class="fab fa-apple"></i>
+                </div>
+                <h4>iOS</h4>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> iOS 12.0 or higher</li>
+                    <li><i class="fas fa-check-circle"></i> 100 MB free storage</li>
+                    <li><i class="fas fa-check-circle"></i> Internet connection for syncing</li>
+                    <li><i class="fas fa-check-circle"></i> Camera for QR scanning</li>
+                    <li><i class="fas fa-check-circle"></i> Push notification support</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+        <h3 style="margin-bottom: 1.5rem;">Frequently Asked Questions</h3>
+        <div class="accordion" id="appFAQ">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                        Is the ADD mobile app free to download?
+                    </button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#appFAQ">
+                    <div class="accordion-body" style="font-size: 14px; color: var(--text-secondary);">
+                        Yes, the ADD mobile app and membership registration are completely free. No fees required. You only pay for mobile data used to access the app.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                        Can I use the app without internet?
+                    </button>
+                </h2>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#appFAQ">
+                    <div class="accordion-body" style="font-size: 14px; color: var(--text-secondary);">
+                        The app works offline for basic functions like viewing your membership card. However, internet is needed to sync data, register for events, and receive updates.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                        How do I reset my app PIN or password?
+                    </button>
+                </h2>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#appFAQ">
+                    <div class="accordion-body" style="font-size: 14px; color: var(--text-secondary);">
+                        Use the "Forgot PIN" link on the login screen, or contact support for assistance. You can also dial *388*3# to reset your credentials.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                        Is my personal information safe in the app?
+                    </button>
+                </h2>
+                <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#appFAQ">
+                    <div class="accordion-body" style="font-size: 14px; color: var(--text-secondary);">
+                        Yes, we use enterprise-grade encryption and security measures to protect your data. All transactions are secured with SSL/TLS encryption.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                        Can I register as a new member through the app?
+                    </button>
+                </h2>
+                <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#appFAQ">
+                    <div class="accordion-body" style="font-size: 14px; color: var(--text-secondary);">
+                        Yes! The app supports both Lite and Full membership registration. You can register directly through the app in just a few minutes.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="cta-section">
+        <h3>Ready to Get Started?</h3>
+        <p>Download the ADD mobile app and take your political engagement mobile</p>
+
+        <div class="download-buttons" style="justify-content: center;">
+            <a href="#" class="download-btn">
+                <i class="fab fa-google-play"></i>
+                <div class="download-info">
+                    <small>GET IT ON</small>
+                    <strong>Google Play</strong>
+                </div>
+            </a>
+            <a href="#" class="download-btn">
+                <i class="fab fa-app-store-ios"></i>
+                <div class="download-info">
+                    <small>DOWNLOAD ON THE</small>
+                    <strong>App Store</strong>
+                </div>
+            </a>
+        </div>
+
+        <p style="font-size: 13px; margin-top: 2rem; margin-bottom: 0;">
+            <i class="fas fa-mobile-alt me-2"></i>
+            Or dial <strong>*388*3#</strong> for USSD access
+        </p>
+    </div>
+</div>
+{% endblock %}

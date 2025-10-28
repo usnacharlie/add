@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Party Membership System{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0 text-center"><i class="bi bi-box-arrow-in-right"></i> Member Login</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('login') }}">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Membership Number or Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input type="text" class="form-control" id="username" name="username" required autofocus>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <p class="mb-2">Don't have an account?</p>
+                        <a href="{{ url_for('register') }}" class="btn btn-outline-primary">
+                            <i class="bi bi-person-plus"></i> Register Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 text-center">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h5 class="card-title">Other Login Options</h5>
+                        <p class="card-text">You can also access your account via:</p>
+                        <div class="d-flex justify-content-around">
+                            <div>
+                                <i class="bi bi-phone fs-3 text-success"></i>
+                                <p class="small mb-0">USSD *388*3#</p>
+                            </div>
+                            <div>
+                                <i class="bi bi-phone-fill fs-3 text-info"></i>
+                                <p class="small mb-0">Mobile App</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

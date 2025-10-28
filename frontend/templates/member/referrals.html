@@ -1,0 +1,265 @@
+{% extends "layouts/member_base.html" %}
+
+{% block page_title %}Referrals{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <!-- Referral Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card border-primary">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted">Total Referrals</h6>
+                                <h3 class="mb-0">{{ stats.total }}</h3>
+                            </div>
+                            <div class="text-primary">
+                                <i class="fas fa-users fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-success">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted">Active Referrals</h6>
+                                <h3 class="mb-0">{{ stats.active }}</h3>
+                            </div>
+                            <div class="text-success">
+                                <i class="fas fa-user-check fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-warning">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted">Pending</h6>
+                                <h3 class="mb-0">{{ stats.pending }}</h3>
+                            </div>
+                            <div class="text-warning">
+                                <i class="fas fa-clock fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Referral Card -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-user-plus me-2"></i>Refer a Friend</h5>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#referralModal">
+                    <i class="fas fa-plus me-1"></i> Send Invitation
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Earn Rewards!</strong> Refer friends and family to join ADD. Help grow our movement and strengthen our community across Zambia.
+                </div>
+
+                <h6 class="mt-4 mb-3">Your Referral Link:</h6>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" value="https://addzambia.com/auth/register?ref={{ session.membership_number }}" id="referralLink" readonly>
+                    <button class="btn btn-outline-primary" type="button" onclick="copyReferralLink()">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Referrals List -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-list me-2"></i>My Referrals</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Contact</th>
+                                <th>Date Referred</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if referrals %}
+                                {% for referral in referrals %}
+                                <tr>
+                                    <td><strong>{{ referral.name }}</strong></td>
+                                    <td>
+                                        {% if referral.phone %}<i class="fas fa-phone me-1"></i>{{ referral.phone }}<br>{% endif %}
+                                        {% if referral.email %}<i class="fas fa-envelope me-1"></i>{{ referral.email }}{% endif %}
+                                    </td>
+                                    <td>{{ referral.created_at[:10] if referral.created_at else 'N/A' }}</td>
+                                    <td>
+                                        {% if referral.status == 'active' %}
+                                            <span class="badge bg-success">Active Member</span>
+                                        {% elif referral.status == 'registered' %}
+                                            <span class="badge bg-info">Registered</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">Invited</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">
+                                        <i class="fas fa-user-friends fa-3x mb-3 d-block"></i>
+                                        <p class="mb-0">No referrals yet</p>
+                                        <small>Start inviting friends and family to join ADD</small>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Referral Modal -->
+<div class="modal fade" id="referralModal" tabindex="-1" aria-labelledby="referralModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="referralModalLabel">
+                    <i class="fas fa-user-plus me-2"></i>Send Referral Invitation
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="referralForm">
+                    <div class="mb-3">
+                        <label for="referralName" class="form-label">Full Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="referralName" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="referralPhone" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                        <input type="tel" class="form-control" id="referralPhone" placeholder="0971234567" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="referralEmail" class="form-label">Email (Optional)</label>
+                        <input type="email" class="form-control" id="referralEmail" placeholder="example@email.com">
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <small>An invitation will be sent to this person encouraging them to join ADD.</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitReferral()">
+                    <i class="fas fa-paper-plane me-1"></i>Send Invitation
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function copyReferralLink() {
+    const linkInput = document.getElementById('referralLink');
+    linkInput.select();
+    document.execCommand('copy');
+
+    Swal.fire({
+        icon: 'success',
+        title: 'Copied!',
+        text: 'Referral link copied to clipboard',
+        timer: 2000,
+        showConfirmButton: false
+    });
+}
+
+function submitReferral() {
+    const name = document.getElementById('referralName').value;
+    const phone = document.getElementById('referralPhone').value;
+    const email = document.getElementById('referralEmail').value;
+
+    if (!name || !phone) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Missing Information',
+            text: 'Please fill in all required fields',
+            confirmButtonColor: '#ef4444'
+        });
+        return;
+    }
+
+    Swal.fire({
+        title: 'Sending Invitation...',
+        text: 'Please wait',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    fetch('{{ url_for("member.send_referral") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: name,
+            phone: phone,
+            email: email
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('referralModal'));
+            if (modal) modal.hide();
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Invitation Sent!',
+                text: 'Your referral invitation has been sent successfully',
+                confirmButtonColor: '#2563eb'
+            }).then(() => {
+                location.reload();
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Failed',
+                text: data.message || 'Failed to send invitation. Please try again.',
+                confirmButtonColor: '#ef4444'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Referral error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Unable to send invitation. Please try again later.',
+            confirmButtonColor: '#ef4444'
+        });
+    });
+}
+</script>
+{% endblock %}

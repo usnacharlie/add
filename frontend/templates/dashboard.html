@@ -1,0 +1,562 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Member Registry System{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="mb-2">Welcome back, {{ session.user_name }}!</h2>
+                    <p class="text-muted mb-0">Here's what's happening with your member registry system today.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0">
+                            <div class="stat-icon bg-primary bg-opacity-10 text-primary rounded-circle p-3">
+                                <i class="fas fa-users fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-0 fw-bold">{{ stats.total_members | default(0) | int | string | replace(',', ',') }}</h3>
+                            <p class="text-muted mb-0 small">Total Members</p>
+                        </div>
+                    </div>
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ (stats.total_members / 15000 * 100) | int if stats.total_members else 0 }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0">
+                            <div class="stat-icon bg-success bg-opacity-10 text-success rounded-circle p-3">
+                                <i class="fas fa-city fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-0 fw-bold">{{ stats.total_districts | default(0) }}</h3>
+                            <p class="text-muted mb-0 small">Total Districts</p>
+                        </div>
+                    </div>
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ (stats.total_districts / 100 * 100) | int if stats.total_districts else 0 }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0">
+                            <div class="stat-icon bg-info bg-opacity-10 text-info rounded-circle p-3">
+                                <i class="fas fa-map-marked-alt fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-0 fw-bold">{{ stats.total_provinces | default(0) }}</h3>
+                            <p class="text-muted mb-0 small">Provinces</p>
+                        </div>
+                    </div>
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: {{ (stats.total_provinces / 10 * 100) | int if stats.total_provinces else 0 }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0">
+                            <div class="stat-icon bg-warning bg-opacity-10 text-warning rounded-circle p-3">
+                                <i class="fas fa-map-pin fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-0 fw-bold">{{ stats.total_wards | default(0) }}</h3>
+                            <p class="text-muted mb-0 small">Total Wards</p>
+                        </div>
+                    </div>
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ (stats.total_wards / 200 * 100) | int if stats.total_wards else 0 }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gender Statistics -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0">
+                            <div class="stat-icon bg-primary bg-opacity-10 text-primary rounded-circle p-3">
+                                <i class="fas fa-male fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-0 fw-bold">{{ stats.male_count | default(0) }}</h3>
+                            <p class="text-muted mb-0 small">Male Members</p>
+                        </div>
+                    </div>
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar bg-primary" role="progressbar"
+                             style="width: {{ (stats.male_count / stats.total_members * 100) | int if stats.total_members else 0 }}%"></div>
+                    </div>
+                    <small class="text-muted mt-2 d-block">
+                        {{ ((stats.male_count / stats.total_members * 100) | round(1)) if stats.total_members else 0 }}% of total
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0">
+                            <div class="stat-icon bg-info bg-opacity-10 text-info rounded-circle p-3">
+                                <i class="fas fa-female fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-0 fw-bold">{{ stats.female_count | default(0) }}</h3>
+                            <p class="text-muted mb-0 small">Female Members</p>
+                        </div>
+                    </div>
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar bg-info" role="progressbar"
+                             style="width: {{ (stats.female_count / stats.total_members * 100) | int if stats.total_members else 0 }}%"></div>
+                    </div>
+                    <small class="text-muted mt-2 d-block">
+                        {{ ((stats.female_count / stats.total_members * 100) | round(1)) if stats.total_members else 0 }}% of total
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 bg-gradient" style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);">
+                <div class="card-body d-flex flex-column justify-content-center align-items-center text-white">
+                    <i class="fas fa-plus-circle fa-3x mb-3" style="opacity: 0.9;"></i>
+                    <h5 class="mb-3 fw-bold">Add New Members</h5>
+                    <a href="{{ url_for('members.new_member') }}" class="btn btn-light btn-lg">
+                        <i class="fas fa-plus me-2"></i>Add Members
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="mb-4"><i class="fas fa-bolt me-2"></i>Quick Actions</h4>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <a href="{{ url_for('members.new_member') }}" class="btn btn-primary w-100 py-3">
+                                <i class="fas fa-user-plus fa-2x d-block mb-2"></i>
+                                <span class="fw-bold">Add Members</span>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ url_for('members.list_members') }}" class="btn btn-outline-success w-100 py-3">
+                                <i class="fas fa-users fa-2x d-block mb-2"></i>
+                                <span class="fw-bold">Manage Members</span>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ url_for('locations.provinces') }}" class="btn btn-outline-info w-100 py-3">
+                                <i class="fas fa-map-marked-alt fa-2x d-block mb-2"></i>
+                                <span class="fw-bold">View Locations</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity and Province Coverage -->
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="mb-4"><i class="fas fa-chart-bar me-2"></i>Member Statistics Overview</h4>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-muted">Total Members</span>
+                                    <span class="fw-bold fs-4 text-primary">{{ stats.total_members | default(0) }}</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-primary" style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-muted">Total Provinces</span>
+                                    <span class="fw-bold fs-4 text-info">{{ stats.total_provinces | default(0) }}</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-info" style="width: {{ (stats.total_provinces / 10 * 100) | int }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-muted">Male Members</span>
+                                    <span class="fw-bold fs-4 text-primary">{{ stats.male_count | default(0) }}</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-primary" style="width: {{ (stats.male_count / stats.total_members * 100) | int if stats.total_members else 0 }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-muted">Female Members</span>
+                                    <span class="fw-bold fs-4 text-info">{{ stats.female_count | default(0) }}</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-info" style="width: {{ (stats.female_count / stats.total_members * 100) | int if stats.total_members else 0 }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <a href="{{ url_for('members.list_members') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-users me-2"></i>View All Members
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="mb-4"><i class="fas fa-chart-pie me-2"></i>Province Coverage</h4>
+                    {% if stats.province_counts %}
+                        {% set max_count = stats.province_counts[0][1] if stats.province_counts else 1 %}
+                        {% for province_name, count in stats.province_counts[:5] %}
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="small">{{ province_name }}</span>
+                                <span class="small fw-bold">{{ count }}</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-{{ ['primary', 'success', 'info', 'warning', 'secondary'][loop.index0 % 5] }}"
+                                     style="width: {{ (count / max_count * 100) | int }}%"></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        {% if stats.province_counts | length > 5 %}
+                        <div class="text-center mt-3">
+                            <small class="text-muted">
+                                +{{ stats.province_counts | length - 5 }} more provinces
+                            </small>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-map-marked-alt fa-2x mb-2 text-muted" style="opacity: 0.3;"></i>
+                        <p class="text-muted mb-0 small">No member data by province yet</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Animation Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+/* Stat Icons */
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.stat-icon::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: inherit;
+    opacity: 0.3;
+    transform: scale(0);
+    transition: transform 0.3s ease;
+}
+
+.card:hover .stat-icon::before {
+    transform: scale(1.2);
+}
+
+/* Card Animations */
+.card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: fadeInUp 0.6s ease-out;
+    animation-fill-mode: both;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: left 0.5s ease;
+}
+
+.card:hover::before {
+    left: 100%;
+}
+
+.card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
+}
+
+/* Stagger Animation for Cards */
+.row > [class*="col-"]:nth-child(1) .card { animation-delay: 0.1s; }
+.row > [class*="col-"]:nth-child(2) .card { animation-delay: 0.2s; }
+.row > [class*="col-"]:nth-child(3) .card { animation-delay: 0.3s; }
+.row > [class*="col-"]:nth-child(4) .card { animation-delay: 0.4s; }
+
+/* Progress Bars */
+.progress {
+    overflow: hidden;
+    border-radius: 10px;
+    background: #e5e7eb;
+}
+
+.progress-bar {
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(90deg, currentColor 0%, currentColor 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    animation: shimmer 2s infinite;
+}
+
+/* Buttons */
+.btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 12px;
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    border: none;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-outline-success:hover,
+.btn-outline-info:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Badges */
+.badge {
+    animation: fadeInUp 0.5s ease-out;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Quick Action Cards */
+.row .col-md-4:nth-child(1) .btn { animation-delay: 0.1s; }
+.row .col-md-4:nth-child(2) .btn { animation-delay: 0.2s; }
+.row .col-md-4:nth-child(3) .btn { animation-delay: 0.3s; }
+
+/* Gradient Background Card */
+.bg-gradient {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-gradient::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: pulse 3s ease-in-out infinite;
+}
+
+/* List Group Items */
+.list-group-item {
+    border: none;
+    border-bottom: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+    animation: slideInLeft 0.5s ease-out;
+    animation-fill-mode: both;
+}
+
+.list-group-item:nth-child(1) { animation-delay: 0.1s; }
+.list-group-item:nth-child(2) { animation-delay: 0.2s; }
+.list-group-item:nth-child(3) { animation-delay: 0.3s; }
+.list-group-item:nth-child(4) { animation-delay: 0.4s; }
+.list-group-item:nth-child(5) { animation-delay: 0.5s; }
+
+.list-group-item:hover {
+    background: #f8f9fa;
+    transform: translateX(5px);
+    border-left: 3px solid #2563eb;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+/* Welcome Section */
+.container-fluid > .row:first-child .card {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(37, 99, 235, 0.08) 100%);
+}
+
+/* Responsive Animations */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+{% endblock %}

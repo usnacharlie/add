@@ -1,0 +1,123 @@
+{% extends "layouts/admin_base.html" %}
+
+{% block page_title %}Import Results{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+<li class="breadcrumb-item"><a href="{{ url_for('import_data.index') }}">Bulk Import</a></li>
+<li class="breadcrumb-item active">Results</li>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <!-- Success Icon -->
+                <div class="mb-4">
+                    {% if failed == 0 %}
+                        <i class="fas fa-check-circle fa-5x text-success"></i>
+                    {% elif success > 0 %}
+                        <i class="fas fa-exclamation-triangle fa-5x text-warning"></i>
+                    {% else %}
+                        <i class="fas fa-times-circle fa-5x text-danger"></i>
+                    {% endif %}
+                </div>
+
+                <!-- Title -->
+                <h2 class="mb-4">
+                    {% if failed == 0 %}
+                        Import Completed Successfully!
+                    {% elif success > 0 %}
+                        Import Partially Completed
+                    {% else %}
+                        Import Failed
+                    {% endif %}
+                </h2>
+
+                <!-- Statistics -->
+                <div class="row justify-content-center mb-4">
+                    <div class="col-md-4">
+                        <div class="stat-card bg-light p-3 rounded">
+                            <h3 class="text-primary mb-0">{{ total }}</h3>
+                            <p class="text-muted mb-0">Total Records</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card bg-light p-3 rounded">
+                            <h3 class="text-success mb-0">{{ success }}</h3>
+                            <p class="text-muted mb-0">Successful</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card bg-light p-3 rounded">
+                            <h3 class="text-danger mb-0">{{ failed }}</h3>
+                            <p class="text-muted mb-0">Failed</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flash Messages -->
+                {% include 'components/flash_messages.html' %}
+
+                <!-- Success Rate -->
+                {% if total > 0 %}
+                <div class="progress mb-4" style="height: 30px;">
+                    <div class="progress-bar bg-success" role="progressbar"
+                         style="width: {{ (success / total * 100)|round }}%">
+                        {{ (success / total * 100)|round }}% Success Rate
+                    </div>
+                    {% if failed > 0 %}
+                    <div class="progress-bar bg-danger" role="progressbar"
+                         style="width: {{ (failed / total * 100)|round }}%">
+                        {{ (failed / total * 100)|round }}% Failed
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Next Steps -->
+                <div class="alert alert-info">
+                    <h6>Next Steps:</h6>
+                    <ul class="text-start mb-0">
+                        {% if success > 0 %}
+                        <li>Successfully imported members have been assigned membership numbers</li>
+                        <li>Default password for each member is their NRC without slashes</li>
+                        <li>Members can now login using their phone number or membership number</li>
+                        {% endif %}
+                        {% if failed > 0 %}
+                        <li>Review failed records and correct any data issues</li>
+                        <li>Check for duplicate NRC numbers or invalid formats</li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mt-4">
+                    <a href="{{ url_for('import_data.index') }}" class="btn btn-primary">
+                        <i class="fas fa-list"></i> View Import History
+                    </a>
+                    <a href="{{ url_for('import_data.upload') }}" class="btn btn-success">
+                        <i class="fas fa-upload"></i> New Import
+                    </a>
+                    {% if success > 0 %}
+                    <a href="{{ url_for('admin.members') }}" class="btn btn-info">
+                        <i class="fas fa-users"></i> View Members
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.stat-card {
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+</style>
+{% endblock %}

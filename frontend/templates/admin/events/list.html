@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block title %}Events - Member Registry System{% endblock %}
+
+{% block page_title %}Events Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="mb-2"><i class="fas fa-calendar-alt me-2"></i>Events Management</h2>
+                            <p class="text-muted mb-0">Organize and manage member events</p>
+                        </div>
+                        <a href="{{ url_for('events.new_event') }}" class="btn btn-primary">
+                            <i class="fas fa-plus-circle me-2"></i>Create Event
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle bg-primary bg-opacity-10 text-primary p-3">
+                                <i class="fas fa-calendar-check fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-0 fw-bold">{{ statistics.get('total_events', 0) }}</h3>
+                            <p class="text-muted mb-0 small">Total Events</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle bg-info bg-opacity-10 text-info p-3">
+                                <i class="fas fa-calendar-plus fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-0 fw-bold">{{ statistics.get('upcoming_events', 0) }}</h3>
+                            <p class="text-muted mb-0 small">Upcoming</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle bg-success bg-opacity-10 text-success p-3">
+                                <i class="fas fa-calendar-check-o fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-0 fw-bold">{{ statistics.get('completed_events', 0) }}</h3>
+                            <p class="text-muted mb-0 small">Completed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle bg-warning bg-opacity-10 text-warning p-3">
+                                <i class="fas fa-users fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-0 fw-bold">{{ statistics.get('total_registrations', 0) }}</h3>
+                            <p class="text-muted mb-0 small">Total Registrations</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <form method="get" action="{{ url_for('events.list_events') }}">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="search"
+                                       placeholder="Search events..." value="{{ filters.get('search', '') }}">
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select" name="status">
+                                    <option value="">All Status</option>
+                                    <option value="upcoming" {% if filters.get('status') == 'upcoming' %}selected{% endif %}>Upcoming</option>
+                                    <option value="ongoing" {% if filters.get('status') == 'ongoing' %}selected{% endif %}>Ongoing</option>
+                                    <option value="completed" {% if filters.get('status') == 'completed' %}selected{% endif %}>Completed</option>
+                                    <option value="cancelled" {% if filters.get('status') == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select" name="event_type">
+                                    <option value="">All Types</option>
+                                    <option value="meeting" {% if filters.get('event_type') == 'meeting' %}selected{% endif %}>Meeting</option>
+                                    <option value="rally" {% if filters.get('event_type') == 'rally' %}selected{% endif %}>Rally</option>
+                                    <option value="training" {% if filters.get('event_type') == 'training' %}selected{% endif %}>Training</option>
+                                    <option value="social" {% if filters.get('event_type') == 'social' %}selected{% endif %}>Social</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" name="province_id">
+                                    <option value="">All Provinces</option>
+                                    {% for province in provinces %}
+                                    <option value="{{ province.id }}" {% if filters.get('province_id') == province.id|string %}selected{% endif %}>
+                                        {{ province.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-filter me-1"></i>Filter
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Events List -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 p-4">
+                    <h5 class="mb-0"><i class="fas fa-list me-2"></i>All Events ({{ total }})</h5>
+                </div>
+                <div class="card-body p-4">
+                    {% if events %}
+                        <div class="row g-4">
+                            {% for event in events %}
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="mb-1">{{ event.title }}</h5>
+                                            <span class="badge bg-{% if event.status == 'upcoming' %}info{% elif event.status == 'ongoing' %}success{% elif event.status == 'completed' %}warning{% else %}danger{% endif %}">
+                                                {{ event.status|title }}
+                                            </span>
+                                        </div>
+
+                                        {% if event.description %}
+                                        <p class="text-muted mb-3">{{ event.description[:100] }}{% if event.description|length > 100 %}...{% endif %}</p>
+                                        {% endif %}
+
+                                        <div class="mb-3">
+                                            <small class="text-muted d-block mb-1">
+                                                <i class="fas fa-calendar me-2"></i>{{ event.start_date[:10] }}
+                                            </small>
+                                            {% if event.event_type %}
+                                            <small class="text-muted d-block mb-1">
+                                                <i class="fas fa-tag me-2"></i>{{ event.event_type|title }}
+                                            </small>
+                                            {% endif %}
+                                            {% if event.location %}
+                                            <small class="text-muted d-block mb-1">
+                                                <i class="fas fa-map-marker-alt me-2"></i>{{ event.location }}
+                                            </small>
+                                            {% endif %}
+                                            <small class="text-muted d-block mb-1">
+                                                <i class="fas fa-users me-2"></i>{{ event.registration_count }} registered • {{ event.attendance_count }} attended
+                                            </small>
+                                        </div>
+
+                                        <div class="btn-group btn-group-sm w-100" role="group">
+                                            <a href="{{ url_for('events.view_event', event_id=event.id) }}" class="btn btn-outline-primary">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                            <a href="{{ url_for('events.edit_event', event_id=event.id) }}" class="btn btn-outline-secondary">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                            <a href="{{ url_for('events.register_for_event', event_id=event.id) }}" class="btn btn-outline-success">
+                                                <i class="fas fa-user-plus"></i> Register
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-calendar-x fa-4x mb-3 text-muted" style="opacity: 0.3;"></i>
+                            <h5>No Events Found</h5>
+                            <p class="text-muted">
+                                {% if filters.get('search') or filters.get('status') or filters.get('event_type') %}
+                                    Try adjusting your filters or <a href="{{ url_for('events.list_events') }}">clear filters</a>
+                                {% else %}
+                                    Start by creating your first event
+                                {% endif %}
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

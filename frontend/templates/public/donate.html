@@ -1,0 +1,357 @@
+{% extends "base.html" %}
+
+{% block title %}Donate - Alliance for Democracy and Development{% endblock %}
+
+{% block content %}
+<style>
+:root {
+    --upnd-red: #d42c2c;
+    --upnd-dark-red: #b91c1c;
+    --add-gold: #fbbf24;
+    --neutral-100: #f5f5f5;
+}
+
+.donation-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    height: 100%;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.donation-card:hover {
+    border-color: var(--upnd-red);
+    transform: translateY(-4px);
+}
+
+.amount-btn {
+    background: white;
+    border: 2px solid var(--upnd-red);
+    color: var(--upnd-red);
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.25rem;
+    margin: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.amount-btn:hover, .amount-btn.active {
+    background: var(--upnd-red);
+    color: white;
+}
+
+.btn-upnd {
+    background: var(--upnd-red);
+    border: none;
+    color: white;
+    padding: 12px 32px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-upnd:hover {
+    background: var(--upnd-dark-red);
+    color: white;
+}
+</style>
+
+<!-- Hero Section -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--upnd-red) 0%, var(--upnd-dark-red) 100%);">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center text-white">
+                <h1 class="display-4 fw-bold mb-3">Support ADD</h1>
+                <p class="lead">Help us build a stronger, more democratic Zambia through your generous donations</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Donation Form -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="donation-card">
+                    <h3 class="fw-bold mb-4">Make a Donation</h3>
+
+                    <form>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Select Amount:</label>
+                            <div class="text-center">
+                                <button type="button" class="amount-btn" data-amount="50">K50</button>
+                                <button type="button" class="amount-btn" data-amount="100">K100</button>
+                                <button type="button" class="amount-btn" data-amount="250">K250</button>
+                                <button type="button" class="amount-btn" data-amount="500">K500</button>
+                                <button type="button" class="amount-btn" data-amount="1000">K1,000</button>
+                            </div>
+                            <div class="mt-3">
+                                <input type="number" class="form-control text-center" placeholder="Enter custom amount" id="customAmount">
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="donorName" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="donorName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="donorEmail" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="donorEmail" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="donorPhone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="donorPhone" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="paymentMethod" class="form-label">Payment Method</label>
+                                <select class="form-select" id="paymentMethod" required>
+                                    <option value="">Select payment method</option>
+                                    <option value="mtn">MTN Mobile Money</option>
+                                    <option value="airtel">Airtel Money</option>
+                                    <option value="zanaco">Zanaco Express</option>
+                                    <option value="zamtel">Zamtel Kwacha</option>
+                                    <option value="bank">Bank Transfer</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="donationPurpose" class="form-label">Donation Purpose (Optional)</label>
+                            <select class="form-select" id="donationPurpose">
+                                <option value="">General party activities</option>
+                                <option value="campaigns">Election campaigns</option>
+                                <option value="youth">Youth programs</option>
+                                <option value="women">Women empowerment</option>
+                                <option value="community">Community projects</option>
+                                <option value="infrastructure">Party infrastructure</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="anonymous">
+                                <label class="form-check-label" for="anonymous">
+                                    Make this donation anonymous
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-upnd btn-lg">
+                            <i class="fas fa-heart me-2"></i>Donate Now
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Donate -->
+<section class="py-5" style="background: var(--neutral-100);">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3">Why Your Donation Matters</h2>
+            <p class="lead text-muted">Your contribution helps ADD make a real difference in Zambia</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="donation-card">
+                    <i class="fas fa-bullhorn fa-3x mb-3" style="color: var(--upnd-red);"></i>
+                    <h4 class="fw-bold mb-3">Campaign Activities</h4>
+                    <p class="text-muted">Fund rallies, community meetings, and awareness campaigns to reach more Zambians with our message of democracy and development.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="donation-card">
+                    <i class="fas fa-users fa-3x mb-3" style="color: var(--upnd-red);"></i>
+                    <h4 class="fw-bold mb-3">Youth Programs</h4>
+                    <p class="text-muted">Support leadership development, skills training, and educational programs for young ADD members across Zambia.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="donation-card">
+                    <i class="fas fa-home fa-3x mb-3" style="color: var(--upnd-red);"></i>
+                    <h4 class="fw-bold mb-3">Party Infrastructure</h4>
+                    <p class="text-muted">Build and maintain party offices, communication systems, and organizational capacity nationwide.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Transparency -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-4">Transparency & Accountability</h2>
+                <p class="lead mb-4">We believe in full transparency regarding how your donations are used</p>
+
+                <div class="mb-4">
+                    <div class="d-flex align-items-start mb-3">
+                        <i class="fas fa-chart-pie fa-2x me-3" style="color: var(--upnd-red);"></i>
+                        <div>
+                            <h5 class="fw-bold">Financial Reports</h5>
+                            <p class="text-muted mb-0">Quarterly financial reports showing how donations are allocated and spent</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start mb-3">
+                        <i class="fas fa-eye fa-2x me-3" style="color: var(--upnd-red);"></i>
+                        <div>
+                            <h5 class="fw-bold">Public Accountability</h5>
+                            <p class="text-muted mb-0">All donations above K1,000 are reported to the Electoral Commission of Zambia</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start">
+                        <i class="fas fa-certificate fa-2x me-3" style="color: var(--upnd-red);"></i>
+                        <div>
+                            <h5 class="fw-bold">Receipts & Records</h5>
+                            <p class="text-muted mb-0">Every donor receives official receipts and tax-deductible documentation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="p-4" style="background: var(--neutral-100); border-radius: 12px;">
+                    <h4 class="fw-bold mb-4">2024 Donation Usage</h4>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Campaign Activities</span>
+                            <span>40%</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar" style="width: 40%; background-color: var(--upnd-red);"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Youth & Community Programs</span>
+                            <span>25%</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar" style="width: 25%; background-color: var(--upnd-red);"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Infrastructure & Operations</span>
+                            <span>20%</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar" style="width: 20%; background-color: var(--upnd-red);"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Administrative Costs</span>
+                            <span>15%</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar" style="width: 15%; background-color: var(--upnd-red);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Other Ways to Support -->
+<section class="py-5" style="background: var(--neutral-100);">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3">Other Ways to Support ADD</h2>
+            <p class="lead text-muted">Not ready to donate? Here are other ways you can help</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="text-center">
+                    <i class="fas fa-user-plus fa-4x mb-3" style="color: var(--upnd-red);"></i>
+                    <h5 class="fw-bold">Become a Member</h5>
+                    <p class="text-muted">Join ADD and be part of our democratic movement</p>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-upnd">Join Now</a>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="text-center">
+                    <i class="fas fa-hands-helping fa-4x mb-3" style="color: var(--upnd-red);"></i>
+                    <h5 class="fw-bold">Volunteer</h5>
+                    <p class="text-muted">Contribute your time and skills to party activities</p>
+                    <a href="{{ url_for('public.contact') }}" class="btn btn-upnd">Volunteer</a>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="text-center">
+                    <i class="fas fa-share-alt fa-4x mb-3" style="color: var(--upnd-red);"></i>
+                    <h5 class="fw-bold">Spread the Word</h5>
+                    <p class="text-muted">Share our message with friends and family</p>
+                    <a href="{{ url_for('public.social_media') }}" class="btn btn-upnd">Share</a>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="text-center">
+                    <i class="fas fa-calendar fa-4x mb-3" style="color: var(--upnd-red);"></i>
+                    <h5 class="fw-bold">Attend Events</h5>
+                    <p class="text-muted">Participate in rallies and community meetings</p>
+                    <a href="{{ url_for('public.public_events') }}" class="btn btn-upnd">View Events</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact for Large Donations -->
+<section class="py-5">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-4">Large Donations & Corporate Partnerships</h2>
+        <p class="lead mb-4">For donations above K10,000 or corporate partnerships, please contact us directly</p>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="p-4 border rounded">
+                    <h5 class="fw-bold mb-3">Contact Information</h5>
+                    <p><i class="fas fa-envelope me-2"></i> donations@partymembership.zm</p>
+                    <p><i class="fas fa-phone me-2"></i> +260 211 123 456</p>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> ADD Headquarters, Plot 123, Independence Avenue, Lusaka</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// Amount button selection
+document.querySelectorAll('.amount-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById('customAmount').value = this.dataset.amount;
+    });
+});
+
+// Custom amount input
+document.getElementById('customAmount').addEventListener('input', function() {
+    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+});
+</script>
+{% endblock %}

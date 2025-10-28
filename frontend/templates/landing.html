@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Alliance for Democracy and Development - UPND Alliance Partner</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* Modern Color Palette */
+:root {
+    --primary: #d42c2c;
+    --primary-dark: #b91c1c;
+    --primary-light: #f87171;
+    --accent: #fbbf24;
+    --dark: #1a1a1a;
+    --light: #ffffff;
+    --gray: #64748b;
+    --gray-light: #f8fafc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Modern Hero Section with Plain Background */
+.modern-hero {
+    position: relative;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 154px 0 80px;
+    margin-top: 0;
+}
+
+.modern-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 50%, rgba(212, 44, 44, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(251, 191, 36, 0.03) 0%, transparent 50%);
+    animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% { opacity: 1; transform: translateY(0); }
+    50% { opacity: 0.8; transform: translateY(-20px); }
+}
+
+.floating-shapes {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.shape {
+    position: absolute;
+    opacity: 0.05;
+    animation: float 20s infinite ease-in-out;
+}
+
+.shape-1 {
+    width: 300px;
+    height: 300px;
+    background: var(--primary);
+    border-radius: 50%;
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    width: 200px;
+    height: 200px;
+    background: var(--accent);
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    top: 60%;
+    right: 10%;
+    animation-delay: 2s;
+}
+
+.shape-3 {
+    width: 150px;
+    height: 150px;
+    background: var(--primary);
+    border-radius: 50%;
+    bottom: 20%;
+    left: 50%;
+    animation-delay: 4s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    33% { transform: translateY(-30px) rotate(120deg); }
+    66% { transform: translateY(20px) rotate(240deg); }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(212, 44, 44, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 44, 44, 0.2);
+    padding: 12px 24px;
+    border-radius: 50px;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 24px;
+    animation: slideInDown 0.6s ease-out;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-title {
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 800;
+    color: var(--dark);
+    line-height: 1.1;
+    margin-bottom: 24px;
+    animation: slideInLeft 0.8s ease-out 0.2s both;
+}
+
+.hero-title .accent-text {
+    display: block;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.hero-subtitle {
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    color: var(--gray);
+    margin-bottom: 32px;
+    line-height: 1.7;
+    animation: fadeIn 1s ease-out 0.4s both;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 40px;
+    animation: slideInUp 0.8s ease-out 0.6s both;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.btn-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    box-shadow: 0 10px 30px rgba(212, 44, 44, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(212, 44, 44, 0.4);
+    color: white;
+}
+
+.btn-outline {
+    background: white;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    backdrop-filter: blur(10px);
+}
+
+.btn-outline:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    transform: translateY(-3px);
+    color: white;
+}
+
+.ussd-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, rgba(212, 44, 44, 0.05) 0%, rgba(251, 191, 36, 0.05) 100%);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(212, 44, 44, 0.2);
+    padding: 20px 28px;
+    border-radius: 16px;
+    animation: fadeIn 1s ease-out 0.8s both;
+}
+
+.ussd-code {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 2px;
+}
+
+/* Statistics Section */
+.stats-section {
+    padding: 80px 0;
+    background: var(--gray-light);
+    position: relative;
+    z-index: 2;
+    margin-top: -60px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.stat-card {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    animation: scaleIn 0.6s ease-out both;
+}
+
+.stat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(212, 44, 44, 0.15);
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.stat-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 10px 25px rgba(212, 44, 44, 0.3);
+}
+
+.stat-icon i {
+    font-size: 28px;
+    color: white;
+}
+
+.stat-number {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 8px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.stat-label {
+    font-size: 16px;
+    color: var(--gray);
+    font-weight: 500;
+}
+
+/* Features Section */
+.features-section {
+    padding: 100px 0;
+    background: white;
+}
+
+.section-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 60px;
+}
+
+.section-tag {
+    display: inline-block;
+    background: rgba(212, 44, 44, 0.1);
+    color: var(--primary);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+}
+
+.section-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 16px;
+    line-height: 1.2;
+}
+
+.section-description {
+    font-size: 18px;
+    color: var(--gray);
+    line-height: 1.7;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+}
+
+.feature-card {
+    background: white;
+    padding: 40px;
+    border-radius: 24px;
+    border: 2px solid #f1f5f9;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover::before {
+    transform: scaleX(1);
+}
+
+.feature-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(212, 44, 44, 0.1);
+}
+
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(212, 44, 44, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.feature-icon i {
+    font-size: 28px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.feature-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 12px;
+}
+
+.feature-description {
+    font-size: 16px;
+    color: var(--gray);
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+.feature-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: gap 0.3s ease;
+}
+
+.feature-link:hover {
+    gap: 12px;
+}
+
+/* Benefits Section */
+.benefits-section {
+    padding: 100px 0;
+    background: linear-gradient(135deg, #fafafa 0%, #f8fafc 100%);
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.benefit-item:hover {
+    transform: translateX(10px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.benefit-icon {
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.benefit-icon i {
+    font-size: 22px;
+    color: white;
+}
+
+.benefit-content h5 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 8px;
+}
+
+.benefit-content p {
+    font-size: 15px;
+    color: var(--gray);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* CTA Section */
+.cta-section {
+    padding: 100px 0;
+    background: linear-gradient(135deg, var(--dark) 0%, #374151 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="2" height="2" fill="rgba(255,255,255,0.05)"/></svg>');
+    background-size: 50px 50px;
+}
+
+.cta-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cta-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: white;
+    margin-bottom: 24px;
+    line-height: 1.2;
+}
+
+.cta-description {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 40px;
+    line-height: 1.7;
+}
+
+.cta-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+}
+
+.btn-cta {
+    padding: 18px 40px;
+    font-size: 18px;
+}
+
+/* Community Engagement Section */
+.community-section {
+    padding: 100px 0;
+    background: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.community-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(212, 44, 44, 0.03) 0%, rgba(251, 191, 36, 0.03) 100%);
+    border-radius: 0 0 0 100%;
+}
+
+.impact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    margin-top: 60px;
+}
+
+.impact-card {
+    position: relative;
+    padding: 40px;
+    background: linear-gradient(135deg, #fff 0%, var(--gray-light) 100%);
+    border-radius: 20px;
+    border-left: 5px solid var(--primary);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.impact-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(212, 44, 44, 0.15);
+    border-left-width: 8px;
+}
+
+.impact-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    font-size: 24px;
+    font-weight: 800;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 20px rgba(212, 44, 44, 0.3);
+}
+
+.impact-card h4 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 12px;
+}
+
+.impact-card p {
+    font-size: 16px;
+    color: var(--gray);
+    line-height: 1.7;
+    margin: 0;
+}
+
+.community-quote {
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    padding: 60px;
+    border-radius: 24px;
+    margin-top: 60px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.community-quote::before {
+    content: '\f10d';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    font-size: 80px;
+    color: rgba(212, 44, 44, 0.08);
+}
+
+.quote-content {
+    position: relative;
+    z-index: 1;
+}
+
+.quote-content p {
+    font-size: 24px;
+    color: var(--dark);
+    font-weight: 600;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.quote-author {
+    font-size: 18px;
+    color: var(--gray);
+    font-weight: 700;
+}
+
+.engagement-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    margin-top: 60px;
+}
+
+.engagement-stat {
+    text-align: center;
+    padding: 30px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.engagement-stat:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(212, 44, 44, 0.15);
+}
+
+.engagement-stat-icon {
+    font-size: 48px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 15px;
+}
+
+.engagement-stat h4 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 8px;
+}
+
+.engagement-stat p {
+    font-size: 14px;
+    color: var(--gray);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Logo Styles */
+.page-logo {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    z-index: 1000;
+    background: white;
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    animation: slideInLeft 0.6s ease-out;
+}
+
+.page-logo:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(212, 44, 44, 0.2);
+}
+
+.page-logo img {
+    height: 50px;
+    width: auto;
+    display: block;
+}
+
+/* Hero Logo */
+.hero-logo-container {
+    margin-bottom: 24px;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.hero-logo {
+    height: 80px;
+    width: auto;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .modern-hero {
+        min-height: auto;
+        padding: 140px 0 60px;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .benefits-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-cta {
+        flex-direction: column;
+    }
+
+    .btn-modern {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .ussd-card {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .impact-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .engagement-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .community-quote {
+        padding: 40px 24px;
+    }
+
+    .quote-content p {
+        font-size: 18px;
+    }
+
+    .page-logo {
+        top: 16px;
+        left: 16px;
+        padding: 8px 12px;
+    }
+
+    .page-logo img {
+        height: 40px;
+    }
+
+    .hero-logo {
+        height: 60px;
+    }
+}
+
+/* Smooth Scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Scroll Animations */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+}
+
+.animate-on-scroll.animated {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Top Navigation */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 12px 0;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-nav .page-logo {
+    position: relative;
+    top: auto;
+    left: auto;
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+    animation: none;
+}
+
+.top-nav .page-logo:hover {
+    transform: none;
+}
+
+.top-nav .page-logo img {
+    height: 50px;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-menu a {
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.nav-menu a:hover {
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.nav-menu a i {
+    font-size: 18px;
+}
+
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--dark);
+    cursor: pointer;
+}
+
+.mobile-menu {
+    position: fixed;
+    top: 74px;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.mobile-menu.active {
+    max-height: 300px;
+}
+
+.mobile-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mobile-menu li {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.mobile-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu a:hover {
+    background: var(--gray-light);
+    color: var(--primary);
+    padding-left: 32px;
+}
+
+.mobile-menu a i {
+    font-size: 18px;
+    width: 24px;
+}
+
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+    }
+
+    .mobile-menu-toggle {
+        display: block;
+    }
+
+    .top-nav .page-logo img {
+        height: 40px;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+    <div class="nav-container">
+        <a href="{{ url_for('main.index') }}" class="page-logo">
+            <img src="/static/img/logoadd.jpeg" alt="Alliance for Democracy and Development">
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="{{ url_for('main.index') }}"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="#"><i class="fas fa-info-circle"></i> About</a></li>
+            <li><a href="#"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li><a href="{{ url_for('auth.login') }}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+        </ul>
+
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <ul>
+        <li><a href="{{ url_for('main.index') }}"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="#"><i class="fas fa-info-circle"></i> About</a></li>
+        <li><a href="#"><i class="fas fa-envelope"></i> Contact</a></li>
+        <li><a href="{{ url_for('auth.login') }}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+    </ul>
+</div>
+
+<!-- Modern Hero Section -->
+<section class="modern-hero">
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7 hero-content">
+                <h1 class="hero-title">
+                    Alliance for
+                    <span class="accent-text">Democracy & Development</span>
+                </h1>
+
+                <p class="hero-subtitle">
+                    A platform for changemakers across Zambia, partnering with the UPND Government to transform our nation.
+                    ADD champions a wealth creation mindset—recognizing that jobs alone cannot solve Zambia's challenges.
+                    We empower citizens to become job creators, not just job seekers. Through entrepreneurship, skills transfer,
+                    and mentorship, we're building a generation of wealth creators who drive economic prosperity across all provinces.
+                    Founded by Charles Milupi in 2010.
+                </p>
+
+                <div class="hero-cta">
+                    <a href="{{ url_for('auth.register') }}" class="btn-modern btn-primary">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Join Now</span>
+                    </a>
+                    <a href="{{ url_for('auth.login') }}" class="btn-modern btn-outline">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Member Login</span>
+                    </a>
+                </div>
+
+                <div class="ussd-card">
+                    <i class="fas fa-mobile-alt" style="font-size: 24px; color: var(--accent);"></i>
+                    <div>
+                        <div style="font-size: 14px; color: rgba(255, 255, 255, 0.8); margin-bottom: 4px;">
+                            Quick Registration
+                        </div>
+                        <div class="ussd-code">*388*3#</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 d-none d-lg-block text-center">
+                <div style="position: relative; z-index: 10;">
+                    <i class="fas fa-map-marked-alt" style="font-size: 300px; color: rgba(255, 255, 255, 0.1);"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card" style="animation-delay: 0.1s;">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-number">{{ stats.total_members | default('12,547') }}</div>
+                <div class="stat-label">Active Members</div>
+            </div>
+
+            <div class="stat-card" style="animation-delay: 0.2s;">
+                <div class="stat-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="stat-number">{{ stats.provinces_covered | default('10') }}</div>
+                <div class="stat-label">Provinces Covered</div>
+            </div>
+
+            <div class="stat-card" style="animation-delay: 0.3s;">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-number">{{ stats.total_events | default('84') }}</div>
+                <div class="stat-label">Events Organized</div>
+            </div>
+
+            <div class="stat-card" style="animation-delay: 0.4s;">
+                <div class="stat-icon">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <div class="stat-number">{{ stats.active_campaigns | default('15') }}</div>
+                <div class="stat-label">Active Campaigns</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag">Join Us</span>
+            <h2 class="section-title">Multiple Ways to Register</h2>
+            <p class="section-description">
+                Choose the most convenient way to become an ADD member and join Zambia's democratic transformation
+            </p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h3 class="feature-title">Web Registration</h3>
+                <p class="feature-description">
+                    Register online through our secure web portal. Complete your membership application in minutes
+                    with full digital verification and instant confirmation.
+                </p>
+                <a href="{{ url_for('auth.register') }}" class="feature-link">
+                    Register Online
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3 class="feature-title">USSD Registration</h3>
+                <p class="feature-description">
+                    No internet? No problem! Dial *388*3# from any mobile phone to register via USSD.
+                    Works on all networks across Zambia, available 24/7.
+                </p>
+                <a href="#" class="feature-link">
+                    Learn More
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-mobile"></i>
+                </div>
+                <h3 class="feature-title">Mobile App</h3>
+                <p class="feature-description">
+                    Download our mobile app for Android and iOS. Manage your membership, view events,
+                    stay connected, and access exclusive member benefits on the go.
+                </p>
+                <a href="#" class="feature-link">
+                    Download App
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="benefits-section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag">Member Benefits</span>
+            <h2 class="section-title">What You Get as an ADD Member</h2>
+            <p class="section-description">
+                Exclusive benefits and opportunities for all registered members
+            </p>
+        </div>
+
+        <div class="benefits-grid">
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div class="benefit-content">
+                    <h5>Digital Membership Card</h5>
+                    <p>Get your digital membership card instantly with QR code verification</p>
+                </div>
+            </div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="fas fa-calendar"></i>
+                </div>
+                <div class="benefit-content">
+                    <h5>Event Participation</h5>
+                    <p>Register and participate in party events, rallies, and community activities</p>
+                </div>
+            </div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="fas fa-language"></i>
+                </div>
+                <div class="benefit-content">
+                    <h5>Multi-Language Support</h5>
+                    <p>Access services in 8 official Zambian languages via USSD and voice</p>
+                </div>
+            </div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div class="benefit-content">
+                    <h5>Mobile Money Donations</h5>
+                    <p>Make voluntary contributions via MTN, Airtel Money, and Zamtel Kwacha</p>
+                </div>
+            </div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="fas fa-hands-helping"></i>
+                </div>
+                <div class="benefit-content">
+                    <h5>Volunteer Opportunities</h5>
+                    <p>Contribute to party activities and campaigns in your constituency</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Community Engagement Section -->
+<section class="community-section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag">Wealth Creation Mindset</span>
+            <h2 class="section-title">Job Creators, Not Job Seekers</h2>
+            <p class="section-description">
+                Working with the UPND Government, ADD champions entrepreneurship as the path to prosperity. Jobs alone
+                cannot solve Zambia's economic challenges—we need citizens who create wealth, build businesses, and
+                generate employment opportunities. Together, we're transforming mindsets across all 10 provinces.
+            </p>
+        </div>
+
+        <div class="impact-grid">
+            <div class="impact-card">
+                <div class="impact-number">01</div>
+                <h4>Entrepreneurial Mindset Development</h4>
+                <p>
+                    ADD transforms job-seeking mentality into wealth-creating thinking. We train Zambians to identify
+                    business opportunities, develop innovative solutions, and build sustainable enterprises. In partnership
+                    with UPND Government initiatives, we're cultivating a generation of entrepreneurs who create jobs
+                    rather than seek them.
+                </p>
+            </div>
+
+            <div class="impact-card">
+                <div class="impact-number">02</div>
+                <h4>Business Mentorship & Wealth Creation</h4>
+                <p>
+                    Successful entrepreneurs mentor aspiring business owners, sharing real-world experience in building
+                    wealth. Our members guide youth through business planning, market entry, scaling strategies, and
+                    wealth management—not how to write CVs, but how to create companies that hire others and generate
+                    lasting prosperity for Zambian families.
+                </p>
+            </div>
+
+            <div class="impact-card">
+                <div class="impact-number">03</div>
+                <h4>From Job Seekers to Employers</h4>
+                <p>
+                    We facilitate practical business training that transforms job seekers into job creators. Through
+                    workshops, startup incubation, and hands-on entrepreneurship programs, ADD members learn to launch
+                    viable businesses that employ others. Working with UPND Government support schemes, we're building
+                    an ecosystem where Zambians create their own economic opportunities.
+                </p>
+            </div>
+
+            <div class="impact-card">
+                <div class="impact-number">04</div>
+                <h4>Capital Access & Investment Networks</h4>
+                <p>
+                    Wealth creation requires capital. ADD, alongside UPND Government financial programs, connects
+                    entrepreneurs with funding sources—from microfinance to venture capital. We facilitate access
+                    to startup loans, grants, and investor networks so youth and women can launch businesses that
+                    generate wealth, not just pursue scarce employment opportunities.
+                </p>
+            </div>
+
+            <div class="impact-card">
+                <div class="impact-number">05</div>
+                <h4>Pro-Business Policy Advocacy</h4>
+                <p>
+                    Partnering with the UPND Government, ADD advocates for policies that enable wealth creation—
+                    reducing business registration costs, simplifying tax compliance, streamlining licensing, and
+                    removing bureaucratic obstacles. We push for reforms that make it easier for Zambians to start
+                    and grow profitable businesses that create jobs and build generational wealth.
+                </p>
+            </div>
+
+            <div class="impact-card">
+                <div class="impact-number">06</div>
+                <h4>Market Access & Economic Opportunities</h4>
+                <p>
+                    Beyond seeking employment, ADD members gain access to procurement opportunities, supplier networks,
+                    and market linkages. We connect entrepreneurs to government tenders, private sector contracts, and
+                    export markets. Through collective economic action, we create wealth distribution channels that
+                    benefit Zambian business owners across all provinces.
+                </p>
+            </div>
+        </div>
+
+        <!-- Quote Section -->
+        <div class="community-quote">
+            <div class="quote-content">
+                <p>
+                    "Jobs alone cannot solve Zambia's economic challenges. We must shift from a job-seeking mentality
+                    to a wealth-creating mindset. ADD, working with the UPND Government, is empowering Zambians to become
+                    entrepreneurs, business owners, and job creators. When our youth build companies instead of searching
+                    for employment, we create sustainable prosperity for generations to come."
+                </p>
+                <div class="quote-author">— Charles Milupi, Party President</div>
+            </div>
+        </div>
+
+        <!-- Engagement Stats -->
+        <div class="engagement-stats">
+            <div class="engagement-stat">
+                <div class="engagement-stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h4>1,200+</h4>
+                <p>Community Leaders</p>
+            </div>
+
+            <div class="engagement-stat">
+                <div class="engagement-stat-icon">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <h4>350+</h4>
+                <p>Development Projects</p>
+            </div>
+
+            <div class="engagement-stat">
+                <div class="engagement-stat-icon">
+                    <i class="fas fa-hands-helping"></i>
+                </div>
+                <h4>5,000+</h4>
+                <p>Volunteers Active</p>
+            </div>
+
+            <div class="engagement-stat">
+                <div class="engagement-stat-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h4>100+</h4>
+                <p>Communities Reached</p>
+            </div>
+        </div>
+
+        <!-- Why Membership Matters -->
+        <div class="row mt-5 pt-5">
+            <div class="col-lg-6 mb-4">
+                <h3 style="font-size: 32px; font-weight: 800; color: var(--dark); margin-bottom: 24px;">
+                    Building Wealth Creators, Not Job Seekers
+                </h3>
+                <p style="font-size: 18px; color: var(--gray); line-height: 1.8; margin-bottom: 20px;">
+                    ADD, in partnership with the UPND Government, is transforming Zambia's economic future by shifting
+                    mindsets from employment-seeking to wealth creation. Our members don't just look for jobs—they
+                    create them. As a member, you:
+                </p>
+                <ul style="font-size: 16px; color: var(--gray); line-height: 2;">
+                    <li><strong>Learn entrepreneurial skills</strong> to identify business opportunities and build viable enterprises</li>
+                    <li><strong>Receive mentorship from successful business owners</strong> who've created jobs and wealth</li>
+                    <li><strong>Access startup capital and investment networks</strong> to launch your business ideas</li>
+                    <li><strong>Connect with UPND Government support programs</strong> for entrepreneurs and SMEs</li>
+                    <li><strong>Join networks of suppliers and contractors</strong> accessing procurement opportunities</li>
+                    <li><strong>Advocate for policies</strong> that make business ownership easier and more profitable</li>
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <div style="background: linear-gradient(135deg, rgba(212, 44, 44, 0.05) 0%, rgba(251, 191, 36, 0.05) 100%);
+                            padding: 40px; border-radius: 20px; border: 2px solid var(--gray-light);">
+                    <h4 style="font-size: 24px; font-weight: 700; color: var(--primary); margin-bottom: 20px;">
+                        <i class="fas fa-chart-line" style="margin-right: 10px;"></i>
+                        Jobs Are Not the Only Answer
+                    </h4>
+                    <p style="font-size: 16px; color: var(--gray); line-height: 1.8; margin-bottom: 16px;">
+                        Current economic challenges require entrepreneurial solutions. ADD members understand that
+                        sustainable prosperity comes from business ownership, not employment dependency. Our 12,000+ members:
+                    </p>
+                    <div style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 16px;">
+                        <p style="font-size: 15px; color: var(--dark); margin: 0;">
+                            <i class="fas fa-check-circle" style="color: var(--primary); margin-right: 8px;"></i>
+                            <strong>Launch businesses that employ others</strong> instead of competing for scarce jobs
+                        </p>
+                    </div>
+                    <div style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 16px;">
+                        <p style="font-size: 15px; color: var(--dark); margin: 0;">
+                            <i class="fas fa-check-circle" style="color: var(--primary); margin-right: 8px;"></i>
+                            <strong>Build assets and generational wealth</strong> through enterprise ownership
+                        </p>
+                    </div>
+                    <div style="background: white; padding: 24px; border-radius: 12px;">
+                        <p style="font-size: 15px; color: var(--dark); margin: 0;">
+                            <i class="fas fa-check-circle" style="color: var(--primary); margin-right: 8px;"></i>
+                            <strong>Leverage UPND Government initiatives</strong> to access markets and funding
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Photo Gallery Section -->
+<section class="gallery-section" style="padding: 100px 0; background: white;">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag">Our Journey</span>
+            <h2 class="section-title">ADD in Action</h2>
+            <p class="section-description">
+                Capturing moments from our events, rallies, and community engagement activities across Zambia
+            </p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-6 col-lg-3">
+                <div class="gallery-item" style="position: relative; overflow: hidden; border-radius: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); transition: all 0.3s ease;">
+                    <img src="/static/img/photos/Milupi-2.jpg" alt="Charles Milupi - ADD President" style="width: 100%; height: 350px; object-fit: cover; transition: transform 0.3s ease;">
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="gallery-item" style="position: relative; overflow: hidden; border-radius: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); transition: all 0.3s ease;">
+                    <img src="/static/img/photos/511147411_708986562062769_7840584320708746098_n.jpg" alt="ADD Community Event" style="width: 100%; height: 350px; object-fit: cover; transition: transform 0.3s ease;">
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="gallery-item" style="position: relative; overflow: hidden; border-radius: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); transition: all 0.3s ease;">
+                    <img src="/static/img/photos/558947863_1127393059532864_7592956079851264299_n.jpg" alt="ADD Rally" style="width: 100%; height: 350px; object-fit: cover; transition: transform 0.3s ease;">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.gallery-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(212, 44, 44, 0.2) !important;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+</style>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="cta-content">
+        <h2 class="cta-title">Become a Changemaker for Zambia</h2>
+        <p class="cta-description">
+            Join 12,000+ Zambians contributing skills, mentoring youth, and creating opportunities.
+            Beyond taxes—your talent, expertise, and commitment build our nation's future.
+        </p>
+        <div class="cta-buttons">
+            <a href="{{ url_for('auth.register') }}" class="btn-modern btn-primary btn-cta">
+                <i class="fas fa-user-plus"></i>
+                <span>Register Now</span>
+            </a>
+            <a href="#" class="btn-modern btn-outline btn-cta">
+                <i class="fas fa-info-circle"></i>
+                <span>Learn More About ADD</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<script>
+// Scroll Animation
+function animateOnScroll() {
+    const elements = document.querySelectorAll('.animate-on-scroll');
+
+    elements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementBottom = element.getBoundingClientRect().bottom;
+
+        if (elementTop < window.innerHeight && elementBottom > 0) {
+            element.classList.add('animated');
+        }
+    });
+}
+
+window.addEventListener('scroll', animateOnScroll);
+window.addEventListener('load', animateOnScroll);
+
+// Animated Counter for Stats
+function animateCounter(element, target) {
+    const duration = 2000;
+    const start = 0;
+    const increment = target / (duration / 16);
+    let current = start;
+
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            element.textContent = target.toLocaleString();
+            clearInterval(timer);
+        } else {
+            element.textContent = Math.floor(current).toLocaleString();
+        }
+    }, 16);
+}
+
+// Trigger counter animation when stats section is visible
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const statNumbers = entry.target.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.textContent.replace(/,/g, ''));
+                if (!isNaN(target)) {
+                    animateCounter(stat, target);
+                }
+            });
+            observer.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.5 });
+
+const statsSection = document.querySelector('.stats-section');
+if (statsSection) {
+    observer.observe(statsSection);
+}
+
+// Mobile menu toggle
+const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+const mobileMenu = document.getElementById('mobileMenu');
+
+if (mobileMenuToggle && mobileMenu) {
+    mobileMenuToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        mobileMenu.classList.toggle('active');
+        const icon = this.querySelector('i');
+        if (icon) {
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.top-nav') && !e.target.closest('.mobile-menu')) {
+            mobileMenu.classList.remove('active');
+            const icon = mobileMenuToggle.querySelector('i');
+            if (icon) {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+    });
+}
+</script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

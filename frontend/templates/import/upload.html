@@ -1,0 +1,182 @@
+{% extends "layouts/admin_base.html" %}
+
+{% block page_title %}Upload Member Data{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+<li class="breadcrumb-item"><a href="{{ url_for('import_data.index') }}">Bulk Import</a></li>
+<li class="breadcrumb-item active">Upload</li>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Upload Member Data File</h5>
+            </div>
+            <div class="card-body">
+                {% include 'components/flash_messages.html' %}
+
+                <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    <!-- File Upload Zone -->
+                    <div class="upload-zone border-2 border-dashed rounded p-5 text-center mb-4"
+                         id="uploadZone">
+                        <i class="fas fa-cloud-upload-alt fa-4x text-muted mb-3"></i>
+                        <h4>Drag & Drop File Here</h4>
+                        <p class="text-muted">or click to browse</p>
+                        <input type="file" class="form-control d-none" id="file" name="file"
+                               accept=".csv,.xlsx,.xls,.docx" required>
+                        <button type="button" class="btn btn-primary" onclick="$('#file').click()">
+                            <i class="fas fa-folder-open"></i> Browse Files
+                        </button>
+                    </div>
+
+                    <!-- File Info Display -->
+                    <div id="fileInfo" class="d-none mb-4">
+                        <div class="alert alert-info">
+                            <i class="fas fa-file"></i>
+                            Selected: <strong id="fileName"></strong>
+                            <span class="float-end">Size: <span id="fileSize"></span></span>
+                        </div>
+                    </div>
+
+                    <!-- Supported Formats -->
+                    <div class="alert alert-secondary">
+                        <h6>Supported File Formats:</h6>
+                        <ul class="mb-0">
+                            <li><strong>CSV:</strong> Comma-separated values (.csv)</li>
+                            <li><strong>Excel:</strong> Microsoft Excel (.xlsx, .xls)</li>
+                            <li><strong>Word:</strong> Registration forms (.docx)</li>
+                        </ul>
+                    </div>
+
+                    <!-- Important Notes -->
+                    <div class="alert alert-warning">
+                        <h6><i class="fas fa-exclamation-triangle"></i> Important Notes:</h6>
+                        <ul class="mb-0">
+                            <li>File size limit: 10MB</li>
+                            <li>Required fields: First Name, NRC Number</li>
+                            <li>NRC format: 123456/78/9</li>
+                            <li>Phone format: 0977123456 or 260977123456</li>
+                            <li>Default password will be NRC without slashes</li>
+                        </ul>
+                    </div>
+
+                    <!-- Submit Buttons -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('import_data.index') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                        <button type="submit" class="btn btn-primary" id="uploadBtn" disabled>
+                            <i class="fas fa-upload"></i> Upload & Preview
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.upload-zone {
+    border-color: #dee2e6;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-zone:hover {
+    border-color: #0d6efd;
+    background-color: #e7f1ff;
+}
+
+.upload-zone.dragover {
+    border-color: #0d6efd;
+    background-color: #cfe2ff;
+}
+</style>
+
+<script>
+// File upload handling
+document.getElementById('file').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        displayFileInfo(file);
+    }
+});
+
+function displayFileInfo(file) {
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileSize').textContent = formatFileSize(file.size);
+    document.getElementById('fileInfo').classList.remove('d-none');
+    document.getElementById('uploadBtn').disabled = false;
+
+    // Validate file size (10MB limit)
+    if (file.size > 10 * 1024 * 1024) {
+        Swal.fire('File Too Large', 'File size must be less than 10MB', 'error');
+        document.getElementById('file').value = '';
+        document.getElementById('fileInfo').classList.add('d-none');
+        document.getElementById('uploadBtn').disabled = true;
+    }
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+}
+
+// Drag and drop handling
+const uploadZone = document.getElementById('uploadZone');
+
+uploadZone.addEventListener('click', function() {
+    document.getElementById('file').click();
+});
+
+uploadZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    this.classList.add('dragover');
+});
+
+uploadZone.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    this.classList.remove('dragover');
+});
+
+uploadZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    this.classList.remove('dragover');
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        const file = files[0];
+        const allowedTypes = ['text/csv', 'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+
+        if (allowedTypes.includes(file.type) ||
+            file.name.endsWith('.csv') ||
+            file.name.endsWith('.xlsx') ||
+            file.name.endsWith('.xls') ||
+            file.name.endsWith('.docx')) {
+            document.getElementById('file').files = files;
+            displayFileInfo(file);
+        } else {
+            Swal.fire('Invalid File Type', 'Please upload CSV, Excel, or Word document', 'error');
+        }
+    }
+});
+
+// Form submission
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    const btn = document.getElementById('uploadBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+});
+</script>
+{% endblock %}

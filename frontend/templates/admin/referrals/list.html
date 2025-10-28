@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+
+{% block title %}Referrals - Member Registry System{% endblock %}
+
+{% block page_title %}Referrals Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="mb-2"><i class="fas fa-share-alt me-2"></i>Referrals Management</h2>
+                            <p class="text-muted mb-0">Track and manage member referrals</p>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a href="{{ url_for('referrals.top_referrers') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-trophy me-2"></i>Top Referrers
+                            </a>
+                            <a href="{{ url_for('referrals.new_referral') }}" class="btn btn-primary">
+                                <i class="fas fa-plus-circle me-2"></i>New Referral
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle bg-primary bg-opacity-10 text-primary p-3">
+                                <i class="fas fa-network-wired fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-0 fw-bold">{{ statistics.get('total_referrals', 0) }}</h3>
+                            <p class="text-muted mb-0 small">Total Referrals</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle bg-warning bg-opacity-10 text-warning p-3">
+                                <i class="fas fa-clock fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-0 fw-bold">{{ statistics.get('pending_referrals', 0) }}</h3>
+                            <p class="text-muted mb-0 small">Pending</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle bg-info bg-opacity-10 text-info p-3">
+                                <i class="fas fa-phone fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-0 fw-bold">{{ statistics.get('contacted_referrals', 0) }}</h3>
+                            <p class="text-muted mb-0 small">Contacted</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle bg-success bg-opacity-10 text-success p-3">
+                                <i class="fas fa-check-circle fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-0 fw-bold">{{ statistics.get('successful_referrals', 0) }}</h3>
+                            <p class="text-muted mb-0 small">Successful</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle bg-secondary bg-opacity-10 text-secondary p-3">
+                                <i class="fas fa-percent fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-0 fw-bold">{{ "%.1f"|format(statistics.get('conversion_rate', 0)) }}%</h3>
+                            <p class="text-muted mb-0 small">Conversion Rate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <form method="get" action="{{ url_for('referrals.list_referrals') }}">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" name="search"
+                                       placeholder="Search referrals..." value="{{ filters.get('search', '') }}">
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" name="status">
+                                    <option value="">All Status</option>
+                                    <option value="pending" {% if filters.get('status') == 'pending' %}selected{% endif %}>Pending</option>
+                                    <option value="contacted" {% if filters.get('status') == 'contacted' %}selected{% endif %}>Contacted</option>
+                                    <option value="registered" {% if filters.get('status') == 'registered' %}selected{% endif %}>Registered</option>
+                                    <option value="declined" {% if filters.get('status') == 'declined' %}selected{% endif %}>Declined</option>
+                                    <option value="expired" {% if filters.get('status') == 'expired' %}selected{% endif %}>Expired</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" name="referrer_id">
+                                    <option value="">All Referrers</option>
+                                    {% for member in members %}
+                                    <option value="{{ member.id }}" {% if filters.get('referrer_id') == member.id|string %}selected{% endif %}>
+                                        {{ member.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-filter me-1"></i>Filter
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Referrals List -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 p-4">
+                    <h5 class="mb-0"><i class="fas fa-list me-2"></i>All Referrals ({{ total }})</h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if referrals %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="px-4 py-3">Code</th>
+                                        <th class="py-3">Referred Name</th>
+                                        <th class="py-3">Contact</th>
+                                        <th class="py-3">Referred By</th>
+                                        <th class="py-3">Date</th>
+                                        <th class="py-3">Status</th>
+                                        <th class="py-3 text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for referral in referrals %}
+                                    <tr>
+                                        <td class="px-4 py-3">
+                                            <span class="badge bg-primary">{{ referral.referral_code }}</span>
+                                        </td>
+                                        <td class="py-3">
+                                            <strong>{{ referral.referred_name }}</strong>
+                                            {% if referral.referred_email %}
+                                            <br><small class="text-muted">{{ referral.referred_email }}</small>
+                                            {% endif %}
+                                        </td>
+                                        <td class="py-3">
+                                            <small class="text-muted">
+                                                <i class="fas fa-phone me-1"></i>{{ referral.referred_contact }}
+                                            </small>
+                                        </td>
+                                        <td class="py-3">
+                                            {{ referral.referrer_name }}
+                                            {% if referral.referrer_contact %}
+                                            <br><small class="text-muted">{{ referral.referrer_contact }}</small>
+                                            {% endif %}
+                                        </td>
+                                        <td class="py-3">
+                                            <small class="text-muted">{{ referral.referred_date[:10] }}</small>
+                                        </td>
+                                        <td class="py-3">
+                                            <span class="badge bg-{% if referral.status == 'pending' %}warning{% elif referral.status == 'contacted' %}info{% elif referral.status == 'registered' %}success{% elif referral.status == 'declined' %}danger{% else %}secondary{% endif %}">
+                                                {{ referral.status|title }}
+                                            </span>
+                                        </td>
+                                        <td class="py-3 text-center">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a href="{{ url_for('referrals.view_referral', referral_id=referral.id) }}" class="btn btn-outline-primary" title="View">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ url_for('referrals.edit_referral', referral_id=referral.id) }}" class="btn btn-outline-secondary" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-share-alt fa-4x mb-3 text-muted" style="opacity: 0.3;"></i>
+                            <h5>No Referrals Found</h5>
+                            <p class="text-muted">
+                                {% if filters.get('search') or filters.get('status') or filters.get('referrer_id') %}
+                                    Try adjusting your filters or <a href="{{ url_for('referrals.list_referrals') }}">clear filters</a>
+                                {% else %}
+                                    Start tracking member referrals
+                                {% endif %}
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

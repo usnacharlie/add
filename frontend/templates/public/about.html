@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>About Alliance for Democracy and Development - UPND Alliance Partner</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* Modern Color Palette */
+:root {
+    --primary: #d42c2c;
+    --primary-dark: #b91c1c;
+    --primary-light: #f87171;
+    --accent: #fbbf24;
+    --dark: #1a1a1a;
+    --light: #ffffff;
+    --gray: #64748b;
+    --gray-light: #f8fafc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: white;
+    color: var(--dark);
+    line-height: 1.6;
+}
+
+/* Top Navigation */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 12px 0;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-logo {
+    text-decoration: none;
+}
+
+.page-logo img {
+    height: 50px;
+    width: auto;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-menu a {
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.nav-menu a:hover {
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.nav-menu a i {
+    font-size: 18px;
+}
+
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--dark);
+    cursor: pointer;
+}
+
+.mobile-menu {
+    position: fixed;
+    top: 74px;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.mobile-menu.active {
+    max-height: 300px;
+}
+
+.mobile-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mobile-menu li {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.mobile-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu a:hover {
+    background: var(--gray-light);
+    color: var(--primary);
+    padding-left: 32px;
+}
+
+.mobile-menu a i {
+    font-size: 18px;
+    width: 24px;
+}
+
+/* Hero Section */
+.about-hero {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    padding: 154px 0 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 50%, rgba(212, 44, 44, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(251, 191, 36, 0.03) 0%, transparent 50%);
+}
+
+.about-hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 24px;
+}
+
+.about-hero .lead {
+    font-size: 1.5rem;
+    color: var(--gray);
+    margin-bottom: 16px;
+}
+
+.about-hero p {
+    color: var(--gray);
+    font-size: 1.125rem;
+}
+
+/* Section Styles */
+.section {
+    padding: 100px 0;
+}
+
+.section-header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 60px;
+}
+
+.section-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 16px;
+}
+
+.section-description {
+    font-size: 18px;
+    color: var(--gray);
+    line-height: 1.7;
+}
+
+/* Timeline */
+.timeline {
+    position: relative;
+    padding-left: 40px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--primary) 0%, var(--accent) 100%);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 40px;
+    padding-left: 20px;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -29px;
+    top: 8px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 3px solid white;
+    box-shadow: 0 0 0 3px var(--primary);
+}
+
+.timeline-date {
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.timeline-content h5 {
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 8px;
+}
+
+.timeline-content p {
+    color: var(--gray);
+    line-height: 1.7;
+}
+
+/* Card Styles */
+.modern-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.modern-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(212, 44, 44, 0.15);
+}
+
+.modern-card h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--dark);
+}
+
+.modern-card .lead {
+    font-size: 18px;
+    color: var(--gray);
+    line-height: 1.7;
+}
+
+/* Value Cards */
+.value-card {
+    text-align: center;
+    padding: 40px;
+    transition: all 0.3s ease;
+}
+
+.value-card:hover {
+    transform: translateY(-5px);
+}
+
+.value-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, rgba(212, 44, 44, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+}
+
+.value-icon i {
+    font-size: 36px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.value-card h5 {
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 12px;
+}
+
+.value-card p {
+    color: var(--gray);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* Leadership Card */
+.leadership-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.leader-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--gray-light);
+    margin: 0 auto 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid var(--primary);
+}
+
+.leader-image i {
+    font-size: 60px;
+    color: var(--primary);
+}
+
+.badge-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Stats Card */
+.stat-card {
+    background: linear-gradient(135deg, rgba(212, 44, 44, 0.05) 0%, rgba(251, 191, 36, 0.05) 100%);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+}
+
+.stat-card h3 {
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 8px;
+}
+
+.stat-card p {
+    color: var(--gray);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
+}
+
+/* CTA Section */
+.cta-section {
+    background: linear-gradient(135deg, var(--dark) 0%, #374151 100%);
+    padding: 100px 0;
+    color: white;
+    text-align: center;
+}
+
+.btn-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    box-shadow: 0 10px 30px rgba(212, 44, 44, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(212, 44, 44, 0.4);
+    color: white;
+}
+
+.btn-outline-light {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.btn-outline-light:hover {
+    background: white;
+    color: var(--dark);
+}
+
+/* UPND Alliance Section */
+.alliance-section {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    padding: 100px 0;
+    color: white;
+}
+
+.alliance-feature {
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    margin-bottom: 20px;
+}
+
+.alliance-feature h5 {
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .about-hero {
+        padding: 140px 0 60px;
+    }
+
+    .section {
+        padding: 60px 0;
+    }
+
+    .nav-menu {
+        display: none;
+    }
+
+    .mobile-menu-toggle {
+        display: block;
+    }
+
+    .page-logo img {
+        height: 40px;
+    }
+}
+
+html {
+    scroll-behavior: smooth;
+}
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+    <div class="nav-container">
+        <a href="{{ url_for('public.index') }}" class="page-logo">
+            <img src="/static/img/logoadd.jpeg" alt="Alliance for Democracy and Development">
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="{{ url_for('public.index') }}"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="{{ url_for('public.about') }}"><i class="fas fa-info-circle"></i> About</a></li>
+            <li><a href="{{ url_for('public.contact') }}"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li><a href="{{ url_for('auth.login') }}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+        </ul>
+
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <ul>
+        <li><a href="{{ url_for('public.index') }}"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="{{ url_for('public.about') }}"><i class="fas fa-info-circle"></i> About</a></li>
+        <li><a href="{{ url_for('public.contact') }}"><i class="fas fa-envelope"></i> Contact</a></li>
+        <li><a href="{{ url_for('auth.login') }}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+    </ul>
+</div>
+
+<!-- Hero Section -->
+<section class="about-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1>About Alliance for Democracy and Development</h1>
+                <p class="lead">Building a Zambia of Wealth Creators and Job Makers</p>
+                <p>Founded on May 14, 2010 by Charles Milupi • UPND Alliance Partner</p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div style="font-size: 120px; color: rgba(212, 44, 44, 0.1);">
+                    <i class="fas fa-handshake"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Party History Section -->
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <h2 class="section-title" style="text-align: left;">Our History</h2>
+                <p class="lead">
+                    The Alliance for Democracy and Development (ADD) was founded on <strong>May 14, 2010</strong>
+                    by Charles Milupi, an independent Member of Parliament who envisioned a democratic and
+                    development-focused political movement in Zambia that champions entrepreneurship and wealth creation.
+                </p>
+
+                <h4 style="margin-top: 40px; margin-bottom: 30px;">Key Milestones</h4>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">May 2010</div>
+                        <div class="timeline-content">
+                            <h5>Party Formation</h5>
+                            <p>ADD officially founded by Charles Milupi with a vision for democratic governance, national development, and wealth creation through entrepreneurship.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">2011</div>
+                        <div class="timeline-content">
+                            <h5>First Elections</h5>
+                            <p>Charles Milupi contested as presidential candidate, finishing 4th with 0.9% of the vote.
+                               ADD won 1 National Assembly seat in Luena constituency (Mwambwa Imenda).</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">2018</div>
+                        <div class="timeline-content">
+                            <h5>Opposition Alliance</h5>
+                            <p>ADD joined the Opposition Alliance, demonstrating commitment to collaborative politics and democratic unity.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">February 2021</div>
+                        <div class="timeline-content">
+                            <h5>UPND Alliance Leadership</h5>
+                            <p>Opposition Alliance rebranded as UPND Alliance with Charles Milupi as Chairperson,
+                               endorsing Hakainde Hichilema for President.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">August 2021</div>
+                        <div class="timeline-content">
+                            <h5>UPND Alliance Government</h5>
+                            <p>Following UPND Alliance's electoral victory, Charles Milupi appointed as Minister of Infrastructure,
+                               Housing and Urban Development, demonstrating ADD's key role as a UPND Alliance partner.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Leadership Card -->
+                <div class="leadership-card mb-4">
+                    <div class="leader-image">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h5 style="color: var(--dark); font-weight: 700;">Charles Milupi</h5>
+                    <p style="color: var(--gray); margin-bottom: 8px;">Party President & Founder</p>
+                    <p style="color: var(--gray); font-size: 14px; margin-bottom: 16px;">Minister of Infrastructure, Housing and Urban Development</p>
+                    <p style="color: var(--gray); font-size: 13px; margin-bottom: 16px;">Appointed: September 17, 2021</p>
+                    <span class="badge-primary">UPND Alliance Partner</span>
+                    <div style="margin-top: 20px;">
+                        <a href="https://www.facebook.com/p/Charles-Lubasi-Milupi-100025627500028/"
+                           target="_blank" class="btn-modern btn-primary" style="font-size: 14px; padding: 12px 24px;">
+                            <i class="fab fa-facebook"></i> Follow (40,000+)
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Facts -->
+                <div class="modern-card">
+                    <h3>Quick Facts</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--gray-light);">
+                            <strong>Founded:</strong> May 14, 2010
+                        </li>
+                        <li style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--gray-light);">
+                            <strong>Founder:</strong> Charles Milupi
+                        </li>
+                        <li style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--gray-light);">
+                            <strong>Abbreviation:</strong> ADD
+                        </li>
+                        <li style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--gray-light);">
+                            <strong>Headquarters:</strong> Lusaka, Zambia
+                        </li>
+                        <li style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--gray-light);">
+                            <strong>Current Role:</strong> UPND Alliance Chairperson
+                        </li>
+                        <li style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--gray-light);">
+                            <strong>Portfolio:</strong> Infrastructure, Housing & Urban Development
+                        </li>
+                        <li style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--gray-light);">
+                            <strong>Status:</strong> Nominated Member of Parliament
+                        </li>
+                        <li>
+                            <strong>Social Media:</strong> 40,000+ Facebook followers
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- UPND Alliance Section -->
+<section class="alliance-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h2 style="margin-bottom: 24px; font-size: 2.5rem; font-weight: 800;">UPND Alliance Partner</h2>
+                <p class="lead" style="font-size: 1.25rem; margin-bottom: 30px;">
+                    ADD is a proud partner in the UPND Alliance, the ruling political alliance in Zambia since August 2021.
+                    Through this partnership, we continue to advance our vision of democracy, development, and wealth creation for all Zambians.
+                </p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="alliance-feature">
+                            <h5><i class="fas fa-handshake"></i> Alliance Partnership</h5>
+                            <p>Working together with UPND to deliver on our shared vision for Zambia's future and economic transformation.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="alliance-feature">
+                            <h5><i class="fas fa-building"></i> Government Role</h5>
+                            <p>ADD President Charles Milupi serves as Minister of Infrastructure, Housing and Urban Development.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                <i class="fas fa-hands-helping" style="font-size: 120px; opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Vision & Mission Section -->
+<section class="section" style="background: var(--gray-light);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="modern-card">
+                    <h3><i class="fas fa-eye" style="color: var(--primary); margin-right: 12px;"></i> Our Vision</h3>
+                    <p class="lead">
+                        A democratic and prosperous Zambia where every citizen enjoys equal opportunities
+                        for development, wealth creation, and participates meaningfully in governance and entrepreneurship.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="modern-card">
+                    <h3><i class="fas fa-bullseye" style="color: var(--primary); margin-right: 12px;"></i> Our Mission</h3>
+                    <p class="lead">
+                        To promote democratic values, good governance, sustainable development, and wealth creation
+                        through inclusive politics, collaborative leadership, and entrepreneurial empowerment.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Core Values Section -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Our Core Values</h2>
+            <p class="section-description">
+                The principles that guide our work and define our commitment to Zambia
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <h5>Democracy</h5>
+                    <p>Upholding democratic principles and participatory governance</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h5>Development</h5>
+                    <p>Promoting sustainable economic and social development through entrepreneurship</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h5>Unity</h5>
+                    <p>Building bridges and fostering national unity across all provinces</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h5>Integrity</h5>
+                    <p>Maintaining high standards of transparency and accountability</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Electoral Performance Section -->
+<section class="section" style="background: var(--gray-light);">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Electoral History</h2>
+            <p class="section-description">
+                ADD's journey in Zambian democratic politics
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="modern-card">
+                    <h3 style="color: var(--primary); margin-bottom: 24px;">2011 Presidential Election</h3>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="stat-card">
+                                <h3>4th</h3>
+                                <p>Position</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-card">
+                                <h3>0.9%</h3>
+                                <p>Vote Share</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 20px;"><strong>Candidate:</strong> Charles Milupi</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="modern-card">
+                    <h3 style="color: var(--primary); margin-bottom: 24px;">2011 National Assembly</h3>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="stat-card">
+                                <h3>1</h3>
+                                <p>Seat Won</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-card">
+                                <h3>1.2%</h3>
+                                <p>Vote Share</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 20px;"><strong>Constituency:</strong> Luena (Mwambwa Imenda)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Join Us Section -->
+<section class="cta-section">
+    <div class="container">
+        <h2 style="font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; margin-bottom: 24px;">
+            Join the Movement for Democracy and Development
+        </h2>
+        <p class="lead" style="font-size: 1.25rem; margin-bottom: 40px; max-width: 800px; margin-left: auto; margin-right: auto;">
+            Be part of Zambia's democratic future. Together, we can build a nation of wealth creators,
+            entrepreneurs, and job makers that works for everyone.
+        </p>
+        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ url_for('auth.register') }}" class="btn-modern btn-primary" style="padding: 18px 40px; font-size: 18px;">
+                <i class="fas fa-user-plus"></i> Become a Member
+            </a>
+            <a href="{{ url_for('public.contact') }}" class="btn-modern btn-outline-light" style="padding: 18px 40px; font-size: 18px;">
+                <i class="fas fa-envelope"></i> Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+
+<script>
+// Mobile menu toggle
+const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+const mobileMenu = document.getElementById('mobileMenu');
+
+if (mobileMenuToggle && mobileMenu) {
+    mobileMenuToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        mobileMenu.classList.toggle('active');
+        const icon = this.querySelector('i');
+        if (icon) {
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.top-nav') && !e.target.closest('.mobile-menu')) {
+            mobileMenu.classList.remove('active');
+            const icon = mobileMenuToggle.querySelector('i');
+            if (icon) {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+    });
+}
+</script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,442 @@
+{% extends "layouts/member_base.html" %}
+
+{% block page_title %}Events{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <!-- Events Header Card -->
+        <div class="card mb-4 border-0 shadow-sm bg-gradient" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <div class="card-body text-white p-4">
+                <h3 class="mb-2"><i class="fas fa-calendar-alt me-2"></i>ADD Events</h3>
+                <p class="mb-0">Stay connected with upcoming party events, meetings, and activities in your area.</p>
+            </div>
+        </div>
+
+        <!-- Event Filters -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <select class="form-select" id="eventTypeFilter">
+                            <option value="">All Event Types</option>
+                            <option value="meeting">Meeting</option>
+                            <option value="rally">Rally</option>
+                            <option value="training">Training</option>
+                            <option value="social">Social Event</option>
+                            <option value="campaign">Campaign</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select" id="locationFilter">
+                            <option value="">All Locations</option>
+                            <option value="lusaka">Lusaka</option>
+                            <option value="copperbelt">Copperbelt</option>
+                            <option value="southern">Southern Province</option>
+                            <option value="eastern">Eastern Province</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select" id="timeFilter">
+                            <option value="upcoming">Upcoming Events</option>
+                            <option value="past">Past Events</option>
+                            <option value="all">All Events</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Events -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-calendar-check me-2"></i>Upcoming Events</h5>
+                <span class="badge bg-primary">{{ events|length }} Events</span>
+            </div>
+            <div class="card-body">
+                {% if events %}
+                    <div class="row">
+                        {% for event in events %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-start border-4 border-primary">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h6 class="card-title mb-0">
+                                            <i class="fas fa-bullhorn me-2 text-primary"></i>{{ event.title }}
+                                        </h6>
+                                        <span class="badge bg-{{ 'success' if event.event_type == 'meeting' else 'info' if event.event_type == 'training' else 'warning' }}">
+                                            {{ event.event_type|title }}
+                                        </span>
+                                    </div>
+                                    <p class="card-text text-muted small mb-3">{{ event.description }}</p>
+
+                                    <div class="mb-2">
+                                        <i class="fas fa-calendar text-muted me-2"></i>
+                                        <strong>{{ event.date }}</strong> at {{ event.time }}
+                                    </div>
+                                    <div class="mb-2">
+                                        <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                                        {{ event.location }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <i class="fas fa-users text-muted me-2"></i>
+                                        <span class="text-muted small">{{ event.attendees|default(0) }} registered</span>
+                                        {% if event.capacity %}
+                                        <span class="text-muted small">/ {{ event.capacity }} capacity</span>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <button class="btn btn-sm btn-primary" onclick="registerForEvent({{ event.id }}, '{{ event.title }}')">
+                                            <i class="fas fa-check-circle me-1"></i>Register
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary" onclick="viewEventDetails({{ event.id }})">
+                                            <i class="fas fa-info-circle me-1"></i>Details
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No Upcoming Events</h5>
+                        <p class="text-muted">Check back soon for new events and activities in your area.</p>
+                        <div class="alert alert-info mt-4" role="alert">
+                            <i class="fas fa-bell me-2"></i>
+                            <strong>Stay Updated!</strong> Make sure your contact information is up to date to receive event notifications.
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- My Event Registrations -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>My Event Registrations</h5>
+            </div>
+            <div class="card-body">
+                {% if registrations %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Event</th>
+                                    <th>Date & Time</th>
+                                    <th>Location</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for registration in registrations %}
+                                <tr>
+                                    <td><strong>{{ registration.event_title }}</strong></td>
+                                    <td>
+                                        {{ registration.event_date }}<br>
+                                        <small class="text-muted">{{ registration.event_time }}</small>
+                                    </td>
+                                    <td>{{ registration.event_location }}</td>
+                                    <td><span class="badge bg-info">{{ registration.event_type|title }}</span></td>
+                                    <td>
+                                        {% if registration.status == 'confirmed' %}
+                                            <span class="badge bg-success">Confirmed</span>
+                                        {% elif registration.status == 'pending' %}
+                                            <span class="badge bg-warning">Pending</span>
+                                        {% elif registration.status == 'attended' %}
+                                            <span class="badge bg-primary">Attended</span>
+                                        {% elif registration.status == 'cancelled' %}
+                                            <span class="badge bg-danger">Cancelled</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ registration.status|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewEventDetails({{ registration.event_id }})">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-calendar-plus fa-3x text-muted mb-3 d-block"></i>
+                        <p class="text-muted mb-0">You haven't registered for any events yet</p>
+                        <small class="text-muted">Browse upcoming events above and register to attend</small>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Event Types Info -->
+        <div class="row mt-4">
+            <div class="col-md-3 mb-3">
+                <div class="card border-success h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users-cog fa-2x text-success mb-2"></i>
+                        <h6 class="small">Meetings</h6>
+                        <p class="text-muted small mb-0">Branch and constituency meetings</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card border-warning h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-bullhorn fa-2x text-warning mb-2"></i>
+                        <h6 class="small">Rallies</h6>
+                        <p class="text-muted small mb-0">Public rallies and gatherings</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card border-info h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-chalkboard-teacher fa-2x text-info mb-2"></i>
+                        <h6 class="small">Training</h6>
+                        <p class="text-muted small mb-0">Skills and leadership training</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card border-primary h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-glass-cheers fa-2x text-primary mb-2"></i>
+                        <h6 class="small">Social Events</h6>
+                        <p class="text-muted small mb-0">Community and social activities</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Event Registration Modal -->
+<div class="modal fade" id="eventRegistrationModal" tabindex="-1" aria-labelledby="eventRegistrationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventRegistrationModalLabel">
+                    <i class="fas fa-calendar-check me-2"></i>Event Registration
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6 id="eventTitle" class="mb-3"></h6>
+                <form id="eventRegistrationForm">
+                    <input type="hidden" id="eventId">
+
+                    <div class="mb-3">
+                        <label for="attendees" class="form-label">Number of Attendees <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="attendees" value="1" min="1" max="5" required>
+                        <small class="text-muted">Including yourself (max 5)</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="transportation" class="form-label">Transportation (Optional)</label>
+                        <select class="form-select" id="transportation">
+                            <option value="">Select if needed</option>
+                            <option value="own">Own transport</option>
+                            <option value="needed">Need transport</option>
+                            <option value="can_provide">Can provide transport</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="dietaryRequirements" class="form-label">Dietary Requirements (Optional)</label>
+                        <input type="text" class="form-control" id="dietaryRequirements" placeholder="e.g., Vegetarian, Halal, None">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="registrationNotes" class="form-label">Additional Notes (Optional)</label>
+                        <textarea class="form-control" id="registrationNotes" rows="2" placeholder="Any questions or special requirements..."></textarea>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <small>You'll receive a confirmation via SMS/Email after registering.</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitEventRegistration()">
+                    <i class="fas fa-check me-1"></i>Confirm Registration
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Event Details Modal -->
+<div class="modal fade" id="eventDetailsModal" tabindex="-1" aria-labelledby="eventDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventDetailsModalLabel">
+                    <i class="fas fa-info-circle me-2"></i>Event Details
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="eventDetailsContent">
+                    <p class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading event details...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function registerForEvent(eventId, eventTitle) {
+    document.getElementById('eventId').value = eventId;
+    document.getElementById('eventTitle').textContent = eventTitle;
+
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('eventRegistrationModal'));
+    modal.show();
+}
+
+function submitEventRegistration() {
+    const eventId = document.getElementById('eventId').value;
+    const attendees = document.getElementById('attendees').value;
+    const transportation = document.getElementById('transportation').value;
+    const dietaryRequirements = document.getElementById('dietaryRequirements').value;
+    const notes = document.getElementById('registrationNotes').value;
+
+    if (!attendees || attendees < 1) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid Input',
+            text: 'Please enter a valid number of attendees',
+            confirmButtonColor: '#ef4444'
+        });
+        return;
+    }
+
+    Swal.fire({
+        title: 'Registering...',
+        text: 'Please wait',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    fetch('{{ url_for("member.register_event", event_id=0) }}'.replace('0', eventId), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            attendees: attendees,
+            transportation: transportation,
+            dietary_requirements: dietaryRequirements,
+            notes: notes
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('eventRegistrationModal'));
+            if (modal) modal.hide();
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Registration Successful!',
+                text: data.message || 'You have been successfully registered for this event. You will receive a confirmation shortly.',
+                confirmButtonColor: '#2563eb'
+            }).then(() => {
+                location.reload();
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Registration Failed',
+                text: data.message || 'Failed to register. Please try again.',
+                confirmButtonColor: '#ef4444'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Event registration error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Unable to register at this time. Please try again later.',
+            confirmButtonColor: '#ef4444'
+        });
+    });
+}
+
+function viewEventDetails(eventId) {
+    const modal = new bootstrap.Modal(document.getElementById('eventDetailsModal'));
+    modal.show();
+
+    // Fetch event details
+    fetch('{{ url_for("member.event_details", event_id=0) }}'.replace('0', eventId))
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const event = data.event;
+                const detailsHtml = `
+                    <h5>${event.title}</h5>
+                    <hr>
+                    <p>${event.description}</p>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <strong><i class="fas fa-calendar me-2"></i>Date:</strong><br>
+                            ${event.date}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong><i class="fas fa-clock me-2"></i>Time:</strong><br>
+                            ${event.time}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong><i class="fas fa-map-marker-alt me-2"></i>Location:</strong><br>
+                            ${event.location}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong><i class="fas fa-users me-2"></i>Capacity:</strong><br>
+                            ${event.attendees}/${event.capacity} registered
+                        </div>
+                    </div>
+                    ${event.additional_info ? '<hr><p>' + event.additional_info + '</p>' : ''}
+                `;
+                document.getElementById('eventDetailsContent').innerHTML = detailsHtml;
+            } else {
+                document.getElementById('eventDetailsContent').innerHTML =
+                    '<p class="text-center text-muted">Event details not available</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching event details:', error);
+            document.getElementById('eventDetailsContent').innerHTML =
+                '<p class="text-center text-danger">Failed to load event details</p>';
+        });
+}
+
+// Filter functionality (placeholder)
+document.getElementById('eventTypeFilter').addEventListener('change', function() {
+    console.log('Filter by type:', this.value);
+    // Future: implement filtering
+});
+
+document.getElementById('locationFilter').addEventListener('change', function() {
+    console.log('Filter by location:', this.value);
+    // Future: implement filtering
+});
+
+document.getElementById('timeFilter').addEventListener('change', function() {
+    console.log('Filter by time:', this.value);
+    // Future: implement filtering
+});
+</script>
+{% endblock %}

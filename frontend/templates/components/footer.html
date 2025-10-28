@@ -1,0 +1,64 @@
+<footer class="footer mt-auto py-3 bg-light">
+    <div class="container">
+        <div class="row">
+            <!-- About Section -->
+            <div class="col-md-4">
+                <h5>About {{ app_name }}</h5>
+                <p class="text-muted">
+                    {{ party_slogan }}. Founded in {{ party_founded }} by {{ party_founder }},
+                    ADD is a proud UPND Alliance partner, committed to democratic governance and sustainable development for all Zambians.
+                </p>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/profile.php?id=61576153207214" target="_blank" class="text-muted me-2" title="ADD Facebook Page">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://www.facebook.com/p/Charles-Lubasi-Milupi-100025627500028/" target="_blank" class="text-muted me-2" title="Charles Milupi Facebook">
+                        <i class="fab fa-facebook-square"></i>
+                    </a>
+                    <a href="#" class="text-muted me-2" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-muted" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+                <small class="text-muted">Follow Charles Milupi: 40,000+ Facebook followers</small>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-md-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{{ url_for('public.about') }}" class="text-muted">About Us</a></li>
+                    <li><a href="{{ url_for('public.contact') }}" class="text-muted">Contact</a></li>
+                    <li><a href="{{ url_for('public.privacy') }}" class="text-muted">Privacy Policy</a></li>
+                    <li><a href="{{ url_for('public.terms') }}" class="text-muted">Terms of Service</a></li>
+                    <li><a href="https://www.elections.org.zm" target="_blank" class="text-muted">ECZ Website</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="col-md-4">
+                <h5>Contact Information</h5>
+                <ul class="list-unstyled text-muted">
+                    <li><i class="fas fa-map-marker-alt"></i> {{ party_headquarters }}</li>
+                    <li><i class="fas fa-phone"></i> {{ party_phone }}</li>
+                    <li><i class="fas fa-envelope"></i> {{ party_email }}</li>
+                    <li><i class="fas fa-mobile-alt"></i> USSD: *388*3#</li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="my-3">
+
+        <!-- Copyright -->
+        <div class="row">
+            <div class="col-md-6">
+                <span class="text-muted">
+                    &copy; {{ current_year|default('2024') }} {{ app_name }}. All rights reserved.
+                </span>
+            </div>
+            <div class="col-md-6 text-end">
+                <span class="text-muted">
+                    ECZ Compliant | Version {{ api_version }}
+                </span>
+            </div>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Quick Registration - Alliance for Democracy and Development</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<style>
+/* Modern Color Palette */
+:root {
+    --primary: #d42c2c;
+    --primary-dark: #b91c1c;
+    --primary-light: #f87171;
+    --accent: #fbbf24;
+    --dark: #1a1a1a;
+    --light: #ffffff;
+    --gray: #64748b;
+    --gray-light: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-300: #cbd5e1;
+    --border-color: #e2e8f0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    min-height: 100vh;
+    color: var(--dark);
+}
+
+/* Fixed Navigation Bar */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 12px 0;
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.page-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.page-logo img {
+    height: 50px;
+    width: auto;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.page-logo:hover img {
+    transform: scale(1.05);
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-menu li {
+    margin: 0;
+}
+
+.nav-menu a {
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-menu a:hover {
+    color: var(--primary);
+    background: rgba(212, 44, 44, 0.05);
+}
+
+.nav-menu a i {
+    font-size: 14px;
+}
+
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--dark);
+    cursor: pointer;
+    padding: 8px;
+}
+
+.mobile-menu {
+    display: none;
+    position: fixed;
+    top: 74px;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 999;
+}
+
+.mobile-menu.active {
+    display: block;
+}
+
+.mobile-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mobile-menu li {
+    margin-bottom: 8px;
+}
+
+.mobile-menu a {
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu a:hover {
+    color: var(--primary);
+    background: rgba(212, 44, 44, 0.05);
+}
+
+/* Registration Header */
+.registration-header {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    padding: 120px 0 60px;
+    margin-top: 74px;
+    text-align: center;
+    color: var(--dark);
+    position: relative;
+    overflow: hidden;
+}
+
+.registration-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 50%, rgba(212, 44, 44, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(251, 191, 36, 0.03) 0%, transparent 50%);
+}
+
+.registration-header h1 {
+    font-size: clamp(2rem, 5vw, 2.5rem);
+    font-weight: 800;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+    color: var(--dark);
+}
+
+.registration-header h1 i {
+    color: var(--primary);
+}
+
+.registration-header p {
+    font-size: 18px;
+    color: var(--gray);
+    position: relative;
+    z-index: 1;
+}
+
+/* Main Container */
+.lite-registration-container {
+    max-width: 700px;
+    margin: -40px auto 60px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 10;
+}
+
+/* Registration Options */
+.registration-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.registration-option {
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: var(--dark);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.registration-option:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(212, 44, 44, 0.2);
+    color: var(--dark);
+}
+
+.registration-option.active {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, rgba(212, 44, 44, 0.05) 0%, rgba(251, 191, 36, 0.05) 100%);
+}
+
+.option-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--gray-100);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 24px;
+    color: var(--primary);
+    transition: all 0.3s ease;
+}
+
+.registration-option.active .option-icon {
+    background: var(--primary);
+    color: white;
+}
+
+.option-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+}
+
+.option-description {
+    font-size: 13px;
+    color: var(--gray);
+    margin: 0;
+}
+
+/* Info Banner */
+.info-banner {
+    background: linear-gradient(135deg, rgba(212, 44, 44, 0.05) 0%, rgba(251, 191, 36, 0.05) 100%);
+    border: 2px solid rgba(212, 44, 44, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.info-banner-icon {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+}
+
+.info-banner-content h6 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0 0 0.5rem 0;
+}
+
+.info-banner-content p {
+    font-size: 14px;
+    color: var(--gray);
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Form Sections */
+.lite-form-section {
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.lite-form-section:hover {
+    border-color: var(--primary);
+    box-shadow: 0 8px 30px rgba(212, 44, 44, 0.15);
+}
+
+.lite-form-section h6 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.lite-form-section h6 i {
+    color: var(--primary);
+}
+
+/* Form Fields */
+.form-field {
+    margin-bottom: 1.25rem;
+}
+
+.form-field label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+}
+
+.form-field label .required {
+    color: var(--primary);
+    margin-left: 2px;
+}
+
+.form-field label .optional {
+    color: var(--gray);
+    font-weight: 400;
+    font-size: 12px;
+    margin-left: 4px;
+}
+
+.form-field input,
+.form-field select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    background: white;
+    font-family: inherit;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(212, 44, 44, 0.1);
+}
+
+.form-field small {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 12px;
+    color: var(--gray);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+}
+
+/* PIN Input */
+.pin-input-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.pin-digit {
+    width: 70px;
+    height: 70px;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.pin-digit:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(212, 44, 44, 0.1);
+    outline: none;
+}
+
+.pin-info {
+    background: rgba(251, 191, 36, 0.1);
+    border: 2px solid rgba(251, 191, 36, 0.3);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-top: 1.25rem;
+}
+
+.pin-info p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--dark);
+    display: flex;
+    align-items: start;
+    gap: 0.75rem;
+    line-height: 1.6;
+}
+
+.pin-info i {
+    color: var(--accent);
+    margin-top: 2px;
+    font-size: 16px;
+}
+
+/* Buttons */
+.btn-register {
+    width: 100%;
+    padding: 1rem 2rem;
+    font-size: 16px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 10px 30px rgba(212, 44, 44, 0.3);
+}
+
+.btn-register:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(212, 44, 44, 0.4);
+}
+
+.upgrade-link {
+    text-align: center;
+    padding: 1.25rem;
+    background: var(--gray-light);
+    border-radius: 12px;
+    margin-top: 1rem;
+    font-size: 14px;
+    color: var(--gray);
+}
+
+.upgrade-link a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.upgrade-link a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+    }
+
+    .mobile-menu-toggle {
+        display: block;
+    }
+
+    .page-logo img {
+        height: 40px;
+    }
+
+    .registration-header {
+        padding: 80px 20px 40px;
+    }
+
+    .registration-options {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .lite-form-section {
+        padding: 1.5rem;
+    }
+
+    .pin-digit {
+        width: 55px;
+        height: 55px;
+        font-size: 22px;
+    }
+
+    .info-banner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .info-banner-icon {
+        margin: 0 auto;
+    }
+}
+
+/* Smooth Scroll */
+html {
+    scroll-behavior: smooth;
+}
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+    <div class="nav-container">
+        <a href="{{ url_for('public.index') }}" class="page-logo">
+            <img src="/static/img/logoadd.jpeg" alt="Alliance for Democracy and Development">
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="{{ url_for('public.index') }}"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="{{ url_for('public.about') }}"><i class="fas fa-info-circle"></i> About</a></li>
+            <li><a href="{{ url_for('public.contact') }}"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li><a href="{{ url_for('auth.login') }}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+        </ul>
+
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <ul>
+        <li><a href="{{ url_for('public.index') }}"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="{{ url_for('public.about') }}"><i class="fas fa-info-circle"></i> About</a></li>
+        <li><a href="{{ url_for('public.contact') }}"><i class="fas fa-envelope"></i> Contact</a></li>
+        <li><a href="{{ url_for('auth.login') }}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+    </ul>
+</div>
+
+<!-- Registration Header -->
+<section class="registration-header">
+    <div class="container">
+        <h1><i class="fas fa-bolt me-2"></i>Quick Registration</h1>
+        <p>Join the movement in just 2 minutes - Start creating wealth today</p>
+    </div>
+</section>
+
+<!-- Main Registration Form -->
+<div class="lite-registration-container">
+    <!-- Registration Type Selection -->
+    <div class="registration-options">
+        <a href="{{ url_for('auth.register_lite') }}" class="registration-option active">
+            <div class="option-icon">
+                <i class="fas fa-bolt"></i>
+            </div>
+            <div class="option-title">Lite Registration</div>
+            <p class="option-description">Quick sign up - 2 minutes</p>
+        </a>
+        <a href="{{ url_for('auth.register') }}" class="registration-option">
+            <div class="option-icon">
+                <i class="fas fa-user-check"></i>
+            </div>
+            <div class="option-title">Full Membership</div>
+            <p class="option-description">Complete registration - 5 minutes</p>
+        </a>
+    </div>
+
+    <!-- Info Banner -->
+    <div class="info-banner">
+        <div class="info-banner-icon">
+            <i class="fas fa-rocket"></i>
+        </div>
+        <div class="info-banner-content">
+            <h6>Quick Registration - Get Started Now!</h6>
+            <p>Join 12,000+ Zambian wealth creators and changemakers. Working with the UPND Government, we empower entrepreneurs across all 10 provinces. Upgrade to full membership anytime!</p>
+        </div>
+    </div>
+
+    <form method="POST" action="{{ url_for('auth.register_lite') }}" id="liteRegistrationForm">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <!-- Personal Information -->
+        <div class="lite-form-section">
+            <h6><i class="fas fa-user"></i>Personal Information</h6>
+
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="first_name">First Name <span class="required">*</span></label>
+                    <input type="text" id="first_name" name="first_name" placeholder="Enter first name" required>
+                </div>
+                <div class="form-field">
+                    <label for="last_name">Last Name <span class="required">*</span></label>
+                    <input type="text" id="last_name" name="last_name" placeholder="Enter last name" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="gender">Gender <span class="required">*</span></label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Select gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="age">Age <span class="required">*</span></label>
+                    <input type="number" id="age" name="age" placeholder="Enter age" min="18" max="120" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="lite-form-section">
+            <h6><i class="fas fa-phone"></i>Contact Information</h6>
+
+            <div class="form-field">
+                <label for="phone">Phone Number <span class="required">*</span></label>
+                <input type="tel" id="phone" name="phone" placeholder="0977123456" pattern="0\d{9}" required>
+                <small>Format: 0XXXXXXXXX (10 digits)</small>
+            </div>
+
+            <div class="form-field">
+                <label for="email">Email Address <span class="optional">(optional)</span></label>
+                <input type="email" id="email" name="email" placeholder="email@example.com">
+            </div>
+        </div>
+
+        <!-- Location Information -->
+        <div class="lite-form-section">
+            <h6><i class="fas fa-map-marker-alt"></i>Location Information</h6>
+
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="province_id">Province <span class="required">*</span></label>
+                    <select id="province_id" name="province_id" required>
+                        <option value="">Select province</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="district_id">District <span class="required">*</span></label>
+                    <select id="district_id" name="district_id" required disabled>
+                        <option value="">Select province first</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="constituency_id">Constituency <span class="required">*</span></label>
+                    <select id="constituency_id" name="constituency_id" required disabled>
+                        <option value="">Select district first</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="ward_id">Ward <span class="required">*</span></label>
+                    <select id="ward_id" name="ward_id" required disabled>
+                        <option value="">Select constituency first</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Security -->
+        <div class="lite-form-section">
+            <h6><i class="fas fa-lock"></i>Account Security</h6>
+
+            <div class="form-field">
+                <label for="pin">Create 4-Digit PIN <span class="required">*</span></label>
+                <div class="pin-input-group">
+                    <input type="password" class="pin-digit" id="pin1" name="pin1" maxlength="1" pattern="[0-9]" required inputmode="numeric">
+                    <input type="password" class="pin-digit" id="pin2" name="pin2" maxlength="1" pattern="[0-9]" required inputmode="numeric">
+                    <input type="password" class="pin-digit" id="pin3" name="pin3" maxlength="1" pattern="[0-9]" required inputmode="numeric">
+                    <input type="password" class="pin-digit" id="pin4" name="pin4" maxlength="1" pattern="[0-9]" required inputmode="numeric">
+                </div>
+                <input type="hidden" id="pin" name="pin">
+
+                <div class="pin-info">
+                    <p><i class="fas fa-info-circle"></i> This PIN is for APP usage only. DO NOT use your bank PIN or mobile money PIN.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-register">
+            <i class="fas fa-check-circle"></i>
+            Complete Quick Registration
+        </button>
+
+        <div class="upgrade-link">
+            Want full membership benefits? <a href="{{ url_for('auth.register') }}">Upgrade to Full Registration</a>
+        </div>
+
+        <div class="upgrade-link" style="margin-top: 0.5rem; background: transparent; padding: 0.5rem;">
+            Already have an account? <a href="{{ url_for('auth.login') }}">Sign in here</a>
+        </div>
+    </form>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+$(document).ready(function() {
+    const API_BASE = '/api/geography';
+
+    // Load provinces on page load
+    $.get(`${API_BASE}/provinces`)
+        .done(function(provinces) {
+            let options = '<option value="">Select province</option>';
+            provinces.forEach(function(province) {
+                options += `<option value="${province.id}">${province.province_name}</option>`;
+            });
+            $('#province_id').html(options);
+        })
+        .fail(function() {
+            console.error('Failed to load provinces');
+        });
+
+    // Province change handler
+    $('#province_id').change(function() {
+        const provinceId = $(this).val();
+        if (provinceId) {
+            // Show loading
+            $('#district_id').html('<option value="">Loading districts...</option>').prop('disabled', true);
+            $('#constituency_id').html('<option value="">Select district first</option>').prop('disabled', true);
+            $('#ward_id').html('<option value="">Select constituency first</option>').prop('disabled', true);
+
+            // Fetch districts for selected province
+            $.get(`${API_BASE}/districts?province_id=${provinceId}`)
+                .done(function(districts) {
+                    let options = '<option value="">Select district</option>';
+                    districts.forEach(function(district) {
+                        options += `<option value="${district.id}">${district.district_name}</option>`;
+                    });
+                    $('#district_id').html(options).prop('disabled', false);
+                })
+                .fail(function() {
+                    $('#district_id').html('<option value="">Error loading districts</option>');
+                    console.error('Failed to load districts');
+                });
+        } else {
+            $('#district_id').html('<option value="">Select province first</option>').prop('disabled', true);
+            $('#constituency_id').html('<option value="">Select district first</option>').prop('disabled', true);
+            $('#ward_id').html('<option value="">Select constituency first</option>').prop('disabled', true);
+        }
+    });
+
+    // District change handler
+    $('#district_id').change(function() {
+        const districtId = $(this).val();
+        if (districtId) {
+            // Show loading
+            $('#constituency_id').html('<option value="">Loading constituencies...</option>').prop('disabled', true);
+            $('#ward_id').html('<option value="">Select constituency first</option>').prop('disabled', true);
+
+            // Fetch constituencies for selected district
+            $.get(`${API_BASE}/constituencies?district_id=${districtId}`)
+                .done(function(constituencies) {
+                    let options = '<option value="">Select constituency</option>';
+                    if (constituencies.length > 0) {
+                        constituencies.forEach(function(constituency) {
+                            options += `<option value="${constituency.id}">${constituency.constituency_name}</option>`;
+                        });
+                    } else {
+                        options += '<option value="">No constituencies available</option>';
+                    }
+                    $('#constituency_id').html(options).prop('disabled', false);
+                })
+                .fail(function() {
+                    $('#constituency_id').html('<option value="">Error loading constituencies</option>');
+                    console.error('Failed to load constituencies');
+                });
+        } else {
+            $('#constituency_id').html('<option value="">Select district first</option>').prop('disabled', true);
+            $('#ward_id').html('<option value="">Select constituency first</option>').prop('disabled', true);
+        }
+    });
+
+    // Constituency change handler
+    $('#constituency_id').change(function() {
+        const constituencyId = $(this).val();
+        if (constituencyId) {
+            // Show loading
+            $('#ward_id').html('<option value="">Loading wards...</option>').prop('disabled', true);
+
+            // Fetch wards for selected constituency
+            $.get(`${API_BASE}/wards?constituency_id=${constituencyId}`)
+                .done(function(wards) {
+                    let options = '<option value="">Select ward</option>';
+                    if (wards.length > 0) {
+                        wards.forEach(function(ward) {
+                            let wardLabel = ward.ward_name;
+                            if (ward.population) {
+                                wardLabel += ` (Pop: ${ward.population.toLocaleString()})`;
+                            }
+                            options += `<option value="${ward.id}">${wardLabel}</option>`;
+                        });
+                    } else {
+                        options += '<option value="">No wards available</option>';
+                    }
+                    $('#ward_id').html(options).prop('disabled', false);
+                })
+                .fail(function() {
+                    $('#ward_id').html('<option value="">Error loading wards</option>');
+                    console.error('Failed to load wards');
+                });
+        } else {
+            $('#ward_id').html('<option value="">Select constituency first</option>').prop('disabled', true);
+        }
+    });
+
+    // PIN input handling
+    $('.pin-digit').on('input', function(e) {
+        const $this = $(this);
+        const value = $this.val();
+
+        // Only allow numbers
+        if (!/^\d*$/.test(value)) {
+            $this.val('');
+            return;
+        }
+
+        // Auto-focus next input
+        if (value.length === 1) {
+            const $next = $this.next('.pin-digit');
+            if ($next.length) {
+                $next.focus();
+            }
+        }
+    });
+
+    // Allow backspace to go to previous input
+    $('.pin-digit').on('keydown', function(e) {
+        if (e.key === 'Backspace' && $(this).val() === '') {
+            const $prev = $(this).prev('.pin-digit');
+            if ($prev.length) {
+                $prev.focus();
+            }
+        }
+    });
+
+    // Form submission
+    $('#liteRegistrationForm').on('submit', function(e) {
+        e.preventDefault();
+
+        // Combine PIN digits
+        const pin = $('#pin1').val() + $('#pin2').val() + $('#pin3').val() + $('#pin4').val();
+
+        if (pin.length !== 4) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid PIN',
+                text: 'Please enter all 4 digits of your PIN.',
+                confirmButtonColor: '#d42c2c'
+            });
+            return false;
+        }
+
+        $('#pin').val(pin);
+        this.submit();
+    });
+
+    // Mobile menu toggle
+    $('#mobileMenuToggle').click(function() {
+        $('#mobileMenu').toggleClass('active');
+        const icon = $(this).find('i');
+        if (icon.hasClass('fa-bars')) {
+            icon.removeClass('fa-bars').addClass('fa-times');
+        } else {
+            icon.removeClass('fa-times').addClass('fa-bars');
+        }
+    });
+
+    // Close mobile menu when clicking outside
+    $(document).click(function(e) {
+        if (!$(e.target).closest('.top-nav').length && !$(e.target).closest('.mobile-menu').length) {
+            $('#mobileMenu').removeClass('active');
+            $('#mobileMenuToggle i').removeClass('fa-times').addClass('fa-bars');
+        }
+    });
+});
+</script>
+
+</body>
+</html>

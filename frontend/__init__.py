@@ -1,0 +1,3 @@
+"""
+Flask frontend application package
+"""

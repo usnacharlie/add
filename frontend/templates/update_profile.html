@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Update Profile - Party Membership System{% endblock %}
+
+{% block content %}
+<div class="py-4">
+    <h2 class="mb-4">Update Profile</h2>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Update Your Information</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('update_profile') }}">
+                        <div class="mb-3">
+                            <label for="phone_number" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone_number" name="phone_number"
+                                   value="{{ current_user.data.phone_number }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="alternate_phone" class="form-label">Alternate Phone</label>
+                            <input type="tel" class="form-control" id="alternate_phone" name="alternate_phone"
+                                   value="{{ current_user.data.alternate_phone or '' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email"
+                                   value="{{ current_user.data.email or '' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="physical_address" class="form-label">Physical Address</label>
+                            <textarea class="form-control" id="physical_address" name="physical_address" rows="2">{{ current_user.data.physical_address }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="postal_address" class="form-label">Postal Address</label>
+                            <input type="text" class="form-control" id="postal_address" name="postal_address"
+                                   value="{{ current_user.data.postal_address or '' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="occupation" class="form-label">Occupation</label>
+                            <input type="text" class="form-control" id="occupation" name="occupation"
+                                   value="{{ current_user.data.occupation or '' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="employer" class="form-label">Employer</label>
+                            <input type="text" class="form-control" id="employer" name="employer"
+                                   value="{{ current_user.data.employer or '' }}">
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('profile') }}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Update Profile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Note</h5>
+                    <p class="card-text">Some information cannot be changed online for security reasons:</p>
+                    <ul>
+                        <li>Name</li>
+                        <li>National ID</li>
+                        <li>Date of Birth</li>
+                        <li>Gender</li>
+                        <li>Constituency/Ward/Branch</li>
+                    </ul>
+                    <p class="card-text">To update this information, please visit your nearest branch office with proper documentation.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,533 @@
+{% extends "layouts/member_base.html" %}
+
+{% block page_title %}Payments{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-credit-card me-2"></i>Membership Payments</h5>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#makePaymentModal">
+                    <i class="fas fa-plus me-1"></i> Make Payment
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Payment Information:</strong> Annual membership fees vary by category (K25 - K2,500).
+                    See the fee structure below for your category. Contact the secretariat for payment methods and account details.
+                </div>
+
+                <!-- Payment History Table -->
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Receipt No.</th>
+                                <th>Date</th>
+                                <th>Payment Year</th>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Status</th>
+                                <th>Reference</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if payments %}
+                                {% for payment in payments %}
+                                <tr>
+                                    <td><strong>{{ payment.receipt_number or 'Pending' }}</strong></td>
+                                    <td>{{ payment.payment_date[:10] if payment.payment_date else 'N/A' }}</td>
+                                    <td>{{ payment.payment_year }}</td>
+                                    <td><strong>K{{ "%.2f"|format(payment.amount) }}</strong></td>
+                                    <td>{{ payment.payment_method|title }}</td>
+                                    <td>
+                                        {% if payment.payment_status == 'completed' %}
+                                            <span class="badge bg-success">Completed</span>
+                                        {% elif payment.payment_status == 'pending' %}
+                                            <span class="badge bg-warning">Pending</span>
+                                        {% elif payment.payment_status == 'failed' %}
+                                            <span class="badge bg-danger">Failed</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ payment.payment_status|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ payment.payment_reference or 'N/A' }}</td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted py-4">
+                                        <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
+                                        <p class="mb-0">No payment records found</p>
+                                        <small>Click "Make Payment" to record your first payment</small>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Payment Summary -->
+                {% if payments %}
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="text-muted">Total Payments</h6>
+                                <h3 class="mb-0">{{ payments|length }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="text-muted">Total Amount Paid</h6>
+                                <h3 class="mb-0">K{{ "%.2f"|format(payments|sum(attribute='amount')) }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="text-muted">Last Payment Date</h6>
+                                <h3 class="mb-0">{{ payments[0].payment_date[:10] if payments else 'N/A' }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Fee Structure Card -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-dollar-sign me-2"></i>Annual Membership Fee Structure</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Membership Category</th>
+                                <th class="text-end">Annual Fee</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class="fas fa-user me-2 text-muted"></i>Ordinary Member</td>
+                                <td class="text-end"><strong>K25.00</strong></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-user-tie me-2 text-primary"></i>Ward Leader</td>
+                                <td class="text-end"><strong>K100.00</strong></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-user-tie me-2 text-info"></i>Constituency Leader</td>
+                                <td class="text-end"><strong>K250.00</strong></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-user-tie me-2 text-success"></i>District Leader</td>
+                                <td class="text-end"><strong>K500.00</strong></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-user-tie me-2 text-warning"></i>Provincial Leader</td>
+                                <td class="text-end"><strong>K1,000.00</strong></td>
+                            </tr>
+                            <tr class="table-primary">
+                                <td><i class="fas fa-star me-2 text-warning"></i><strong>National Leader</strong></td>
+                                <td class="text-end"><strong>K2,500.00</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="alert alert-info mt-3 mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <small><strong>Note:</strong> All fees are annual and must be paid to maintain active membership status.</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Information Card -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-question-circle me-2"></i>Payment Information</h5>
+            </div>
+            <div class="card-body">
+                <h6>How to Make a Payment:</h6>
+
+                <div class="alert alert-primary">
+                    <strong><i class="fas fa-mobile-alt me-2"></i>Cgrade Mobile Money (Recommended):</strong>
+                    <ol class="mb-0 mt-2">
+                        <li>Click the "Make Payment" button above</li>
+                        <li>Select your membership category (sets the correct fee)</li>
+                        <li>Choose "Cgrade (Mobile Money)" as payment method</li>
+                        <li>Click Submit - you'll receive a prompt on your registered phone</li>
+                        <li>Approve the payment on your phone with your PIN</li>
+                        <li>Your membership will be activated automatically</li>
+                    </ol>
+                </div>
+
+                <strong>Other Payment Methods:</strong>
+                <ol>
+                    <li>Complete payment via Bank Transfer, Cash, or Mobile Money</li>
+                    <li>Note the transaction reference number</li>
+                    <li>Click "Make Payment" and select your payment method</li>
+                    <li>Enter the payment reference number</li>
+                    <li>Submit for verification by the secretariat</li>
+                </ol>
+
+                <div class="alert alert-warning mt-3">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Important:</strong> Ensure you select the correct membership category. Leadership positions have higher annual fees based on your role within the party structure.
+                </div>
+
+                <h6 class="mt-4">Contact Information:</h6>
+                <p>
+                    <i class="fas fa-phone me-2"></i>Hotline: +260 XXX XXX XXX<br>
+                    <i class="fas fa-envelope me-2"></i>Email: info@add.org.zm<br>
+                    <i class="fas fa-map-marker-alt me-2"></i>Visit: ADD Secretariat Office
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Make Payment Modal -->
+<div class="modal fade" id="makePaymentModal" tabindex="-1" aria-labelledby="makePaymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="makePaymentModalLabel">
+                    <i class="fas fa-credit-card me-2"></i>Record Payment
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="paymentForm">
+                    <div class="mb-3">
+                        <label for="paymentYear" class="form-label">Payment Year <span class="text-danger">*</span></label>
+                        <select class="form-select" id="paymentYear" required>
+                            <option value="">Select Year</option>
+                            {% for year in range(2024, 2031) %}
+                            <option value="{{ year }}" {% if year == 2025 %}selected{% endif %}>{{ year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Membership Category <span class="text-danger">*</span></label>
+                        <div class="list-group">
+                            <label class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <input class="form-check-input me-2" type="radio" name="membershipType" value="25" id="ordinaryMember" checked>
+                                    <strong>Ordinary Member</strong>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">K25.00</span>
+                            </label>
+                            <label class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <input class="form-check-input me-2" type="radio" name="membershipType" value="100" id="wardLeader">
+                                    <strong>Ward Leader</strong>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">K100.00</span>
+                            </label>
+                            <label class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <input class="form-check-input me-2" type="radio" name="membershipType" value="250" id="constituencyLeader">
+                                    <strong>Constituency Leader</strong>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">K250.00</span>
+                            </label>
+                            <label class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <input class="form-check-input me-2" type="radio" name="membershipType" value="500" id="districtLeader">
+                                    <strong>District Leader</strong>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">K500.00</span>
+                            </label>
+                            <label class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <input class="form-check-input me-2" type="radio" name="membershipType" value="1000" id="provincialLeader">
+                                    <strong>Provincial Leader</strong>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">K1,000.00</span>
+                            </label>
+                            <label class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <input class="form-check-input me-2" type="radio" name="membershipType" value="2500" id="nationalLeader">
+                                    <strong>National Leader</strong>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">K2,500.00</span>
+                            </label>
+                        </div>
+                        <small class="text-muted d-block mt-2">Select your membership category to set the annual fee</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Amount (ZMW) <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="amount" step="0.01" min="0" value="25.00" placeholder="25.00" required readonly>
+                        <small class="text-muted">Amount is set based on your membership category</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="paymentMethod" class="form-label">Payment Method <span class="text-danger">*</span></label>
+                        <select class="form-select" id="paymentMethod" required onchange="togglePaymentReference()">
+                            <option value="">Select Method</option>
+                            <option value="cgrade" selected>Cgrade (Mobile Money)</option>
+                            <option value="mobile_money">Mobile Money (Other)</option>
+                            <option value="bank_transfer">Bank Transfer</option>
+                            <option value="cash">Cash</option>
+                            <option value="cheque">Cheque</option>
+                        </select>
+                        <small class="text-muted">Cgrade sends a mobile money prompt to your registered phone number</small>
+                    </div>
+
+                    <div class="mb-3" id="cgradePhoneGroup">
+                        <label for="paymentPhone" class="form-label">Mobile Money Phone Number <span class="text-danger">*</span></label>
+                        <input type="tel" class="form-control" id="paymentPhone" value="{{ session.phone or '' }}" placeholder="0971234567" required>
+                        <small class="text-muted">Enter the phone number to receive the mobile money prompt. Defaults to your registered number.</small>
+                    </div>
+
+                    <div class="mb-3" id="paymentReferenceGroup" style="display: none;">
+                        <label for="paymentReference" class="form-label">Payment Reference <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="paymentReference" placeholder="Transaction ID or Receipt Number">
+                        <small class="text-muted">Enter the transaction ID or reference number you received</small>
+                    </div>
+
+                    <div class="alert alert-info" id="cgradeInfo" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <small><strong>Cgrade Payment:</strong> A mobile money prompt will be sent to the phone number you entered above. Approve the payment to complete the transaction. Payment reference will be auto-generated.</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Additional Notes (Optional)</label>
+                        <textarea class="form-control" id="notes" rows="3" placeholder="Any additional information..."></textarea>
+                    </div>
+
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <small>Please ensure all payment details are correct. Your payment will be verified by the secretariat.</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitPayment()">
+                    <i class="fas fa-check me-1"></i>Submit Payment
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Update amount when membership type changes
+document.addEventListener('DOMContentLoaded', function() {
+    const membershipTypeRadios = document.querySelectorAll('input[name="membershipType"]');
+    const amountInput = document.getElementById('amount');
+
+    membershipTypeRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            amountInput.value = parseFloat(this.value).toFixed(2);
+        });
+    });
+
+    // Initialize payment reference visibility
+    togglePaymentReference();
+});
+
+function togglePaymentReference() {
+    const paymentMethod = document.getElementById('paymentMethod').value;
+    const referenceGroup = document.getElementById('paymentReferenceGroup');
+    const referenceInput = document.getElementById('paymentReference');
+    const cgradeInfo = document.getElementById('cgradeInfo');
+    const cgradePhoneGroup = document.getElementById('cgradePhoneGroup');
+    const phoneInput = document.getElementById('paymentPhone');
+
+    if (paymentMethod === 'cgrade') {
+        // Show phone number, hide payment reference for Cgrade
+        cgradePhoneGroup.style.display = 'block';
+        phoneInput.setAttribute('required', 'required');
+        referenceGroup.style.display = 'none';
+        referenceInput.removeAttribute('required');
+        referenceInput.value = '';
+        cgradeInfo.style.display = 'block';
+    } else {
+        // Hide phone number, show payment reference for other methods
+        cgradePhoneGroup.style.display = 'none';
+        phoneInput.removeAttribute('required');
+        referenceGroup.style.display = 'block';
+        referenceInput.setAttribute('required', 'required');
+        cgradeInfo.style.display = 'none';
+    }
+}
+
+function submitPayment() {
+    const paymentYear = document.getElementById('paymentYear').value;
+    const amount = document.getElementById('amount').value;
+    const paymentMethod = document.getElementById('paymentMethod').value;
+    const paymentReference = document.getElementById('paymentReference').value;
+    const paymentPhone = document.getElementById('paymentPhone').value;
+    const notes = document.getElementById('notes').value;
+
+    // Validation
+    if (!paymentYear || !amount || !paymentMethod) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Missing Information',
+            text: 'Please fill in all required fields',
+            confirmButtonColor: '#ef4444'
+        });
+        return;
+    }
+
+    // For Cgrade payments, phone number is required
+    if (paymentMethod === 'cgrade' && !paymentPhone) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Missing Phone Number',
+            text: 'Please enter a phone number to receive the mobile money prompt',
+            confirmButtonColor: '#ef4444'
+        });
+        return;
+    }
+
+    // For non-Cgrade payments, payment reference is required
+    if (paymentMethod !== 'cgrade' && !paymentReference) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Missing Payment Reference',
+            text: 'Please enter the payment reference or transaction ID',
+            confirmButtonColor: '#ef4444'
+        });
+        return;
+    }
+
+    if (parseFloat(amount) <= 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid Amount',
+            text: 'Please enter a valid payment amount',
+            confirmButtonColor: '#ef4444'
+        });
+        return;
+    }
+
+    // Show loading with appropriate message
+    const loadingMessage = paymentMethod === 'cgrade'
+        ? 'Initiating Cgrade payment...'
+        : 'Please wait while we record your payment';
+
+    Swal.fire({
+        title: 'Submitting Payment...',
+        text: loadingMessage,
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    // Prepare payment data
+    const paymentData = {
+        payment_year: parseInt(paymentYear),
+        amount: parseFloat(amount),
+        payment_method: paymentMethod,
+        payment_reference: paymentReference,
+        notes: notes
+    };
+
+    // Add phone number for Cgrade payments
+    if (paymentMethod === 'cgrade') {
+        paymentData.payment_phone = paymentPhone;
+    }
+
+    // Submit payment
+    fetch('{{ url_for("member.make_payment") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(paymentData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('makePaymentModal'));
+            if (modal) modal.hide();
+
+            // Different success messages based on payment method
+            if (paymentMethod === 'cgrade') {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Payment Initiated!',
+                    html: '<div style="text-align: left;">' +
+                          '<p><strong>Check your phone now!</strong></p>' +
+                          '<p>A mobile money prompt has been sent to: <strong>' + paymentPhone + '</strong></p>' +
+                          '<p><strong>To complete payment:</strong></p>' +
+                          '<ol>' +
+                          '<li>Check for the mobile money prompt on your phone</li>' +
+                          '<li>Verify the amount: <strong>K' + amount + '</strong></li>' +
+                          '<li>Enter your PIN to approve</li>' +
+                          '</ol>' +
+                          '<p class="text-muted small">Your membership will be activated automatically once payment is confirmed.</p>' +
+                          '</div>',
+                    confirmButtonText: 'I\'ve Approved',
+                    confirmButtonColor: '#2563eb',
+                    showCancelButton: true,
+                    cancelButtonText: 'Close',
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Show checking status message
+                        Swal.fire({
+                            title: 'Checking Payment Status...',
+                            text: 'Please wait while we verify your payment',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+
+                        // Wait 5 seconds then reload to show updated status
+                        setTimeout(() => {
+                            location.reload();
+                        }, 5000);
+                    } else {
+                        location.reload();
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Payment Submitted!',
+                    text: 'Your payment has been recorded and will be verified by the secretariat.',
+                    confirmButtonColor: '#2563eb'
+                }).then(() => {
+                    location.reload();
+                });
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Submission Failed',
+                text: data.message || 'Unable to record payment. Please try again.',
+                confirmButtonColor: '#ef4444'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Payment error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Connection Error',
+            text: 'Unable to connect to the server. Please try again later.',
+            confirmButtonColor: '#ef4444'
+        });
+    });
+}
+</script>
+{% endblock %}

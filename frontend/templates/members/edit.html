@@ -1,0 +1,407 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Member - Member Registry System{% endblock %}
+
+{% block page_title %}Edit Member{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    {% if member %}
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(37, 99, 235, 0.08) 100%);">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="icon-circle">
+                                <i class="fas fa-user-edit fa-2x text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h2 class="mb-1 fw-bold">Edit Member Profile</h2>
+                            <p class="text-muted mb-0">Update member information and details</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="POST" id="editMemberForm">
+        <div class="row g-4">
+            <!-- Personal Information -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm modern-card">
+                    <div class="card-header bg-white border-0 pb-0">
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-id-card text-primary me-2"></i>Personal Information
+                        </h4>
+                    </div>
+                    <div class="card-body pt-3">
+                        <div class="mb-4">
+                            <label for="name" class="form-label">
+                                <i class="fas fa-user text-primary me-2"></i>Full Name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control form-control-lg" id="name" name="name"
+                                   value="{{ member.name }}" required placeholder="Enter full name">
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="gender" class="form-label">
+                                    <i class="fas fa-venus-mars text-primary me-2"></i>Gender <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select form-select-lg" id="gender" name="gender" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="Male" {% if member.gender == 'Male' %}selected{% endif %}>Male</option>
+                                    <option value="Female" {% if member.gender == 'Female' %}selected{% endif %}>Female</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="date_of_birth" class="form-label">
+                                    <i class="fas fa-birthday-cake text-primary me-2"></i>Date of Birth
+                                </label>
+                                <input type="date" class="form-control form-control-lg" id="date_of_birth" name="date_of_birth"
+                                       value="{{ member.date_of_birth if member.date_of_birth else '' }}"
+                                       max="{{ today }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-0">
+                            <label for="contact" class="form-label">
+                                <i class="fas fa-phone text-primary me-2"></i>Contact Number
+                            </label>
+                            <input type="text" class="form-control form-control-lg" id="contact" name="contact"
+                                   value="{{ member.contact or '' }}" placeholder="e.g., 0977123456">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Identification & Location -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm modern-card">
+                    <div class="card-header bg-white border-0 pb-0">
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-map-marker-alt text-success me-2"></i>Identification & Location
+                        </h4>
+                    </div>
+                    <div class="card-body pt-3">
+                        <div class="mb-4">
+                            <label for="nrc" class="form-label">
+                                <i class="fas fa-id-card-alt text-success me-2"></i>National Registration Card (NRC)
+                            </label>
+                            <input type="text" class="form-control form-control-lg" id="nrc" name="nrc"
+                                   value="{{ member.nrc or '' }}" placeholder="e.g., 123456/10/1">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="voters_id" class="form-label">
+                                <i class="fas fa-vote-yea text-success me-2"></i>Voter's ID
+                            </label>
+                            <input type="text" class="form-control form-control-lg" id="voters_id" name="voters_id"
+                                   value="{{ member.voters_id or '' }}" placeholder="e.g., VID123456">
+                        </div>
+
+                        <div class="mb-0">
+                            <label for="ward_id" class="form-label">
+                                <i class="fas fa-map-pin text-success me-2"></i>Ward <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select form-select-lg" id="ward_id" name="ward_id" required>
+                                <option value="">Select Ward</option>
+                                {% for ward in wards %}
+                                <option value="{{ ward.id }}" {% if ward.id == member.ward_id %}selected{% endif %}>
+                                    {{ ward.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Fields marked with <span class="text-danger">*</span> are required
+                                </small>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a href="{{ url_for('members.view_member', member_id=member.id) }}"
+                                   class="btn btn-outline-secondary btn-lg px-5">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary btn-lg px-5">
+                                    <i class="fas fa-save me-2"></i>Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    {% else %}
+    <!-- Member Not Found -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-user-slash fa-4x text-muted mb-4" style="opacity: 0.3;"></i>
+                    <h3 class="mb-3">Member Not Found</h3>
+                    <p class="text-muted mb-4">The member you're trying to edit doesn't exist or has been removed.</p>
+                    <a href="{{ url_for('members.list_members') }}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Members List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+/* Icon Circle */
+.icon-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Modern Card */
+.modern-card {
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out;
+    overflow: hidden;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modern-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Form Styling */
+.form-label {
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.form-control,
+.form-select {
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    outline: none;
+}
+
+.form-control-lg,
+.form-select-lg {
+    padding: 16px 18px;
+    font-size: 16px;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    border: none;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-outline-secondary {
+    border: 2px solid #6b7280;
+    color: #6b7280;
+}
+
+.btn-outline-secondary:hover {
+    background: #6b7280;
+    border-color: #6b7280;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Card Headers */
+.card-header h4 {
+    font-size: 18px;
+    padding: 1rem 0;
+}
+
+/* Text Danger */
+.text-danger {
+    color: #dc2626 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .icon-circle {
+        width: 60px;
+        height: 60px;
+    }
+
+    .btn-lg {
+        padding: 12px 24px !important;
+    }
+
+    .d-flex.gap-2 {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .d-flex.gap-2 .btn {
+        width: 100%;
+    }
+}
+
+/* Form Validation */
+.form-control:invalid:not(:placeholder-shown),
+.form-select:invalid {
+    border-color: #ef4444;
+}
+
+.form-control:valid:not(:placeholder-shown) {
+    border-color: #10b981;
+}
+
+/* Loading State */
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Stagger Animation */
+.col-lg-6:nth-child(1) .modern-card {
+    animation-delay: 0.1s;
+}
+
+.col-lg-6:nth-child(2) .modern-card {
+    animation-delay: 0.2s;
+}
+</style>
+
+<script>
+// Form validation and enhancement
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('editMemberForm');
+
+    if (form) {
+        // Add loading state on submit
+        form.addEventListener('submit', function(e) {
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+            }
+        });
+
+        // Real-time validation feedback
+        const inputs = form.querySelectorAll('input[required], select[required]');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (!this.value) {
+                    this.classList.add('is-invalid');
+                } else {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                }
+            });
+        });
+    }
+
+    // Phone number formatting
+    const contactInput = document.getElementById('contact');
+    if (contactInput) {
+        contactInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 10) {
+                value = value.substring(0, 10);
+            }
+            e.target.value = value;
+        });
+    }
+
+    // Gender icon update
+    const genderSelect = document.getElementById('gender');
+    if (genderSelect) {
+        genderSelect.addEventListener('change', function() {
+            const icon = this.parentElement.querySelector('.fa-venus-mars');
+            if (icon) {
+                if (this.value === 'Male') {
+                    icon.className = 'fas fa-male text-primary me-2';
+                } else if (this.value === 'Female') {
+                    icon.className = 'fas fa-female text-primary me-2';
+                } else {
+                    icon.className = 'fas fa-venus-mars text-primary me-2';
+                }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

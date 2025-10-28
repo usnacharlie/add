@@ -1,0 +1,232 @@
+{% extends "layouts/member_base.html" %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Welcome Section -->
+<div class="alert alert-primary" role="alert">
+    <h4 class="alert-heading">Welcome, {{ session.user_name }}!</h4>
+    <p>Membership Number: <strong>{{ stats.membership_number }}</strong> | Status:
+        <span class="badge bg-{{ 'success' if stats.membership_status == 'Active' else 'warning' }}">
+            {{ stats.membership_status }}
+        </span>
+    </p>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card border-primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Days Remaining</h6>
+                        <h3 class="mb-0">{{ stats.membership_days }}</h3>
+                        <small class="text-muted">Until renewal</small>
+                    </div>
+                    <div class="text-primary">
+                        <i class="fas fa-calendar-check fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Last Payment</h6>
+                        <h3 class="mb-0">
+                            {% if stats.last_payment %}
+                                K{{ "%.2f"|format(stats.last_payment.amount) }}
+                            {% else %}
+                                --
+                            {% endif %}
+                        </h3>
+                        {% if stats.last_payment %}
+                        <small class="text-muted">{{ stats.last_payment.payment_date[:10] }}</small>
+                        {% endif %}
+                    </div>
+                    <div class="text-success">
+                        <i class="fas fa-money-bill-wave fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Events Attended</h6>
+                        <h3 class="mb-0">{{ stats.events_attended }}</h3>
+                    </div>
+                    <div class="text-info">
+                        <i class="fas fa-calendar-alt fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Referrals</h6>
+                        <h3 class="mb-0">{{ stats.referrals_count }}</h3>
+                    </div>
+                    <div class="text-warning">
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Upcoming Events -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Upcoming Events</h5>
+                <a href="{{ url_for('member.events') }}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body">
+                {% if stats.upcoming_events %}
+                    <div class="list-group list-group-flush">
+                        {% for event in stats.upcoming_events[:3] %}
+                        <div class="list-group-item px-0">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ event.name }}</h6>
+                                <small class="text-muted">{{ event.date }}</small>
+                            </div>
+                            <p class="mb-1">{{ event.location }}</p>
+                            <small class="text-muted">{{ event.time }}</small>
+                            <button class="btn btn-sm btn-primary float-end" onclick="registerForEvent({{ event.id }})">
+                                Register
+                            </button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">No upcoming events at the moment.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('member.payments') }}" class="btn btn-primary">
+                        <i class="fas fa-credit-card"></i> Make Payment
+                    </a>
+                    <a href="{{ url_for('member.membership_card') }}" class="btn btn-success">
+                        <i class="fas fa-id-card"></i> View Membership Card
+                    </a>
+                    <a href="{{ url_for('member.referrals') }}" class="btn btn-info">
+                        <i class="fas fa-user-plus"></i> Refer a Friend
+                    </a>
+                    <a href="{{ url_for('member.volunteer') }}" class="btn btn-warning">
+                        <i class="fas fa-hands-helping"></i> Volunteer Opportunities
+                    </a>
+                    <a href="{{ url_for('member.profile') }}" class="btn btn-secondary">
+                        <i class="fas fa-user-edit"></i> Update Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activities -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Activities</h5>
+                <a href="{{ url_for('member.activities') }}" class="btn btn-sm btn-outline-secondary">View All</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Activity</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if stats.recent_activities %}
+                                {% for activity in stats.recent_activities %}
+                                <tr>
+                                    <td>{{ activity.date }}</td>
+                                    <td>{{ activity.type }}</td>
+                                    <td>{{ activity.description }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ activity.status_color }}">
+                                            {{ activity.status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">
+                                        No recent activities
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function registerForEvent(eventId) {
+    Swal.fire({
+        title: 'Register for Event?',
+        text: 'Do you want to register for this event?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Register',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`{{ url_for('member.register_event', event_id=0) }}`.replace('0', eventId), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('Success!', 'You have been registered for the event.', 'success');
+                } else {
+                    Swal.fire('Error', data.message, 'error');
+                }
+            });
+        }
+    });
+}
+</script>
+{% endblock %}

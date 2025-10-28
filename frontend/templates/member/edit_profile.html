@@ -1,0 +1,400 @@
+{% extends "layouts/member_base.html" %}
+
+{% block page_title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3><i class="fas fa-user-edit me-2"></i>Edit Profile</h3>
+            <a href="{{ url_for('member.profile') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Back to Profile
+            </a>
+        </div>
+
+        <form method="POST" action="{{ url_for('member.edit_profile') }}" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+            <!-- Personal Information -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user me-2"></i>Personal Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name"
+                                   value="{{ member.first_name or '' }}" readonly>
+                            <small class="text-muted">Contact admin to change</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name"
+                                   value="{{ member.last_name or '' }}" readonly>
+                            <small class="text-muted">Contact admin to change</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="nrc" class="form-label">NRC Number</label>
+                            <input type="text" class="form-control" id="nrc" name="nrc"
+                                   value="{{ member.nrc or '' }}" readonly>
+                            <small class="text-muted">Contact admin to change</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="date_of_birth" class="form-label">Date of Birth</label>
+                            <input type="date" class="form-control" id="date_of_birth" name="date_of_birth"
+                                   value="{{ member.date_of_birth or '' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select class="form-select" id="gender" name="gender">
+                                <option value="">Select Gender</option>
+                                <option value="Male" {{ 'selected' if member.gender == 'Male' else '' }}>Male</option>
+                                <option value="Female" {{ 'selected' if member.gender == 'Female' else '' }}>Female</option>
+                                <option value="Other" {{ 'selected' if member.gender == 'Other' else '' }}>Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="marital_status" class="form-label">Marital Status</label>
+                            <select class="form-select" id="marital_status" name="marital_status">
+                                <option value="">Select Status</option>
+                                <option value="Single" {{ 'selected' if member.marital_status == 'Single' else '' }}>Single</option>
+                                <option value="Married" {{ 'selected' if member.marital_status == 'Married' else '' }}>Married</option>
+                                <option value="Divorced" {{ 'selected' if member.marital_status == 'Divorced' else '' }}>Divorced</option>
+                                <option value="Widowed" {{ 'selected' if member.marital_status == 'Widowed' else '' }}>Widowed</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location & Political Information -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Location & Political Information</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Current Location Display -->
+                    {% if member.constituency or member.ward %}
+                    <div class="alert alert-info mb-4">
+                        <h6 class="mb-2"><i class="fas fa-info-circle me-2"></i>Current Location</h6>
+                        <div class="row">
+                            {% if member.constituency %}
+                            <div class="col-md-6">
+                                <strong>Constituency:</strong> {{ member.constituency }}
+                            </div>
+                            {% endif %}
+                            {% if member.ward %}
+                            <div class="col-md-6">
+                                <strong>Ward:</strong> {{ member.ward }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <small class="text-muted mt-2 d-block">Use the dropdowns below to update your location</small>
+                    </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="province_id" class="form-label">Province</label>
+                            <select class="form-select" id="province_id" name="province_id">
+                                <option value="">Select Province</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="district_id" class="form-label">District</label>
+                            <select class="form-select" id="district_id" name="district_id" disabled>
+                                <option value="">Select Province First</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="constituency_id" class="form-label">Constituency</label>
+                            <select class="form-select" id="constituency_id" name="constituency_id" disabled>
+                                <option value="">Select District First</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="ward_id" class="form-label">Ward</label>
+                            <select class="form-select" id="ward_id" name="ward_id" disabled>
+                                <option value="">Select Constituency First</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="voter_registration_number" class="form-label">Voter Registration Number</label>
+                            <input type="text" class="form-control" id="voter_registration_number" name="voter_registration_number"
+                                   value="{{ member.voter_registration_number or '' }}"
+                                   placeholder="Enter your voter registration number">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-phone me-2"></i>Contact Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="phone" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control" id="phone" name="phone"
+                                   value="{{ member.phone or '' }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email"
+                                   value="{{ member.email or '' }}">
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="address" class="form-label">Physical Address</label>
+                            <textarea class="form-control" id="address" name="address" rows="3">{{ member.address or '' }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Information -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Additional Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="occupation" class="form-label">Occupation</label>
+                            <input type="text" class="form-control" id="occupation" name="occupation"
+                                   value="{{ member.occupation or '' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="education_level" class="form-label">Education Level</label>
+                            <select class="form-select" id="education_level" name="education_level">
+                                <option value="">Select Education Level</option>
+                                <option value="primary" {{ 'selected' if member.education_level == 'primary' else '' }}>Primary</option>
+                                <option value="secondary" {{ 'selected' if member.education_level == 'secondary' else '' }}>Secondary</option>
+                                <option value="tertiary" {{ 'selected' if member.education_level == 'tertiary' else '' }}>Tertiary</option>
+                                <option value="university" {{ 'selected' if member.education_level == 'university' else '' }}>University</option>
+                                <option value="postgraduate" {{ 'selected' if member.education_level == 'postgraduate' else '' }}>Postgraduate</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Communication Preferences -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-bell me-2"></i>Communication Preferences</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="preferred_language" class="form-label">Preferred Language</label>
+                            <select class="form-select" id="preferred_language" name="preferred_language">
+                                <option value="English" {{ 'selected' if member.preferred_language == 'English' else '' }}>English</option>
+                                <option value="Bemba" {{ 'selected' if member.preferred_language == 'Bemba' else '' }}>Bemba</option>
+                                <option value="Nyanja" {{ 'selected' if member.preferred_language == 'Nyanja' else '' }}>Nyanja</option>
+                                <option value="Tonga" {{ 'selected' if member.preferred_language == 'Tonga' else '' }}>Tonga</option>
+                                <option value="Lozi" {{ 'selected' if member.preferred_language == 'Lozi' else '' }}>Lozi</option>
+                                <option value="Kaonde" {{ 'selected' if member.preferred_language == 'Kaonde' else '' }}>Kaonde</option>
+                                <option value="Lunda" {{ 'selected' if member.preferred_language == 'Lunda' else '' }}>Lunda</option>
+                                <option value="Luvale" {{ 'selected' if member.preferred_language == 'Luvale' else '' }}>Luvale</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="communication_preference" class="form-label">Communication Preference</label>
+                            <select class="form-select" id="communication_preference" name="communication_preference">
+                                <option value="sms" {{ 'selected' if member.communication_preference == 'sms' else '' }}>SMS</option>
+                                <option value="email" {{ 'selected' if member.communication_preference == 'email' else '' }}>Email</option>
+                                <option value="whatsapp" {{ 'selected' if member.communication_preference == 'whatsapp' else '' }}>WhatsApp</option>
+                                <option value="phone" {{ 'selected' if member.communication_preference == 'phone' else '' }}>Phone Call</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Photo Upload -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-camera me-2"></i>Profile Photo</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-3 text-center mb-3">
+                            <img src="{{ member.photo_url if member.photo_url else '/static/img/default-avatar.png' }}"
+                                 alt="Current Photo"
+                                 class="rounded-circle"
+                                 style="width: 150px; height: 150px; object-fit: cover; border: 3px solid #2563eb;"
+                                 id="photoPreview">
+                        </div>
+                        <div class="col-md-9">
+                            <label for="photo" class="form-label">Upload New Photo</label>
+                            <input type="file" class="form-control" id="photo" name="photo" accept="image/*" onchange="previewPhoto(this)">
+                            <small class="text-muted">Accepted formats: JPG, PNG. Max size: 2MB</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('member.profile') }}" class="btn btn-secondary">
+                            <i class="fas fa-times me-1"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function previewPhoto(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('photoPreview').src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// Load provinces on page load
+$(document).ready(function() {
+    loadProvinces();
+});
+
+// Load provinces from API
+function loadProvinces() {
+    $.ajax({
+        url: '/auth/api/provinces',
+        method: 'GET',
+        success: function(data) {
+            let options = '<option value="">Select Province</option>';
+            data.forEach(province => {
+                options += `<option value="${province.id}">${province.province_name}</option>`;
+            });
+            $('#province_id').html(options);
+        },
+        error: function() {
+            console.error('Failed to load provinces');
+        }
+    });
+}
+
+// Province change - load districts
+$('#province_id').on('change', function() {
+    const provinceId = $(this).val();
+    const districtSelect = $('#district_id');
+    const constituencySelect = $('#constituency_id');
+    const wardSelect = $('#ward_id');
+
+    // Reset dependent dropdowns
+    constituencySelect.html('<option value="">Select District First</option>').prop('disabled', true);
+    wardSelect.html('<option value="">Select Constituency First</option>').prop('disabled', true);
+
+    if (provinceId) {
+        districtSelect.prop('disabled', true).html('<option value="">Loading...</option>');
+
+        $.ajax({
+            url: `/auth/api/districts/${provinceId}`,
+            method: 'GET',
+            success: function(data) {
+                let options = '<option value="">Select District</option>';
+                data.forEach(district => {
+                    options += `<option value="${district.id}">${district.district_name}</option>`;
+                });
+                districtSelect.html(options).prop('disabled', false);
+            },
+            error: function() {
+                districtSelect.html('<option value="">Error loading districts</option>');
+            }
+        });
+    } else {
+        districtSelect.html('<option value="">Select Province First</option>').prop('disabled', true);
+    }
+});
+
+// District change - load constituencies
+$('#district_id').on('change', function() {
+    const districtId = $(this).val();
+    const constituencySelect = $('#constituency_id');
+    const wardSelect = $('#ward_id');
+
+    // Reset ward dropdown
+    wardSelect.html('<option value="">Select Constituency First</option>').prop('disabled', true);
+
+    if (districtId) {
+        constituencySelect.prop('disabled', true).html('<option value="">Loading...</option>');
+
+        $.ajax({
+            url: `/auth/api/constituencies/${districtId}`,
+            method: 'GET',
+            success: function(data) {
+                let options = '<option value="">Select Constituency</option>';
+                data.forEach(constituency => {
+                    options += `<option value="${constituency.id}">${constituency.constituency_name}</option>`;
+                });
+                constituencySelect.html(options).prop('disabled', false);
+            },
+            error: function() {
+                constituencySelect.html('<option value="">Error loading constituencies</option>');
+            }
+        });
+    } else {
+        constituencySelect.html('<option value="">Select District First</option>').prop('disabled', true);
+    }
+});
+
+// Constituency change - load wards
+$('#constituency_id').on('change', function() {
+    const constituencyId = $(this).val();
+    const wardSelect = $('#ward_id');
+
+    if (constituencyId) {
+        wardSelect.prop('disabled', true).html('<option value="">Loading...</option>');
+
+        $.ajax({
+            url: `/auth/api/wards/${constituencyId}`,
+            method: 'GET',
+            success: function(data) {
+                let options = '<option value="">Select Ward</option>';
+                data.forEach(ward => {
+                    options += `<option value="${ward.id}">${ward.ward_name}</option>`;
+                });
+                wardSelect.html(options).prop('disabled', false);
+            },
+            error: function() {
+                wardSelect.html('<option value="">Error loading wards</option>');
+            }
+        });
+    } else {
+        wardSelect.html('<option value="">Select Constituency First</option>').prop('disabled', true);
+    }
+});
+
+// Form validation
+document.querySelector('form').addEventListener('submit', function(e) {
+    const phone = document.getElementById('phone').value;
+    if (!phone || phone.trim() === '') {
+        e.preventDefault();
+        Swal.fire({
+            icon: 'error',
+            title: 'Required Field',
+            text: 'Phone number is required',
+            confirmButtonColor: '#2563eb'
+        });
+        return false;
+    }
+});
+</script>
+{% endblock %}

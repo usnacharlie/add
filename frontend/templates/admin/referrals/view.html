@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}{{ referral.referred_name }} - Member Registry System{% endblock %}
+
+{% block page_title %}Referral Details{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h2 class="mb-2">{{ referral.referred_name }}</h2>
+                            <span class="badge bg-{% if referral.status == 'pending' %}warning{% elif referral.status == 'contacted' %}info{% elif referral.status == 'registered' %}success{% elif referral.status == 'declined' %}danger{% else %}secondary{% endif %} fs-6">
+                                {{ referral.status|title }}
+                            </span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a href="{{ url_for('referrals.edit_referral', referral_id=referral.id) }}" class="btn btn-outline-primary">
+                                <i class="fas fa-edit me-1"></i> Edit
+                            </a>
+                            <a href="{{ url_for('referrals.list_referrals') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Back
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary p-3">
+                                        <i class="fas fa-user-check fa-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="text-muted mb-1 small">REFERRING MEMBER</h6>
+                                    <p class="mb-0 fw-semibold">{{ referral.referrer_name }}</p>
+                                    {% if referral.referrer_contact %}
+                                    <small class="text-muted">{{ referral.referrer_contact }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="rounded-circle bg-info bg-opacity-10 text-info p-3">
+                                        <i class="fas fa-phone fa-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="text-muted mb-1 small">CONTACT</h6>
+                                    <p class="mb-0 fw-semibold">{{ referral.referred_contact }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if referral.referred_email %}
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="rounded-circle bg-success bg-opacity-10 text-success p-3">
+                                        <i class="fas fa-envelope fa-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="text-muted mb-1 small">EMAIL</h6>
+                                    <p class="mb-0 fw-semibold">{{ referral.referred_email }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="rounded-circle bg-warning bg-opacity-10 text-warning p-3">
+                                        <i class="fas fa-key fa-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="text-muted mb-1 small">REFERRAL CODE</h6>
+                                    <p class="mb-0 fw-semibold"><span class="badge bg-primary">{{ referral.referral_code }}</span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="rounded-circle bg-secondary bg-opacity-10 text-secondary p-3">
+                                        <i class="fas fa-calendar fa-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="text-muted mb-1 small">REFERRED DATE</h6>
+                                    <p class="mb-0 fw-semibold">{{ referral.referred_date[:10] }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if referral.contacted_date %}
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="rounded-circle bg-info bg-opacity-10 text-info p-3">
+                                        <i class="fas fa-calendar-check fa-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="text-muted mb-1 small">CONTACTED DATE</h6>
+                                    <p class="mb-0 fw-semibold">{{ referral.contacted_date[:10] }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if referral.registered_date %}
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="rounded-circle bg-success bg-opacity-10 text-success p-3">
+                                        <i class="fas fa-check-circle fa-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="text-muted mb-1 small">REGISTERED DATE</h6>
+                                    <p class="mb-0 fw-semibold">{{ referral.registered_date[:10] }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if referral.referred_member_name %}
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="rounded-circle bg-success bg-opacity-10 text-success p-3">
+                                        <i class="fas fa-user-plus fa-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="text-muted mb-1 small">MEMBER ACCOUNT</h6>
+                                    <p class="mb-0 fw-semibold">{{ referral.referred_member_name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if referral.notes %}
+                    <div class="mt-4 p-3 bg-light rounded">
+                        <h6 class="text-muted mb-2">Notes</h6>
+                        <p class="mb-0">{{ referral.notes }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

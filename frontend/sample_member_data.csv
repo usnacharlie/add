@@ -1,0 +1,11 @@
+First Name,Last Name,NRC Number,Phone,Gender,Age,Voter ID,Province,District,Ward,Email,Occupation
+John,Banda,123456/78/9,0977123456,M,35,10165522,Lusaka,Lusaka,Kabwata,john.banda@example.com,Teacher
+Mary,Mwanza,234567/89/1,0966234567,F,28,20275633,Copperbelt,Kitwe,Chimwemwe,mary.mwanza@example.com,Nurse
+Peter,Sakala,345678/90/2,0955345678,M,42,30386744,Southern,Livingstone,Dambwa,peter.sakala@example.com,Farmer
+Grace,Phiri,456789/01/3,0977456789,F,31,40497855,Eastern,Chipata,Kapata,grace.phiri@example.com,Business Owner
+James,Zulu,567890/12/4,0966567890,M,29,50508966,Western,Mongu,Lealui,james.zulu@example.com,Engineer
+Susan,Tembo,678901/23/5,0955678901,F,38,60610077,Northwestern,Solwezi,Kyawama,susan.tembo@example.com,Doctor
+David,Mulenga,789012/34/6,0977789012,M,33,70721188,Northern,Kasama,Chishimba,david.mulenga@example.com,Mechanic
+Ruth,Nkole,890123/45/7,0966890123,F,27,80832299,Muchinga,Chinsali,Fiwila,ruth.nkole@example.com,Secretary
+Francis,Nyirenda,901234/56/8,0955901234,M,45,90943300,Central,Kabwe,Bwacha,francis.nyirenda@example.com,Driver
+Jennifer,Lungu,012345/67/9,0977012345,F,26,01054411,Luapula,Mansa,Mansa Central,jennifer.lungu@example.com,Student

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Payments - Party Membership System{% endblock %}
+
+{% block content %}
+<div class="py-4">
+    <h2 class="mb-4">Membership Payments</h2>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Payment History</h5>
+                </div>
+                <div class="card-body">
+                    {% if payments %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Method</th>
+                                    <th>Year</th>
+                                    <th>Reference</th>
+                                    <th>Status</th>
+                                    <th>Receipt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for payment in payments %}
+                                <tr>
+                                    <td>{{ payment.payment_date }}</td>
+                                    <td>${{ payment.amount }}</td>
+                                    <td>{{ payment.payment_method|title }}</td>
+                                    <td>{{ payment.payment_year }}</td>
+                                    <td>{{ payment.payment_reference or '-' }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if payment.payment_status == 'completed' else 'warning' if payment.payment_status == 'pending' else 'danger' }}">
+                                            {{ payment.payment_status|title }}
+                                        </span>
+                                    </td>
+                                    <td>{{ payment.receipt_number }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No payment records found.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-header">
+                    <h5 class="mb-0">Payment Methods</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Available Payment Options:</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-cash text-success"></i> <strong>Cash:</strong><br>
+                            Visit any branch office
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-phone text-info"></i> <strong>Mobile Money:</strong><br>
+                            Send to: 0971234567
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-bank text-primary"></i> <strong>Bank Transfer:</strong><br>
+                            Account: 1234567890<br>
+                            Bank: Party Bank
+                        </li>
+                    </ul>
+
+                    <hr>
+
+                    <h6>Annual Membership Fees:</h6>
+                    <ul>
+                        <li>Regular Member: $50</li>
+                        <li>Youth Wing: $25</li>
+                        <li>Women's League: $30</li>
+                        <li>Diaspora: $100</li>
+                    </ul>
+
+                    <div class="alert alert-info mt-3">
+                        <i class="bi bi-info-circle"></i> After making payment, please keep your reference number for verification.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

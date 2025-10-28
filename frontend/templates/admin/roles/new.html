@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+
+{% block title %}Create Role - Member Registry System{% endblock %}
+
+{% block page_title %}Create New Role{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.03) 0%, rgba(16, 185, 129, 0.08) 100%);">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle me-3">
+                            <i class="fas fa-plus-circle fa-2x text-success"></i>
+                        </div>
+                        <div>
+                            <h2 class="mb-1 fw-bold">Create New Role</h2>
+                            <p class="text-muted mb-0">Define a new role for the system</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <form method="POST" id="roleForm">
+        <div class="row g-4">
+            <!-- Role Information -->
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm modern-card">
+                    <div class="card-header bg-white border-0 pb-0">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="fas fa-info-circle text-success me-2"></i>Role Information
+                        </h5>
+                    </div>
+                    <div class="card-body pt-3">
+                        <div class="mb-4">
+                            <label for="name" class="form-label">
+                                <i class="fas fa-tag text-success me-2"></i>Role Name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control form-control-lg" id="name" name="name"
+                                   required placeholder="e.g., Event Coordinator" maxlength="100">
+                            <small class="form-text text-muted">
+                                <i class="fas fa-lightbulb me-1"></i>
+                                Choose a clear, descriptive name for this role
+                            </small>
+                        </div>
+
+                        <div class="mb-0">
+                            <label for="description" class="form-label">
+                                <i class="fas fa-align-left text-success me-2"></i>Description
+                            </label>
+                            <textarea class="form-control" id="description" name="description"
+                                      rows="4" placeholder="Describe the responsibilities and scope of this role..."></textarea>
+                            <small class="form-text text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Provide a clear description of what this role can do
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Panel -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm modern-card">
+                    <div class="card-header bg-white border-0 pb-0">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="fas fa-info-circle text-info me-2"></i>Important Notes
+                        </h5>
+                    </div>
+                    <div class="card-body pt-3">
+                        <div class="alert alert-info mb-3">
+                            <i class="fas fa-lightbulb me-2"></i>
+                            <strong>Next Step:</strong> After creating the role, you can assign specific permissions to it.
+                        </div>
+
+                        <div class="info-item mb-3">
+                            <div class="info-icon-small bg-success-light me-2">
+                                <i class="fas fa-shield-alt text-success"></i>
+                            </div>
+                            <div>
+                                <strong>Custom Role</strong>
+                                <p class="text-muted mb-0 small">This role can be edited or deleted later</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item mb-3">
+                            <div class="info-icon-small bg-primary-light me-2">
+                                <i class="fas fa-key text-primary"></i>
+                            </div>
+                            <div>
+                                <strong>Permissions</strong>
+                                <p class="text-muted mb-0 small">Control access to different system features</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon-small bg-warning-light me-2">
+                                <i class="fas fa-users text-warning"></i>
+                            </div>
+                            <div>
+                                <strong>User Assignment</strong>
+                                <p class="text-muted mb-0 small">Assign this role to users after creation</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Fields marked with <span class="text-danger">*</span> are required
+                                </small>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a href="{{ url_for('roles.list_roles') }}"
+                                   class="btn btn-outline-secondary btn-lg px-5">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </a>
+                                <button type="submit" class="btn btn-success btn-lg px-5">
+                                    <i class="fas fa-check me-2"></i>Create Role
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+/* Icon Circle */
+.icon-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Modern Card */
+.modern-card {
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modern-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Form Styling */
+.form-label {
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.form-control,
+.form-select {
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #10b981;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+    outline: none;
+}
+
+.form-control-lg {
+    padding: 16px 18px;
+    font-size: 16px;
+}
+
+/* Info Items */
+.info-item {
+    display: flex;
+    align-items-flex-start;
+    gap: 0.75rem;
+}
+
+.info-icon-small {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.bg-success-light {
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.bg-primary-light {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+.bg-warning-light {
+    background: rgba(245, 158, 11, 0.1);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: none;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-outline-secondary {
+    border: 2px solid #6b7280;
+    color: #6b7280;
+}
+
+.btn-outline-secondary:hover {
+    background: #6b7280;
+    border-color: #6b7280;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Alert */
+.alert-info {
+    background: rgba(6, 182, 212, 0.1);
+    border: 2px solid rgba(6, 182, 212, 0.2);
+    border-radius: 12px;
+}
+
+/* Stagger Animation */
+.col-lg-8 .modern-card {
+    animation-delay: 0.1s;
+}
+
+.col-lg-4 .modern-card {
+    animation-delay: 0.2s;
+}
+</style>
+
+<script>
+// Form validation and enhancement
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('roleForm');
+
+    if (form) {
+        // Add loading state on submit
+        form.addEventListener('submit', function(e) {
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating...';
+            }
+        });
+
+        // Real-time validation
+        const nameInput = document.getElementById('name');
+        nameInput.addEventListener('input', function() {
+            if (this.value.length > 0) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

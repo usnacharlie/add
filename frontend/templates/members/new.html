@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+
+{% block title %}Add Members - Member Registry System{% endblock %}
+
+{% block page_title %}Quick Add Members{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="mb-2"><i class="fas fa-user-plus me-2"></i>Quick Add Members</h2>
+                            <p class="text-muted mb-0">Add up to 10 members at once</p>
+                        </div>
+                        <a href="{{ url_for('members.list_members') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Members
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="POST" id="memberForm">
+        <!-- Location Selection -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-primary text-white p-3">
+                        <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Location Information</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label for="province" class="form-label">Province <span class="text-danger">*</span></label>
+                                <select class="form-select" id="province" name="province_id" required>
+                                    <option value="">Select Province</option>
+                                    {% for province in provinces %}
+                                    <option value="{{ province.id }}">{{ province.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="district" class="form-label">District <span class="text-danger">*</span></label>
+                                <select class="form-select" id="district" name="district_id" required disabled>
+                                    <option value="">Select District</option>
+                                    {% for district in districts %}
+                                    <option value="{{ district.id }}" data-province="{{ district.province_id }}">{{ district.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="constituency" class="form-label">Constituency <span class="text-danger">*</span></label>
+                                <select class="form-select" id="constituency" name="constituency_id" required disabled>
+                                    <option value="">Select Constituency</option>
+                                    {% for constituency in constituencies %}
+                                    <option value="{{ constituency.id }}" data-district="{{ constituency.district_id }}">{{ constituency.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="ward" class="form-label">Ward <span class="text-danger">*</span></label>
+                                <select class="form-select" id="ward" name="member_0_ward_id" required disabled>
+                                    <option value="">Select Ward</option>
+                                    {% for ward in wards %}
+                                    <option value="{{ ward.id }}" data-constituency="{{ ward.constituency_id }}">{{ ward.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Members Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="fas fa-users me-2"></i>Member Details</h5>
+                            <button type="button" class="btn btn-sm btn-primary" onclick="addMemberRow()">
+                                <i class="fas fa-plus me-1"></i>Add Member
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+                        <div id="membersContainer">
+                            <!-- Member rows will be added here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4 text-center">
+                        <button type="submit" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-save me-2"></i>Add Members
+                        </button>
+                        <a href="{{ url_for('members.list_members') }}" class="btn btn-outline-secondary btn-lg px-5 ms-3">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+.member-card {
+    background: #f8fafc;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.member-card:hover {
+    border-color: #2563eb;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+}
+
+.member-card-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.member-number {
+    background: #2563eb;
+    color: white;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.remove-member-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 8px;
+}
+
+.form-control, .form-select {
+    border: 1px solid #d1d5db;
+    padding: 10px 14px;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.1);
+}
+
+.text-danger {
+    color: #dc2626 !important;
+}
+</style>
+
+<script>
+let memberCount = 0;
+const maxMembers = 10;
+
+// Initialize with 3 member rows
+window.addEventListener('DOMContentLoaded', function() {
+    for (let i = 0; i < 3; i++) {
+        addMemberRow();
+    }
+});
+
+function addMemberRow() {
+    if (memberCount >= maxMembers) {
+        alert(`Maximum ${maxMembers} members allowed`);
+        return;
+    }
+
+    const container = document.getElementById('membersContainer');
+    const wardId = document.getElementById('ward').value;
+
+    const memberCard = document.createElement('div');
+    memberCard.className = 'member-card';
+    memberCard.id = `member-${memberCount}`;
+
+    memberCard.innerHTML = `
+        <div class="member-card-header">
+            <div class="member-number">${memberCount + 1}</div>
+            <button type="button" class="btn btn-sm btn-outline-danger remove-member-btn" onclick="removeMemberRow(${memberCount})">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="member_${memberCount}_name" required>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Gender <span class="text-danger">*</span></label>
+                <select class="form-select" name="member_${memberCount}_gender" required>
+                    <option value="">Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Date of Birth</label>
+                <input type="date" class="form-control" name="member_${memberCount}_date_of_birth" max="${new Date().toISOString().split('T')[0]}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">NRC <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="member_${memberCount}_nrc" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Voter's ID <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="member_${memberCount}_voters_id" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Contact</label>
+                <input type="text" class="form-control" name="member_${memberCount}_contact">
+            </div>
+            <input type="hidden" name="member_${memberCount}_ward_id" value="${wardId}">
+        </div>
+    `;
+
+    container.appendChild(memberCard);
+    memberCount++;
+}
+
+function removeMemberRow(index) {
+    const memberCard = document.getElementById(`member-${index}`);
+    if (memberCard) {
+        memberCard.remove();
+        updateMemberNumbers();
+    }
+}
+
+function updateMemberNumbers() {
+    const cards = document.querySelectorAll('.member-card');
+    cards.forEach((card, index) => {
+        const numberDiv = card.querySelector('.member-number');
+        if (numberDiv) {
+            numberDiv.textContent = index + 1;
+        }
+    });
+}
+
+// Cascading dropdown logic
+document.getElementById('province').addEventListener('change', function() {
+    const provinceId = this.value;
+    const districtSelect = document.getElementById('district');
+    const constituencySelect = document.getElementById('constituency');
+    const wardSelect = document.getElementById('ward');
+
+    // Reset districts, constituencies, and wards
+    districtSelect.value = '';
+    constituencySelect.value = '';
+    wardSelect.value = '';
+    constituencySelect.disabled = true;
+    wardSelect.disabled = true;
+
+    if (provinceId) {
+        districtSelect.disabled = false;
+        // Filter districts
+        Array.from(districtSelect.options).forEach(option => {
+            if (option.value === '') {
+                option.style.display = 'block';
+            } else {
+                option.style.display = option.dataset.province === provinceId ? 'block' : 'none';
+            }
+        });
+    } else {
+        districtSelect.disabled = true;
+    }
+});
+
+document.getElementById('district').addEventListener('change', function() {
+    const districtId = this.value;
+    const constituencySelect = document.getElementById('constituency');
+    const wardSelect = document.getElementById('ward');
+
+    // Reset constituencies and wards
+    constituencySelect.value = '';
+    wardSelect.value = '';
+    wardSelect.disabled = true;
+
+    if (districtId) {
+        constituencySelect.disabled = false;
+        // Filter constituencies
+        Array.from(constituencySelect.options).forEach(option => {
+            if (option.value === '') {
+                option.style.display = 'block';
+            } else {
+                option.style.display = option.dataset.district === districtId ? 'block' : 'none';
+            }
+        });
+    } else {
+        constituencySelect.disabled = true;
+    }
+});
+
+document.getElementById('constituency').addEventListener('change', function() {
+    const constituencyId = this.value;
+    const wardSelect = document.getElementById('ward');
+
+    // Reset wards
+    wardSelect.value = '';
+
+    if (constituencyId) {
+        wardSelect.disabled = false;
+        // Filter wards
+        Array.from(wardSelect.options).forEach(option => {
+            if (option.value === '') {
+                option.style.display = 'block';
+            } else {
+                option.style.display = option.dataset.constituency === constituencyId ? 'block' : 'none';
+            }
+        });
+    } else {
+        wardSelect.disabled = true;
+    }
+});
+
+// Update ward_id in all member cards when ward changes
+document.getElementById('ward').addEventListener('change', function() {
+    const wardId = this.value;
+    document.querySelectorAll('input[name*="_ward_id"]').forEach(input => {
+        input.value = wardId;
+    });
+});
+
+// Form validation
+document.getElementById('memberForm').addEventListener('submit', function(e) {
+    const wardSelect = document.getElementById('ward');
+    if (!wardSelect.value) {
+        e.preventDefault();
+        alert('Please select a ward before submitting');
+        return false;
+    }
+
+    // Check if at least one member has a name
+    const memberNames = document.querySelectorAll('input[name*="_name"]');
+    let hasName = false;
+    memberNames.forEach(input => {
+        if (input.value.trim()) {
+            hasName = true;
+        }
+    });
+
+    if (!hasName) {
+        e.preventDefault();
+        alert('Please add at least one member');
+        return false;
+    }
+});
+</script>
+{% endblock %}

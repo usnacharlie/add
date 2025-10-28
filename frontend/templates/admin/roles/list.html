@@ -1,0 +1,366 @@
+{% extends "base.html" %}
+
+{% block title %}Roles Management - Member Registry System{% endblock %}
+
+{% block page_title %}Roles & Permissions{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.03) 0%, rgba(99, 102, 241, 0.08) 100%);">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-circle me-3">
+                                <i class="fas fa-user-shield fa-2x text-primary"></i>
+                            </div>
+                            <div>
+                                <h2 class="mb-1 fw-bold">Role Management</h2>
+                                <p class="text-muted mb-0">Manage roles and permissions for the system</p>
+                            </div>
+                        </div>
+                        <a href="{{ url_for('roles.create_role') }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus me-2"></i>Create Role
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm stat-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-primary-light me-3">
+                            <i class="fas fa-user-tag fa-2x text-primary"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Total Roles</h6>
+                            <h2 class="mb-0 fw-bold">{{ total }}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm stat-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-success-light me-3">
+                            <i class="fas fa-shield-alt fa-2x text-success"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">System Roles</h6>
+                            <h2 class="mb-0 fw-bold">{{ roles|selectattr('is_system_role')|list|length }}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm stat-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-info-light me-3">
+                            <i class="fas fa-user-cog fa-2x text-info"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Custom Roles</h6>
+                            <h2 class="mb-0 fw-bold">{{ roles|rejectattr('is_system_role')|list|length }}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Roles List -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="fas fa-list me-2 text-primary"></i>All Roles
+                        </h5>
+                        <div class="input-group" style="max-width: 300px;">
+                            <span class="input-group-text bg-white">
+                                <i class="fas fa-search text-muted"></i>
+                            </span>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search roles...">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    {% if roles %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="px-4 py-3">Role Name</th>
+                                    <th class="py-3">Description</th>
+                                    <th class="py-3 text-center">Type</th>
+                                    <th class="py-3 text-center">Created</th>
+                                    <th class="py-3 text-end pe-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rolesTable">
+                                {% for role in roles %}
+                                <tr class="role-row">
+                                    <td class="px-4 py-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="role-avatar me-3">
+                                                <i class="fas fa-user-shield"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-bold">{{ role.name }}</h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="py-3">
+                                        <span class="text-muted">{{ role.description or 'No description' }}</span>
+                                    </td>
+                                    <td class="py-3 text-center">
+                                        {% if role.is_system_role %}
+                                        <span class="badge bg-primary px-3 py-2">
+                                            <i class="fas fa-lock me-1"></i>System
+                                        </span>
+                                        {% else %}
+                                        <span class="badge bg-success px-3 py-2">
+                                            <i class="fas fa-user-edit me-1"></i>Custom
+                                        </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="py-3 text-center text-muted">
+                                        {{ role.created_at[:10] if role.created_at else 'N/A' }}
+                                    </td>
+                                    <td class="py-3 text-end pe-4">
+                                        <div class="btn-group">
+                                            <a href="{{ url_for('roles.view_role', role_id=role.id) }}"
+                                               class="btn btn-sm btn-outline-primary"
+                                               title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            {% if not role.is_system_role %}
+                                            <a href="{{ url_for('roles.edit_role', role_id=role.id) }}"
+                                               class="btn btn-sm btn-outline-secondary"
+                                               title="Edit Role">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    onclick="confirmDelete({{ role.id }}, '{{ role.name }}')"
+                                                    title="Delete Role">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                            {% endif %}
+                                            <a href="{{ url_for('roles.manage_permissions', role_id=role.id) }}"
+                                               class="btn btn-sm btn-outline-info"
+                                               title="Manage Permissions">
+                                                <i class="fas fa-key"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-user-shield fa-4x text-muted mb-4" style="opacity: 0.3;"></i>
+                        <h4 class="mb-3">No Roles Found</h4>
+                        <p class="text-muted mb-4">Create your first role to get started</p>
+                        <a href="{{ url_for('roles.create_role') }}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Create Role
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Confirm Delete
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the role <strong id="deleteRoleName"></strong>?</p>
+                <p class="text-danger mb-0">
+                    <i class="fas fa-exclamation-circle me-1"></i>
+                    This action cannot be undone!
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i>Delete Role
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Icon Circle */
+.icon-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Stat Cards */
+.stat-card {
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12) !important;
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bg-primary-light {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+.bg-success-light {
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.bg-info-light {
+    background: rgba(6, 182, 212, 0.1);
+}
+
+/* Table Styling */
+.table thead th {
+    font-weight: 600;
+    color: #4b5563;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.role-row {
+    transition: all 0.2s ease;
+}
+
+.role-row:hover {
+    background: #f8fafc;
+    transform: translateX(5px);
+}
+
+.role-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stat-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.stat-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.stat-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+/* Badge Styling */
+.badge {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Button Group */
+.btn-group .btn {
+    padding: 0.375rem 0.75rem;
+}
+
+/* Search Input */
+#searchInput {
+    border-left: none;
+}
+
+#searchInput:focus {
+    box-shadow: none;
+    border-color: #d1d5db;
+}
+
+.input-group-text {
+    border-right: none;
+}
+</style>
+
+<script>
+// Search functionality
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const rows = document.querySelectorAll('#rolesTable tr');
+
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchTerm) ? '' : 'none';
+    });
+});
+
+// Delete confirmation
+function confirmDelete(roleId, roleName) {
+    document.getElementById('deleteRoleName').textContent = roleName;
+    document.getElementById('deleteForm').action = `/admin/roles/${roleId}/delete`;
+
+    const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    modal.show();
+}
+</script>
+{% endblock %}

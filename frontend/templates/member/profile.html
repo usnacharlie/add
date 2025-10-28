@@ -1,0 +1,206 @@
+{% extends "layouts/member_base.html" %}
+
+{% block page_title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <!-- Profile Header -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        <div class="profile-photo mb-3">
+                            <img src="{{ member.photo_url if member.photo_url else '/static/img/default-avatar.png' }}"
+                                 alt="Profile Photo"
+                                 class="rounded-circle"
+                                 style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #2563eb;">
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <h3 class="mb-1">{{ session.user_name or 'Member' }}</h3>
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-id-card me-1"></i> {{ session.membership_number or 'N/A' }}
+                        </p>
+                        <p class="mb-1">
+                            <span class="badge bg-{{ 'success' if member.membership_status == 'Active' else 'warning' }}">
+                                {{ member.membership_status or 'Active' }}
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <a href="{{ url_for('member.edit_profile') }}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personal Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-user me-2"></i>Personal Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Full Name</label>
+                        <p class="mb-0"><strong>{{ session.user_name or 'N/A' }}</strong></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">NRC/Passport</label>
+                        <p class="mb-0"><strong>{{ member.nrc or 'N/A' }}</strong></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Date of Birth</label>
+                        <p class="mb-0"><strong>{% if member.date_of_birth %}{{ member.date_of_birth if member.date_of_birth is string else member.date_of_birth.strftime('%d/%m/%Y') }}{% else %}N/A{% endif %}</strong></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Gender</label>
+                        <p class="mb-0"><strong>{{ member.gender or 'N/A' }}</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-phone me-2"></i>Contact Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Phone Number</label>
+                        <p class="mb-0"><strong>{{ member.phone or 'N/A' }}</strong></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Email Address</label>
+                        <p class="mb-0"><strong>{{ member.email or 'N/A' }}</strong></p>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="text-muted small">Physical Address</label>
+                        <p class="mb-0"><strong>{{ member.address or 'N/A' }}</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Location Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Province</label>
+                        <p class="mb-0"><strong>{{ member.province or 'N/A' }}</strong></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">District</label>
+                        <p class="mb-0"><strong>{{ member.district or 'N/A' }}</strong></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Constituency</label>
+                        <p class="mb-0"><strong>{{ member.constituency or 'N/A' }}</strong></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Ward</label>
+                        <p class="mb-0"><strong>{{ member.ward or 'N/A' }}</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Membership Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-id-card me-2"></i>Membership Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Membership Number</label>
+                        <p class="mb-0"><strong class="text-primary">{{ session.membership_number or 'N/A' }}</strong></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Member Since</label>
+                        <p class="mb-0"><strong>{{ member.created_at.strftime('%B %d, %Y') if member.created_at else 'N/A' }}</strong></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Membership Status</label>
+                        <p class="mb-0">
+                            <span class="badge bg-{{ 'success' if member.membership_status == 'Active' else 'warning' }}">
+                                {{ member.membership_status or 'Active' }}
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Registration Type</label>
+                        <p class="mb-0">
+                            <span class="badge bg-{{ 'primary' if member.registration_type == 'full' else 'secondary' }}">
+                                {{ member.registration_type|upper if member.registration_type else 'LITE' }} KYC
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Additional Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Occupation</label>
+                        <p class="mb-0"><strong>{{ member.occupation or 'N/A' }}</strong></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Education Level</label>
+                        <p class="mb-0"><strong>{{ member.education_level or 'N/A' }}</strong></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Preferred Language</label>
+                        <p class="mb-0"><strong>{{ member.preferred_language or 'English' }}</strong></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Communication Preference</label>
+                        <p class="mb-0"><strong>{{ member.communication_preference|upper if member.communication_preference else 'SMS' }}</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <a href="{{ url_for('member.membership_card') }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-id-card me-1"></i> View Membership Card
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <a href="{{ url_for('member.edit_profile') }}" class="btn btn-outline-success w-100">
+                            <i class="fas fa-edit me-1"></i> Edit Profile
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <a href="{{ url_for('member.settings') }}" class="btn btn-outline-secondary w-100">
+                            <i class="fas fa-cog me-1"></i> Settings
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

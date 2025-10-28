@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADD USSD Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .simulator-container {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .phone-container {
+            background: #2c2c2c;
+            border-radius: 40px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            width: 350px;
+            position: relative;
+        }
+
+        .phone-container::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 5px;
+            background: #444;
+            border-radius: 10px;
+        }
+
+        .phone-screen {
+            background: #f5f5f5;
+            border-radius: 20px;
+            margin-top: 30px;
+            height: 600px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            background: #333;
+            color: white;
+            padding: 5px 15px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .carrier {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .signal-bars {
+            display: flex;
+            gap: 2px;
+            align-items: flex-end;
+        }
+
+        .signal-bar {
+            width: 3px;
+            background: white;
+            border-radius: 1px;
+        }
+
+        .ussd-display {
+            background: white;
+            height: calc(100% - 120px);
+            padding: 20px;
+            overflow-y: auto;
+            font-family: monospace;
+        }
+
+        .ussd-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .keypad {
+            background: #e0e0e0;
+            padding: 15px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .key-button {
+            background: white;
+            border: 1px solid #ccc;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+
+        .key-button:hover {
+            background: #f0f0f0;
+            transform: scale(1.05);
+        }
+
+        .key-button:active {
+            background: #ddd;
+            transform: scale(0.95);
+        }
+
+        .key-button.send {
+            background: #4CAF50;
+            color: white;
+            grid-column: span 2;
+        }
+
+        .key-button.cancel {
+            background: #f44336;
+            color: white;
+        }
+
+        .input-display {
+            background: #f9f9f9;
+            padding: 10px 15px;
+            font-size: 16px;
+            text-align: center;
+            font-family: monospace;
+            min-height: 40px;
+            border-top: 1px solid #ddd;
+        }
+
+        .control-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .session-info {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .history {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 12px;
+            font-family: monospace;
+        }
+
+        @media (max-width: 768px) {
+            .simulator-container {
+                flex-direction: column;
+            }
+
+            .phone-container, .control-panel {
+                width: 100%;
+                max-width: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="simulator-container">
+        <div class="phone-container">
+            <div class="phone-screen">
+                <div class="status-bar">
+                    <div class="carrier">
+                        <div class="signal-bars">
+                            <div class="signal-bar" style="height: 6px;"></div>
+                            <div class="signal-bar" style="height: 9px;"></div>
+                            <div class="signal-bar" style="height: 12px;"></div>
+                            <div class="signal-bar" style="height: 15px;"></div>
+                        </div>
+                        <span id="network-name">MTN</span>
+                    </div>
+                    <div class="time" id="phone-time">12:34</div>
+                    <div class="battery">🔋 89%</div>
+                </div>
+
+                <div class="ussd-display">
+                    <div class="loading" id="loading">
+                        <div class="spinner"></div>
+                        <p style="margin-top: 10px;">Processing...</p>
+                    </div>
+                    <div class="ussd-content" id="ussd-content">
+                        Dial *388*3# to start
+                    </div>
+                </div>
+
+                <div class="input-display" id="input-display"></div>
+
+                <div class="keypad">
+                    <button class="key-button" onclick="addInput('1')">1</button>
+                    <button class="key-button" onclick="addInput('2')">2</button>
+                    <button class="key-button" onclick="addInput('3')">3</button>
+                    <button class="key-button" onclick="addInput('4')">4</button>
+                    <button class="key-button" onclick="addInput('5')">5</button>
+                    <button class="key-button" onclick="addInput('6')">6</button>
+                    <button class="key-button" onclick="addInput('7')">7</button>
+                    <button class="key-button" onclick="addInput('8')">8</button>
+                    <button class="key-button" onclick="addInput('9')">9</button>
+                    <button class="key-button cancel" onclick="cancelSession()">✖</button>
+                    <button class="key-button" onclick="addInput('0')">0</button>
+                    <button class="key-button send" onclick="sendInput()">SEND</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <h2>🎮 USSD Simulator Control</h2>
+
+            <div class="control-group">
+                <label for="phone-number">Phone Number:</label>
+                <input type="text" id="phone-number" value="260979669350" placeholder="260XXXXXXXXX">
+            </div>
+
+            <div class="control-group">
+                <label for="network">Network:</label>
+                <select id="network" onchange="updateNetwork()">
+                    <option value="MTN">MTN Zambia</option>
+                    <option value="Airtel">Airtel Zambia</option>
+                    <option value="Zamtel">Zamtel</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="gateway-url">Gateway URL:</label>
+                <select id="gateway-url">
+                    <option value="http://localhost:57023/ussd">Local (localhost:57023)</option>
+                    <option value="http://31.97.113.202:57023/ussd">External (31.97.113.202:57023)</option>
+                </select>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="dialUSSD()">📞 Dial *388*3#</button>
+                <button class="btn btn-danger" onclick="endSession()">📴 End Session</button>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="quickFill('register')">⚡ Quick Register</button>
+                <button class="btn btn-secondary" onclick="quickFill('status')">📊 Check Status</button>
+            </div>
+
+            <div class="session-info">
+                <strong>Session Info:</strong>
+                <div>Session ID: <span id="session-id">None</span></div>
+                <div>Status: <span id="session-status">Idle</span></div>
+                <div>Inputs: <span id="input-count">0</span></div>
+            </div>
+
+            <div class="history">
+                <strong>Input History:</strong>
+                <div id="input-history"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let sessionId = null;
+        let textHistory = [];
+        let currentInput = '';
+        let sessionActive = false;
+
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('phone-time').textContent =
+                now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        function updateNetwork() {
+            const network = document.getElementById('network').value;
+            document.getElementById('network-name').textContent = network;
+        }
+
+        function generateSessionId() {
+            return `web_sim_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+        }
+
+        function addInput(value) {
+            if (!sessionActive) return;
+            currentInput += value;
+            document.getElementById('input-display').textContent = currentInput;
+        }
+
+        function clearInput() {
+            currentInput = '';
+            document.getElementById('input-display').textContent = '';
+        }
+
+        async function dialUSSD() {
+            sessionId = generateSessionId();
+            textHistory = [];
+            sessionActive = true;
+
+            updateSessionInfo();
+            await sendUSSD('');
+        }
+
+        async function sendInput() {
+            if (!sessionActive || !currentInput) return;
+
+            await sendUSSD(currentInput);
+            clearInput();
+        }
+
+        async function sendUSSD(input) {
+            const phoneNumber = document.getElementById('phone-number').value;
+            const gatewayUrl = document.getElementById('gateway-url').value;
+
+            if (input) {
+                textHistory.push(input);
+                addToHistory(input);
+            }
+
+            const requestData = {
+                sessionId: sessionId,
+                msisdn: phoneNumber,
+                text: textHistory.join('*')
+            };
+
+            // Show loading
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('ussd-content').style.display = 'none';
+
+            try {
+                const response = await fetch(gatewayUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                const data = await response.json();
+
+                // Hide loading
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('ussd-content').style.display = 'block';
+
+                // Display response
+                document.getElementById('ussd-content').textContent = data.response_string;
+
+                // Update session status
+                sessionActive = data.continue_session;
+                if (!sessionActive) {
+                    document.getElementById('session-status').textContent = 'Completed';
+                    clearInput();
+                } else {
+                    document.getElementById('session-status').textContent = 'Active';
+                }
+
+                updateSessionInfo();
+
+            } catch (error) {
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('ussd-content').style.display = 'block';
+                document.getElementById('ussd-content').textContent =
+                    '❌ Connection Error\n\nFailed to connect to USSD gateway.\nPlease check if the service is running.';
+                endSession();
+            }
+        }
+
+        function cancelSession() {
+            if (!sessionActive) return;
+            endSession();
+        }
+
+        function endSession() {
+            sessionActive = false;
+            sessionId = null;
+            textHistory = [];
+            currentInput = '';
+
+            document.getElementById('ussd-content').textContent = 'Session ended.\n\nDial *388*3# to start';
+            document.getElementById('input-display').textContent = '';
+            document.getElementById('session-status').textContent = 'Idle';
+            document.getElementById('session-id').textContent = 'None';
+            document.getElementById('input-count').textContent = '0';
+            document.getElementById('input-history').innerHTML = '';
+        }
+
+        function updateSessionInfo() {
+            document.getElementById('session-id').textContent = sessionId ? sessionId.substring(0, 20) + '...' : 'None';
+            document.getElementById('input-count').textContent = textHistory.length;
+            document.getElementById('session-status').textContent = sessionActive ? 'Active' : 'Idle';
+        }
+
+        function addToHistory(input) {
+            const historyDiv = document.getElementById('input-history');
+            const entry = document.createElement('div');
+            entry.textContent = `${textHistory.length}: ${input}`;
+            historyDiv.appendChild(entry);
+            historyDiv.scrollTop = historyDiv.scrollHeight;
+        }
+
+        async function quickFill(type) {
+            if (type === 'register') {
+                await dialUSSD();
+                setTimeout(() => { currentInput = '1'; sendInput(); }, 1000);
+            } else if (type === 'status') {
+                await dialUSSD();
+                setTimeout(() => { currentInput = '2'; sendInput(); }, 1000);
+            }
+        }
+
+        // Handle Enter key
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && sessionActive) {
+                sendInput();
+            }
+        });
+
+        // Handle number keys
+        document.addEventListener('keypress', (e) => {
+            if (sessionActive && e.key >= '0' && e.key <= '9') {
+                addInput(e.key);
+            }
+        });
+    </script>
+</body>
+</html>

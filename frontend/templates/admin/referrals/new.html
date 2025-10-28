@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}New Referral - Member Registry System{% endblock %}
+
+{% block page_title %}New Referral{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2 class="mb-2"><i class="fas fa-user-plus me-2"></i>New Referral</h2>
+                            <p class="text-muted mb-0">Record a new member referral</p>
+                        </div>
+                        <a href="{{ url_for('referrals.list_referrals') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Back
+                        </a>
+                    </div>
+
+                    <form method="post" action="{{ url_for('referrals.create_referral') }}">
+                        <div class="mb-4">
+                            <h5 class="fw-bold mb-3"><i class="fas fa-user-check me-2"></i>Referring Member</h5>
+
+                            <div class="mb-3">
+                                <label for="referrer_id" class="form-label fw-semibold">Member Making the Referral <span class="text-danger">*</span></label>
+                                <select class="form-select" id="referrer_id" name="referrer_id" required>
+                                    <option value="">Select member...</option>
+                                    {% for member in members %}
+                                    <option value="{{ member.id }}">{{ member.name }} - {{ member.contact }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="mb-4">
+                            <h5 class="fw-bold mb-3"><i class="fas fa-user me-2"></i>Referred Person Details</h5>
+
+                            <div class="mb-3">
+                                <label for="referred_name" class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="referred_name" name="referred_name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="referred_contact" class="form-label fw-semibold">Contact Number <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="referred_contact" name="referred_contact" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="referred_email" class="form-label fw-semibold">Email Address</label>
+                                <input type="email" class="form-control" id="referred_email" name="referred_email"
+                                       placeholder="optional">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="notes" class="form-label fw-semibold">Notes</label>
+                                <textarea class="form-control" id="notes" name="notes" rows="3"
+                                          placeholder="Any additional information about the referral..."></textarea>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{{ url_for('referrals.list_referrals') }}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-check me-1"></i> Create Referral
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}New Province - Member Registry System{% endblock %}
+
+{% block content %}
+<h1>Add New Province</h1>
+
+<form method="POST" class="form-container">
+    <div class="form-group">
+        <label for="name">Province Name*</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Create Province</button>
+        <a href="{{ url_for('locations.provinces') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}

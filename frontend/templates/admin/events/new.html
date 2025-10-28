@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}Create Event - Member Registry System{% endblock %}
+
+{% block page_title %}Create Event{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2 class="mb-2"><i class="fas fa-calendar-plus me-2"></i>Create Event</h2>
+                            <p class="text-muted mb-0">Fill in the details to create a new event</p>
+                        </div>
+                        <a href="{{ url_for('events.list_events') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Events
+                        </a>
+                    </div>
+
+                    <form method="post" action="{{ url_for('events.create_event') }}" id="eventForm">
+                        <!-- Basic Information -->
+                        <div class="mb-4">
+                            <h5 class="fw-bold mb-3"><i class="fas fa-info-circle me-2"></i>Basic Information</h5>
+
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="title" class="form-label fw-semibold">Event Title <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="title" name="title" required>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="description" class="form-label fw-semibold">Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="event_type" class="form-label fw-semibold">Event Type</label>
+                                    <select class="form-select" id="event_type" name="event_type">
+                                        <option value="">Select type...</option>
+                                        <option value="meeting">Meeting</option>
+                                        <option value="rally">Rally</option>
+                                        <option value="training">Training</option>
+                                        <option value="social">Social</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="max_attendees" class="form-label fw-semibold">Maximum Attendees</label>
+                                    <input type="number" class="form-control" id="max_attendees" name="max_attendees" min="1">
+                                    <small class="text-muted">Leave empty for unlimited</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Date & Time -->
+                        <div class="mb-4">
+                            <h5 class="fw-bold mb-3"><i class="fas fa-calendar-alt me-2"></i>Date & Time</h5>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="start_date" class="form-label fw-semibold">Start Date & Time <span class="text-danger">*</span></label>
+                                    <input type="datetime-local" class="form-control" id="start_date" name="start_date" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="end_date" class="form-label fw-semibold">End Date & Time</label>
+                                    <input type="datetime-local" class="form-control" id="end_date" name="end_date">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Location -->
+                        <div class="mb-4">
+                            <h5 class="fw-bold mb-3"><i class="fas fa-map-marker-alt me-2"></i>Location</h5>
+
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="location" class="form-label fw-semibold">Location/Address</label>
+                                    <input type="text" class="form-control" id="location" name="location">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="venue" class="form-label fw-semibold">Venue Details</label>
+                                    <textarea class="form-control" id="venue" name="venue" rows="2"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="province_id" class="form-label fw-semibold">Province</label>
+                                    <select class="form-select" id="province_id" name="province_id" onchange="loadDistricts()">
+                                        <option value="">Select province...</option>
+                                        {% for province in provinces %}
+                                        <option value="{{ province.id }}">{{ province.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="district_id" class="form-label fw-semibold">District</label>
+                                    <select class="form-select" id="district_id" name="district_id" disabled>
+                                        <option value="">Select district...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{{ url_for('events.list_events') }}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-check me-1"></i> Create Event
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Load districts when province changes
+    async function loadDistricts() {
+        const provinceId = document.getElementById('province_id').value;
+        const districtSelect = document.getElementById('district_id');
+
+        if (!provinceId) {
+            districtSelect.innerHTML = '<option value="">Select district...</option>';
+            districtSelect.disabled = true;
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:9500/api/v1/provinces/${provinceId}/districts`);
+            const districts = await response.json();
+
+            districtSelect.innerHTML = '<option value="">Select district...</option>';
+            districts.forEach(district => {
+                const option = document.createElement('option');
+                option.value = district.id;
+                option.textContent = district.name;
+                districtSelect.appendChild(option);
+            });
+            districtSelect.disabled = false;
+        } catch (error) {
+            console.error('Error loading districts:', error);
+        }
+    }
+
+    // Form validation
+    document.getElementById('eventForm').addEventListener('submit', function(e) {
+        const startDate = new Date(document.getElementById('start_date').value);
+        const endDate = document.getElementById('end_date').value;
+
+        if (endDate) {
+            const endDateTime = new Date(endDate);
+            if (endDateTime < startDate) {
+                e.preventDefault();
+                alert('End date must be after start date');
+                return false;
+            }
+        }
+    });
+
+    // Set minimum date to today
+    const today = new Date().toISOString().slice(0, 16);
+    document.getElementById('start_date').min = today;
+    document.getElementById('end_date').min = today;
+</script>
+{% endblock %}

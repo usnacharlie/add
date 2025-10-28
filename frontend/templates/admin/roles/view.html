@@ -1,0 +1,423 @@
+{% extends "base.html" %}
+
+{% block title %}{{ role.name }} - Member Registry System{% endblock %}
+
+{% block page_title %}Role Details{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm profile-header">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="role-avatar-large">
+                                <i class="fas fa-user-shield fa-4x"></i>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h2 class="mb-2 fw-bold">{{ role.name }}</h2>
+                                    <p class="text-muted mb-3">{{ role.description or 'No description provided' }}</p>
+                                    <div class="d-flex gap-2">
+                                        {% if role.is_system_role %}
+                                        <span class="badge bg-primary px-3 py-2">
+                                            <i class="fas fa-lock me-1"></i>System Role
+                                        </span>
+                                        {% else %}
+                                        <span class="badge bg-success px-3 py-2">
+                                            <i class="fas fa-user-edit me-1"></i>Custom Role
+                                        </span>
+                                        {% endif %}
+                                        <span class="badge bg-info px-3 py-2">
+                                            <i class="fas fa-key me-1"></i>{{ role.permissions|length }} Permissions
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a href="{{ url_for('roles.list_roles') }}" class="btn btn-outline-secondary">
+                                        <i class="fas fa-arrow-left me-2"></i>Back
+                                    </a>
+                                    {% if not role.is_system_role %}
+                                    <a href="{{ url_for('roles.edit_role', role_id=role.id) }}" class="btn btn-primary">
+                                        <i class="fas fa-edit me-2"></i>Edit Role
+                                    </a>
+                                    {% endif %}
+                                    <a href="{{ url_for('roles.manage_permissions', role_id=role.id) }}" class="btn btn-success">
+                                        <i class="fas fa-key me-2"></i>Manage Permissions
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Role Information -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm modern-card h-100">
+                <div class="card-header bg-white border-0 pb-0">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-info-circle text-primary me-2"></i>Role Information
+                    </h5>
+                </div>
+                <div class="card-body pt-3">
+                    <div class="info-list">
+                        <div class="info-item">
+                            <div class="info-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <i class="fas fa-hashtag"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Role ID</div>
+                                <div class="info-value">#{{ role.id }}</div>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">
+                                <i class="fas fa-tag"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Role Name</div>
+                                <div class="info-value">{{ role.name }}</div>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Role Type</div>
+                                <div class="info-value">
+                                    {% if role.is_system_role %}
+                                    <span class="badge bg-primary">System</span>
+                                    {% else %}
+                                    <span class="badge bg-success">Custom</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                                <i class="fas fa-calendar-plus"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Created Date</div>
+                                <div class="info-value">{{ role.created_at[:10] if role.created_at else 'N/A' }}</div>
+                            </div>
+                        </div>
+
+                        {% if role.updated_at %}
+                        <div class="info-item">
+                            <div class="info-icon" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Last Updated</div>
+                                <div class="info-value">{{ role.updated_at[:10] }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Permissions List -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm modern-card h-100">
+                <div class="card-header bg-white border-0 pb-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="fas fa-key text-success me-2"></i>Assigned Permissions ({{ role.permissions|length }})
+                        </h5>
+                        <a href="{{ url_for('roles.manage_permissions', role_id=role.id) }}" class="btn btn-sm btn-success">
+                            <i class="fas fa-edit me-2"></i>Manage
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body pt-3">
+                    {% if role.permissions %}
+                    {% set permissions_by_resource = {} %}
+                    {% for perm in role.permissions %}
+                        {% if perm.resource not in permissions_by_resource %}
+                            {% set _ = permissions_by_resource.update({perm.resource: []}) %}
+                        {% endif %}
+                        {% set _ = permissions_by_resource[perm.resource].append(perm) %}
+                    {% endfor %}
+
+                    <div class="permissions-grid">
+                        {% for resource, perms in permissions_by_resource.items() %}
+                        <div class="resource-group">
+                            <h6 class="resource-title">
+                                <i class="fas fa-folder-open me-2 text-primary"></i>
+                                {{ resource.title() }}
+                            </h6>
+                            <div class="permissions-list">
+                                {% for perm in perms %}
+                                <div class="permission-badge">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <span>{{ perm.name }}</span>
+                                    <small class="text-muted ms-2">({{ perm.action }})</small>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-key fa-4x text-muted mb-4" style="opacity: 0.3;"></i>
+                        <h5 class="mb-3">No Permissions Assigned</h5>
+                        <p class="text-muted mb-4">This role doesn't have any permissions yet</p>
+                        <a href="{{ url_for('roles.manage_permissions', role_id=role.id) }}" class="btn btn-success">
+                            <i class="fas fa-plus me-2"></i>Assign Permissions
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Cards -->
+    {% if not role.is_system_role %}
+    <div class="row g-4 mt-2">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm action-card" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">
+                <div class="card-body text-white text-center p-4">
+                    <i class="fas fa-edit fa-3x mb-3" style="opacity: 0.9;"></i>
+                    <h5 class="fw-bold mb-3">Edit Role</h5>
+                    <p class="mb-3 small">Update role name and description</p>
+                    <a href="{{ url_for('roles.edit_role', role_id=role.id) }}" class="btn btn-light btn-sm">
+                        <i class="fas fa-edit me-2"></i>Edit Details
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm action-card" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                <div class="card-body text-white text-center p-4">
+                    <i class="fas fa-trash-alt fa-3x mb-3" style="opacity: 0.9;"></i>
+                    <h5 class="fw-bold mb-3">Delete Role</h5>
+                    <p class="mb-3 small">Permanently remove this role</p>
+                    <button type="button" class="btn btn-light btn-sm" onclick="confirmDelete()">
+                        <i class="fas fa-trash me-2"></i>Delete Role
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Confirm Delete
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete the role <strong>{{ role.name }}</strong>?</p>
+                    <p class="text-danger mb-0">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        This action cannot be undone!
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form action="{{ url_for('roles.delete_role', role_id=role.id) }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-2"></i>Delete Role
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+/* Profile Header */
+.profile-header {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.03) 0%, rgba(99, 102, 241, 0.08) 100%);
+}
+
+/* Role Avatar */
+.role-avatar-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+/* Modern Card */
+.modern-card {
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modern-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Info List */
+.info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.info-item:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+
+.info-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.info-content {
+    flex: 1;
+}
+
+.info-label {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 600;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 16px;
+    color: #1f2937;
+    font-weight: 600;
+}
+
+/* Permissions Grid */
+.permissions-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.resource-group {
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 2px solid #e5e7eb;
+}
+
+.resource-title {
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.permissions-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.permission-badge {
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.permission-badge:hover {
+    border-color: #10b981;
+    background: #f0fdf4;
+    transform: translateY(-2px);
+}
+
+/* Action Cards */
+.action-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.action-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Badge */
+.badge {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Stagger Animation */
+.col-lg-4 .modern-card {
+    animation-delay: 0.1s;
+}
+
+.col-lg-8 .modern-card {
+    animation-delay: 0.2s;
+}
+</style>
+
+<script>
+function confirmDelete() {
+    const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    modal.show();
+}
+</script>
+{% endblock %}

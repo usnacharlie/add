@@ -1,0 +1,25 @@
+# USSD Gateway Service Requirements
+# Political Party Membership System - ADD
+
+# Core dependencies
+Flask==2.3.2
+Flask-CORS==4.0.0
+requests==2.31.0
+redis==4.6.0
+
+# Security
+cryptography==41.0.3
+
+# Environment management
+python-dotenv==1.0.0
+
+# Logging
+colorlog==6.7.0
+
+# Testing
+pytest==7.4.0
+pytest-flask==1.2.0
+
+# Production server
+gunicorn==21.2.0
+gevent==23.7.0

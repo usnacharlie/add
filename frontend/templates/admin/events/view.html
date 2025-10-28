@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+
+{% block title %}{{ event.title }} - Member Registry System{% endblock %}
+
+{% block page_title %}Event Details{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Event Details Card -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h2 class="mb-2">{{ event.title }}</h2>
+                            <span class="badge bg-{% if event.status == 'upcoming' %}info{% elif event.status == 'ongoing' %}success{% elif event.status == 'completed' %}warning{% else %}danger{% endif %} fs-6">
+                                {{ event.status|title }}
+                            </span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a href="{{ url_for('events.edit_event', event_id=event.id) }}" class="btn btn-outline-primary">
+                                <i class="fas fa-edit me-1"></i> Edit
+                            </a>
+                            <a href="{{ url_for('events.list_events') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Back
+                            </a>
+                        </div>
+                    </div>
+
+                    {% if event.description %}
+                    <p class="text-muted mb-4">{{ event.description }}</p>
+                    {% endif %}
+
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary p-3">
+                                        <i class="fas fa-calendar fa-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="text-muted mb-1 small">START DATE</h6>
+                                    <p class="mb-0 fw-semibold">{{ event.start_date[:16].replace('T', ' ') }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if event.end_date %}
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="rounded-circle bg-success bg-opacity-10 text-success p-3">
+                                        <i class="fas fa-calendar-check fa-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="text-muted mb-1 small">END DATE</h6>
+                                    <p class="mb-0 fw-semibold">{{ event.end_date[:16].replace('T', ' ') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if event.event_type %}
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="rounded-circle bg-info bg-opacity-10 text-info p-3">
+                                        <i class="fas fa-tag fa-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="text-muted mb-1 small">EVENT TYPE</h6>
+                                    <p class="mb-0 fw-semibold">{{ event.event_type|title }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if event.location %}
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="rounded-circle bg-warning bg-opacity-10 text-warning p-3">
+                                        <i class="fas fa-map-marker-alt fa-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="text-muted mb-1 small">LOCATION</h6>
+                                    <p class="mb-0 fw-semibold">{{ event.location }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary p-3">
+                                        <i class="fas fa-users fa-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="text-muted mb-1 small">REGISTRATIONS</h6>
+                                    <p class="mb-0 fw-semibold">{{ event.registration_count }}{% if event.max_attendees %} / {{ event.max_attendees }}{% endif %}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="rounded-circle bg-success bg-opacity-10 text-success p-3">
+                                        <i class="fas fa-check-circle fa-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="text-muted mb-1 small">ATTENDANCE</h6>
+                                    <p class="mb-0 fw-semibold">{{ event.attendance_count }} attended</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if event.province_name %}
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="rounded-circle bg-secondary bg-opacity-10 text-secondary p-3">
+                                        <i class="fas fa-map-marked-alt fa-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="text-muted mb-1 small">PROVINCE</h6>
+                                    <p class="mb-0 fw-semibold">{{ event.province_name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if event.district_name %}
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="rounded-circle bg-secondary bg-opacity-10 text-secondary p-3">
+                                        <i class="fas fa-map-pin fa-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="text-muted mb-1 small">DISTRICT</h6>
+                                    <p class="mb-0 fw-semibold">{{ event.district_name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if event.venue %}
+                    <div class="mt-4 p-3 bg-light rounded">
+                        <h6 class="text-muted mb-2">Venue Details</h6>
+                        <p class="mb-0">{{ event.venue }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendees List -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-users me-2"></i>Attendees ({{ total_attendees }})
+                        </h5>
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-success btn-sm" onclick="markAttendance(true)"
+                                    id="markAttendedBtn" style="display: none;">
+                                <i class="fas fa-check-circle me-1"></i> Mark as Attended
+                            </button>
+                            <button type="button" class="btn btn-warning btn-sm" onclick="markAttendance(false)"
+                                    id="unmarkAttendedBtn" style="display: none;">
+                                <i class="fas fa-times-circle me-1"></i> Unmark Attended
+                            </button>
+                            <a href="{{ url_for('events.register_for_event', event_id=event.id) }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-user-plus me-1"></i> Register Member
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    {% if attendees %}
+                        <form id="attendanceForm">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="px-4 py-3" style="width: 50px;">
+                                                <input type="checkbox" class="form-check-input" id="selectAll" onchange="toggleSelectAll()">
+                                            </th>
+                                            <th class="py-3">Member Name</th>
+                                            <th class="py-3">Contact</th>
+                                            <th class="py-3">Notes</th>
+                                            <th class="py-3">Status</th>
+                                            <th class="py-3 text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for attendee in attendees %}
+                                        <tr>
+                                            <td class="px-4 py-3">
+                                                <input class="form-check-input attendee-checkbox" type="checkbox"
+                                                       value="{{ attendee.member_id }}" id="attendee-{{ attendee.id }}"
+                                                       onchange="updateButtons()">
+                                            </td>
+                                            <td class="py-3">
+                                                <strong>{{ attendee.member_name }}</strong>
+                                            </td>
+                                            <td class="py-3">
+                                                {% if attendee.member_contact %}
+                                                <small class="text-muted"><i class="fas fa-phone me-1"></i>{{ attendee.member_contact }}</small>
+                                                {% endif %}
+                                            </td>
+                                            <td class="py-3">
+                                                {% if attendee.notes %}
+                                                <small class="text-muted">{{ attendee.notes }}</small>
+                                                {% endif %}
+                                            </td>
+                                            <td class="py-3">
+                                                <span class="badge bg-{% if attendee.registration_status == 'registered' %}info{% elif attendee.registration_status == 'attended' %}success{% else %}secondary{% endif %}">
+                                                    {{ attendee.registration_status|title }}
+                                                </span>
+                                            </td>
+                                            <td class="py-3 text-center">
+                                                {% if attendee.registration_status != 'cancelled' %}
+                                                <form method="post" action="{{ url_for('events.cancel_registration', event_id=event.id, member_id=attendee.member_id) }}"
+                                                      onsubmit="return confirm('Cancel this registration?')" style="display: inline;">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-users fa-4x mb-3 text-muted" style="opacity: 0.3;"></i>
+                            <h5>No Attendees Yet</h5>
+                            <p class="text-muted">Register members to this event</p>
+                            <a href="{{ url_for('events.register_for_event', event_id=event.id) }}" class="btn btn-primary mt-2">
+                                <i class="fas fa-user-plus me-1"></i> Register First Member
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleSelectAll() {
+        const selectAll = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.attendee-checkbox');
+        checkboxes.forEach(cb => cb.checked = selectAll.checked);
+        updateButtons();
+    }
+
+    function updateButtons() {
+        const checkboxes = document.querySelectorAll('.attendee-checkbox:checked');
+        const markBtn = document.getElementById('markAttendedBtn');
+        const unmarkBtn = document.getElementById('unmarkAttendedBtn');
+
+        if (checkboxes.length > 0) {
+            markBtn.style.display = 'inline-block';
+            unmarkBtn.style.display = 'inline-block';
+        } else {
+            markBtn.style.display = 'none';
+            unmarkBtn.style.display = 'none';
+        }
+    }
+
+    function markAttendance(asAttended) {
+        const checkboxes = document.querySelectorAll('.attendee-checkbox:checked');
+        const memberIds = Array.from(checkboxes).map(cb => cb.value);
+
+        if (memberIds.length === 0) {
+            alert('Please select at least one attendee');
+            return;
+        }
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ url_for("events.mark_attendance", event_id=event.id) }}';
+
+        memberIds.forEach(id => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'member_ids[]';
+            input.value = id;
+            form.appendChild(input);
+        });
+
+        const attendedInput = document.createElement('input');
+        attendedInput.type = 'hidden';
+        attendedInput.name = 'mark_as_attended';
+        attendedInput.value = asAttended ? 'true' : 'false';
+        form.appendChild(attendedInput);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+{% endblock %}

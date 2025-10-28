@@ -1,0 +1,372 @@
+{% extends "layouts/admin_base.html" %}
+
+{% block page_title %}Admin Dashboard{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active">Dashboard</li>
+{% endblock %}
+
+{% block content %}
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase">Total Members</h6>
+                        <h2 class="mb-0">{{ stats.total_members | default(0) }}</h2>
+                        <small>{{ stats.active_members | default(0) }} active</small>
+                    </div>
+                    <div>
+                        <i class="fas fa-users fa-3x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase">Total Revenue</h6>
+                        <h2 class="mb-0">K{{ stats.total_revenue | default(0) | round(2) }}</h2>
+                        <small>This month</small>
+                    </div>
+                    <div>
+                        <i class="fas fa-money-bill-wave fa-3x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase">Pending Approvals</h6>
+                        <h2 class="mb-0">{{ stats.pending_approvals | default(0) }}</h2>
+                        <small>Requires action</small>
+                    </div>
+                    <div>
+                        <i class="fas fa-clock fa-3x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase">Upcoming Events</h6>
+                        <h2 class="mb-0">{{ stats.upcoming_events | default(0) }}</h2>
+                        <small>Next 30 days</small>
+                    </div>
+                    <div>
+                        <i class="fas fa-calendar-alt fa-3x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Membership Growth</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="membershipChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Member Distribution</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="distributionChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Registrations and Quick Actions -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Registrations</h5>
+                <a href="{{ url_for('admin.members') }}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Member ID</th>
+                                <th>Name</th>
+                                <th>Province</th>
+                                <th>Registration</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for member in stats.recent_registrations %}
+                            <tr>
+                                <td>{{ member.membership_number }}</td>
+                                <td>{{ member.first_name }} {{ member.last_name }}</td>
+                                <td>{{ member.province }}</td>
+                                <td>{{ member.created_at | default('') }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if member.status == 'Active' else 'warning' }}">
+                                        {{ member.status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('admin.member_detail', member_id=member.id) }}"
+                                       class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">No recent registrations</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#broadcastModal">
+                        <i class="fas fa-bullhorn"></i> Send Broadcast
+                    </button>
+                    <a href="{{ url_for('admin.create_event') }}" class="btn btn-success">
+                        <i class="fas fa-calendar-plus"></i> Create Event
+                    </a>
+                    <a href="{{ url_for('admin.reports') }}" class="btn btn-info">
+                        <i class="fas fa-chart-bar"></i> Generate Report
+                    </a>
+                    <button class="btn btn-warning" onclick="exportMembers()">
+                        <i class="fas fa-download"></i> Export Members
+                    </button>
+                    <a href="{{ url_for('admin.settings') }}" class="btn btn-secondary">
+                        <i class="fas fa-cog"></i> System Settings
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Health -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="mb-0">System Health</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-2">
+                    <small class="text-muted">Database</small>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" style="width: 95%">95%</div>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <small class="text-muted">API Server</small>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" style="width: 98%">98%</div>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <small class="text-muted">SMS Gateway</small>
+                    <div class="progress">
+                        <div class="progress-bar bg-warning" style="width: 75%">75%</div>
+                    </div>
+                </div>
+                <div>
+                    <small class="text-muted">Storage</small>
+                    <div class="progress">
+                        <div class="progress-bar bg-info" style="width: 60%">60%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Broadcast Modal -->
+<div class="modal fade" id="broadcastModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Send Broadcast Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="broadcastForm">
+                    <div class="mb-3">
+                        <label for="broadcastTitle" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="broadcastTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="broadcastMessage" class="form-label">Message</label>
+                        <textarea class="form-control" id="broadcastMessage" rows="4" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Channels</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="channelSMS" value="sms" checked>
+                            <label class="form-check-label" for="channelSMS">SMS</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="channelWhatsApp" value="whatsapp">
+                            <label class="form-check-label" for="channelWhatsApp">WhatsApp</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="channelEmail" value="email">
+                            <label class="form-check-label" for="channelEmail">Email</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="targetGroup" class="form-label">Target Group</label>
+                        <select class="form-select" id="targetGroup">
+                            <option value="all">All Members</option>
+                            <option value="active">Active Members Only</option>
+                            <option value="province">Specific Province</option>
+                            <option value="district">Specific District</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="sendBroadcast()">Send Broadcast</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Initialize Charts
+const ctx1 = document.getElementById('membershipChart').getContext('2d');
+const membershipChart = new Chart(ctx1, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+            label: 'New Members',
+            data: [120, 190, 300, 250, 420, 380],
+            borderColor: 'rgb(13, 110, 253)',
+            backgroundColor: 'rgba(13, 110, 253, 0.1)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true
+            }
+        }
+    }
+});
+
+const ctx2 = document.getElementById('distributionChart').getContext('2d');
+const distributionChart = new Chart(ctx2, {
+    type: 'doughnut',
+    data: {
+        labels: ['Lusaka', 'Copperbelt', 'Southern', 'Eastern', 'Others'],
+        datasets: [{
+            data: [35, 25, 15, 10, 15],
+            backgroundColor: [
+                'rgb(13, 110, 253)',
+                'rgb(25, 135, 84)',
+                'rgb(255, 193, 7)',
+                'rgb(220, 53, 69)',
+                'rgb(108, 117, 125)'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+
+function sendBroadcast() {
+    const channels = [];
+    if (document.getElementById('channelSMS').checked) channels.push('sms');
+    if (document.getElementById('channelWhatsApp').checked) channels.push('whatsapp');
+    if (document.getElementById('channelEmail').checked) channels.push('email');
+
+    const data = {
+        title: document.getElementById('broadcastTitle').value,
+        message: document.getElementById('broadcastMessage').value,
+        channels: channels,
+        target_group: document.getElementById('targetGroup').value
+    };
+
+    fetch('{{ url_for("admin.broadcast_message") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire('Success!', 'Broadcast message sent successfully.', 'success');
+            $('#broadcastModal').modal('hide');
+        } else {
+            Swal.fire('Error', data.message, 'error');
+        }
+    });
+}
+
+function exportMembers() {
+    Swal.fire({
+        title: 'Export Members',
+        text: 'Select export format',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'CSV',
+        cancelButtonText: 'Excel',
+        showDenyButton: true,
+        denyButtonText: 'PDF'
+    }).then((result) => {
+        if (result.isConfirmed || result.isDenied || result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire('Exporting...', 'Your file is being generated.', 'info');
+        }
+    });
+}
+</script>
+{% endblock %}

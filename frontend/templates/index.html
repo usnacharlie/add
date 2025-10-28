@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Member Registry System{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Member Registry System</h1>
+    <p>Manage member registration forms by Province, District, and Ward</p>
+    <div class="cta-buttons">
+        <a href="{{ url_for('forms.new_form') }}" class="btn btn-primary">New Registration Form</a>
+        <a href="{{ url_for('forms.list_forms') }}" class="btn btn-secondary">View Forms</a>
+    </div>
+</div>
+
+<div class="features">
+    <div class="feature-card">
+        <h3>Registration Forms</h3>
+        <p>Submit and manage member registration forms with up to 50 members per form</p>
+        <a href="{{ url_for('forms.list_forms') }}">View Forms →</a>
+    </div>
+    <div class="feature-card">
+        <h3>Member Management</h3>
+        <p>Search, view, and edit member information including NRC and Voter's ID</p>
+        <a href="{{ url_for('members.list_members') }}">View Members →</a>
+    </div>
+    <div class="feature-card">
+        <h3>Location Hierarchy</h3>
+        <p>Organize data by Province, District, and Ward</p>
+        <a href="{{ url_for('locations.provinces') }}">Manage Locations →</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Activities - Party Membership System{% endblock %}
+
+{% block content %}
+<div class="py-4">
+    <h2 class="mb-4">Party Activities & Events</h2>
+
+    <div class="row">
+        {% if activities %}
+            {% for activity in activities %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">{{ activity.activity_name }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-2">
+                            <i class="bi bi-tag"></i> <strong>Type:</strong>
+                            <span class="badge bg-info">{{ activity.activity_type|title }}</span>
+                        </p>
+                        <p class="mb-2">
+                            <i class="bi bi-calendar"></i> <strong>Date:</strong> {{ activity.activity_date }}
+                        </p>
+                        <p class="mb-2">
+                            <i class="bi bi-geo-alt"></i> <strong>Location:</strong> {{ activity.location }}
+                        </p>
+                        {% if activity.description %}
+                        <p class="mb-2">
+                            <i class="bi bi-info-circle"></i> <strong>Description:</strong><br>
+                            {{ activity.description }}
+                        </p>
+                        {% endif %}
+                        {% if activity.organizer %}
+                        <p class="mb-2">
+                            <i class="bi bi-person"></i> <strong>Organizer:</strong> {{ activity.organizer }}
+                        </p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ url_for('register_for_activity', activity_id=activity.id) }}"
+                           class="btn btn-primary btn-sm w-100">
+                            <i class="bi bi-check-circle"></i> Register for Event
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                <i class="bi bi-info-circle"></i> No upcoming activities at the moment. Check back later!
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

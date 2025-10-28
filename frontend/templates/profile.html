@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - Party Membership System{% endblock %}
+
+{% block content %}
+<div class="py-4">
+    <h2 class="mb-4">My Profile</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-circle fs-1 text-primary mb-3"></i>
+                    <h4>{{ current_user.first_name }} {{ current_user.last_name }}</h4>
+                    <p class="text-muted">{{ current_user.membership_number }}</p>
+                    <span class="badge bg-{{ 'success' if current_user.membership_status == 'active' else 'warning' }} mb-3">
+                        {{ current_user.membership_status|title }}
+                    </span>
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('update_profile') }}" class="btn btn-primary">
+                            <i class="bi bi-pencil"></i> Edit Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Personal Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">First Name</label>
+                            <p class="fw-bold">{{ current_user.data.first_name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Last Name</label>
+                            <p class="fw-bold">{{ current_user.data.last_name }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Middle Name</label>
+                            <p class="fw-bold">{{ current_user.data.middle_name or 'Not provided' }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Gender</label>
+                            <p class="fw-bold">{{ current_user.data.gender }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Date of Birth</label>
+                            <p class="fw-bold">{{ current_user.data.date_of_birth }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">National ID</label>
+                            <p class="fw-bold">{{ current_user.data.national_id }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Marital Status</label>
+                            <p class="fw-bold">{{ current_user.data.marital_status or 'Not provided' }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Education Level</label>
+                            <p class="fw-bold">{{ current_user.data.education_level or 'Not provided' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Contact Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Phone Number</label>
+                            <p class="fw-bold">{{ current_user.data.phone_number }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Alternate Phone</label>
+                            <p class="fw-bold">{{ current_user.data.alternate_phone or 'Not provided' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label text-muted">Email Address</label>
+                            <p class="fw-bold">{{ current_user.data.email or 'Not provided' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label text-muted">Physical Address</label>
+                            <p class="fw-bold">{{ current_user.data.physical_address }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label text-muted">Postal Address</label>
+                            <p class="fw-bold">{{ current_user.data.postal_address or 'Not provided' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Political Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label text-muted">Constituency</label>
+                            <p class="fw-bold">{{ current_user.data.constituency }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted">Ward</label>
+                            <p class="fw-bold">{{ current_user.data.ward }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted">Branch</label>
+                            <p class="fw-bold">{{ current_user.data.branch }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Membership Type</label>
+                            <p class="fw-bold">{{ current_user.data.membership_type|title }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Registration Date</label>
+                            <p class="fw-bold">{{ current_user.data.registration_date }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Employment Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Occupation</label>
+                            <p class="fw-bold">{{ current_user.data.occupation or 'Not provided' }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Employer</label>
+                            <p class="fw-bold">{{ current_user.data.employer or 'Not provided' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

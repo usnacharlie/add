@@ -1,0 +1,350 @@
+{% extends "base.html" %}
+
+{% block title %}USSD Registration - ADD Zambia{% endblock %}
+
+{% block content %}
+<style>
+/* Plain, minimal design */
+.plain-hero {
+    background: #0066CC;
+    color: white;
+    padding: 3rem 0;
+    text-align: center;
+}
+
+.ussd-code {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 1.5rem 0;
+    letter-spacing: 0.2em;
+}
+
+.step-section {
+    padding: 3rem 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.step-section:last-child {
+    border-bottom: none;
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    background: #0066CC;
+    color: white;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.phone-screen {
+    background: #f3f4f6;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    padding: 1.5rem;
+    font-family: monospace;
+    max-width: 400px;
+    margin: 2rem auto;
+}
+
+.screen-text {
+    line-height: 1.8;
+    color: #1f2937;
+}
+
+.feature-box {
+    padding: 2rem;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 1rem;
+}
+
+.faq-item {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+}
+
+@media (max-width: 768px) {
+    .ussd-code {
+        font-size: 2rem;
+    }
+}
+</style>
+
+<!-- Hero -->
+<div class="plain-hero">
+    <div class="container">
+        <h1>Register via USSD</h1>
+        <div class="ussd-code">*388*3#</div>
+        <p>Works on all mobile networks • No internet required</p>
+    </div>
+</div>
+
+<!-- Registration Steps -->
+<div class="container">
+    <!-- Step 1 -->
+    <div class="step-section">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="step-number">1</div>
+                <h3>Dial the USSD Code</h3>
+                <p>From any mobile phone, dial <strong>*388*3#</strong> and press call.</p>
+                <ul>
+                    <li>Works on any phone</li>
+                    <li>No internet needed</li>
+                    <li>Available 24/7</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <div class="phone-screen">
+                    <div class="screen-text">
+                        <strong>ADD Zambia Membership</strong><br><br>
+                        1. Register as new member<br>
+                        2. Check membership status<br>
+                        3. Make payment<br>
+                        4. Update information<br>
+                        5. Exit<br><br>
+                        Reply: _
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-section">
+        <div class="row">
+            <div class="col-md-6 order-md-2">
+                <div class="step-number">2</div>
+                <h3>Select Registration</h3>
+                <p>Choose option <strong>1</strong> to register as a new member.</p>
+                <p>Make sure you have your NRC number ready.</p>
+            </div>
+            <div class="col-md-6 order-md-1">
+                <div class="phone-screen">
+                    <div class="screen-text">
+                        <strong>Register as New Member</strong><br><br>
+                        Welcome to ADD!<br><br>
+                        Please enter your National ID (NRC) number:<br><br>
+                        Reply: _
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-section">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="step-number">3</div>
+                <h3>Enter Personal Details</h3>
+                <p>Follow the prompts to enter:</p>
+                <ul>
+                    <li>National ID (NRC)</li>
+                    <li>First name</li>
+                    <li>Last name</li>
+                    <li>Gender</li>
+                    <li>Date of birth</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <div class="phone-screen">
+                    <div class="screen-text">
+                        <strong>Personal Details</strong><br><br>
+                        NRC: 123456/78/9 ✓<br>
+                        First Name: John ✓<br>
+                        Last Name: Banda ✓<br><br>
+                        Enter your date of birth (DD/MM/YYYY):<br><br>
+                        Reply: _
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-section">
+        <div class="row">
+            <div class="col-md-6 order-md-2">
+                <div class="step-number">4</div>
+                <h3>Select Location</h3>
+                <p>Choose your location details:</p>
+                <ul>
+                    <li>Province</li>
+                    <li>District</li>
+                    <li>Constituency</li>
+                    <li>Ward</li>
+                </ul>
+            </div>
+            <div class="col-md-6 order-md-1">
+                <div class="phone-screen">
+                    <div class="screen-text">
+                        <strong>Select Province</strong><br><br>
+                        1. Central<br>
+                        2. Copperbelt<br>
+                        3. Eastern<br>
+                        4. Luapula<br>
+                        5. Lusaka<br>
+                        6. More...<br><br>
+                        Reply: _
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step-section">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="step-number">5</div>
+                <h3>Review & Confirm</h3>
+                <p>Review your information and confirm.</p>
+                <p>Once confirmed, you'll receive your membership number.</p>
+            </div>
+            <div class="col-md-6">
+                <div class="phone-screen">
+                    <div class="screen-text">
+                        <strong>Confirm Registration</strong><br><br>
+                        Name: John Banda<br>
+                        NRC: 123456/78/9<br>
+                        Location: Lusaka, Chawama<br><br>
+                        Is this correct?<br>
+                        1. Confirm<br>
+                        2. Edit<br><br>
+                        Reply: _
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="step-section">
+        <div class="row">
+            <div class="col-md-6 order-md-2">
+                <div class="step-number">✓</div>
+                <h3>Registration Complete</h3>
+                <p>You'll receive:</p>
+                <ul>
+                    <li>SMS with membership number</li>
+                    <li>Digital membership card access</li>
+                    <li>Payment instructions (K25 annual fee)</li>
+                    <li>Member portal link</li>
+                </ul>
+            </div>
+            <div class="col-md-6 order-md-1">
+                <div class="phone-screen">
+                    <div class="screen-text" style="text-align: center;">
+                        <strong>Success!</strong><br><br>
+                        <span style="font-size: 2rem;">✓</span><br><br>
+                        Registration Successful!<br><br>
+                        Membership: PM12345678<br><br>
+                        Check your SMS for details
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features -->
+<div style="background: #f9fafb; padding: 3rem 0;">
+    <div class="container">
+        <h2 class="text-center mb-4">Why USSD Registration?</h2>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="feature-box">
+                    <h5>Instant</h5>
+                    <p class="mb-0">Complete registration in 5-10 minutes</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="feature-box">
+                    <h5>Universal</h5>
+                    <p class="mb-0">Works on any phone, no smartphone needed</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="feature-box">
+                    <h5>Secure</h5>
+                    <p class="mb-0">Your data is encrypted and protected</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="feature-box">
+                    <h5>Multi-Language</h5>
+                    <p class="mb-0">Available in English, Bemba, Nyanja, Tonga, Lozi</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="feature-box">
+                    <h5>All Networks</h5>
+                    <p class="mb-0">MTN, Airtel, Zamtel - all operators supported</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="feature-box">
+                    <h5>Free</h5>
+                    <p class="mb-0">No registration fees (standard USSD charges apply)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FAQ -->
+<div class="container" style="padding: 3rem 0;">
+    <h2 class="text-center mb-4">Common Questions</h2>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="faq-item">
+                <h5>Do I need internet to register via USSD?</h5>
+                <p class="text-muted mb-0">No, USSD works without internet. You only need a mobile phone with network coverage.</p>
+            </div>
+            <div class="faq-item">
+                <h5>What information do I need?</h5>
+                <p class="text-muted mb-0">You'll need: Full name, NRC number, date of birth, gender, and location details.</p>
+            </div>
+            <div class="faq-item">
+                <h5>How much does it cost?</h5>
+                <p class="text-muted mb-0">Registration is FREE. You only pay standard USSD charges (less than K0.20). Annual membership is K25.</p>
+            </div>
+            <div class="faq-item">
+                <h5>How long does it take?</h5>
+                <p class="text-muted mb-0">USSD registration takes 5-10 minutes depending on response time.</p>
+            </div>
+            <div class="faq-item">
+                <h5>Will I get confirmation?</h5>
+                <p class="text-muted mb-0">Yes! You'll receive an SMS with your membership number and next steps.</p>
+            </div>
+            <div class="faq-item">
+                <h5>Can I register someone else?</h5>
+                <p class="text-muted mb-0">No, each person must register themselves using their own phone for security.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA -->
+<div style="background: #0066CC; color: white; padding: 3rem 0; text-align: center;">
+    <div class="container">
+        <h2>Ready to Join?</h2>
+        <div class="ussd-code">*388*3#</div>
+        <p>Available 24/7 on all networks</p>
+        <p class="mt-4">
+            <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg">Register Online Instead</a>
+        </p>
+    </div>
+</div>
+
+{% endblock %}

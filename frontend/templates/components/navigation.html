@@ -1,0 +1,96 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <!-- Logo/Brand -->
+        <a class="navbar-brand" href="{{ url_for('public.index') }}">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" height="30" class="d-inline-block align-text-top me-2">
+            {{ app_name }}
+        </a>
+
+        <!-- Mobile Toggle -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation Items -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Main Navigation -->
+            <ul class="navbar-nav me-auto">
+                {% for item in main_navigation %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == item.endpoint %}active{% endif %}"
+                       href="{{ url_for(item.endpoint) }}">
+                        <i class="fas fa-{{ item.icon }}"></i> {{ item.name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <!-- Right Side Items -->
+            <ul class="navbar-nav ms-auto">
+                <!-- Language Selector -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-globe"></i> {{ languages[current_language] }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                        {% for code, name in languages.items() %}
+                        <li>
+                            <a class="dropdown-item {% if code == current_language %}active{% endif %}"
+                               href="{{ url_for('public.set_language', lang=code) }}">
+                                {{ name }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+
+                {% if current_user.is_authenticated %}
+                <!-- User Menu -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle"></i> {{ current_user.name|default('Member') }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        {% if current_user.is_admin %}
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('admin.dashboard') }}">
+                                <i class="fas fa-user-shield"></i> Admin Panel
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        {% endif %}
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('member.dashboard') }}">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('member.profile') }}">
+                                <i class="fas fa-user"></i> Profile
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('auth.logout') }}">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                {% else %}
+                <!-- Login/Register -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.login') }}">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-light ms-2" href="{{ url_for('auth.register') }}">
+                        <i class="fas fa-user-plus"></i> Register
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Contact Alliance for Democracy and Development - UPND Alliance Partner</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<style>
+/* Modern Color Palette */
+:root {
+    --primary: #d42c2c;
+    --primary-dark: #b91c1c;
+    --primary-light: #f87171;
+    --accent: #fbbf24;
+    --dark: #1a1a1a;
+    --light: #ffffff;
+    --gray: #64748b;
+    --gray-light: #f8fafc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: white;
+    color: var(--dark);
+    line-height: 1.6;
+}
+
+/* Top Navigation */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 12px 0;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-logo {
+    text-decoration: none;
+}
+
+.page-logo img {
+    height: 50px;
+    width: auto;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-menu a {
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.nav-menu a:hover {
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.nav-menu a i {
+    font-size: 18px;
+}
+
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--dark);
+    cursor: pointer;
+}
+
+.mobile-menu {
+    position: fixed;
+    top: 74px;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.mobile-menu.active {
+    max-height: 300px;
+}
+
+.mobile-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mobile-menu li {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.mobile-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu a:hover {
+    background: var(--gray-light);
+    color: var(--primary);
+    padding-left: 32px;
+}
+
+.mobile-menu a i {
+    font-size: 18px;
+    width: 24px;
+}
+
+/* Hero Section */
+.contact-hero {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    padding: 154px 0 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 50%, rgba(212, 44, 44, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(251, 191, 36, 0.03) 0%, transparent 50%);
+}
+
+.contact-hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 24px;
+}
+
+.contact-hero .lead {
+    font-size: 1.25rem;
+    color: var(--gray);
+}
+
+/* Section */
+.section {
+    padding: 100px 0;
+}
+
+/* Contact Cards */
+.contact-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    height: 100%;
+    text-align: center;
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(212, 44, 44, 0.15);
+}
+
+.contact-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+}
+
+.contact-icon i {
+    font-size: 36px;
+    color: white;
+}
+
+.contact-card h4 {
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 16px;
+}
+
+.contact-card p {
+    color: var(--gray);
+    margin-bottom: 8px;
+}
+
+/* Form Styles */
+.form-card {
+    background: white;
+    border-radius: 20px;
+    padding: 50px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 8px;
+}
+
+.form-control, .form-select {
+    border: 2px solid var(--gray-light);
+    border-radius: 12px;
+    padding: 12px 16px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(212, 44, 44, 0.1);
+}
+
+textarea.form-control {
+    resize: vertical;
+}
+
+.btn-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 40px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    box-shadow: 0 10px 30px rgba(212, 44, 44, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(212, 44, 44, 0.4);
+    color: white;
+}
+
+/* USSD Section */
+.ussd-section {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    padding: 100px 0;
+    color: white;
+}
+
+.ussd-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+}
+
+.ussd-code {
+    font-size: 48px;
+    font-weight: 800;
+    color: white;
+    margin: 20px 0;
+    letter-spacing: 2px;
+}
+
+/* Social Media Section */
+.social-section {
+    background: var(--gray-light);
+    padding: 100px 0;
+}
+
+.social-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.social-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(212, 44, 44, 0.15);
+}
+
+.social-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+}
+
+.social-icon i {
+    font-size: 36px;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .contact-hero {
+        padding: 140px 0 60px;
+    }
+
+    .section {
+        padding: 60px 0;
+    }
+
+    .form-card {
+        padding: 30px 20px;
+    }
+
+    .nav-menu {
+        display: none;
+    }
+
+    .mobile-menu-toggle {
+        display: block;
+    }
+
+    .page-logo img {
+        height: 40px;
+    }
+}
+
+html {
+    scroll-behavior: smooth;
+}
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+    <div class="nav-container">
+        <a href="{{ url_for('public.index') }}" class="page-logo">
+            <img src="/static/img/logoadd.jpeg" alt="Alliance for Democracy and Development">
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="{{ url_for('public.index') }}"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="{{ url_for('public.about') }}"><i class="fas fa-info-circle"></i> About</a></li>
+            <li><a href="{{ url_for('public.contact') }}"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li><a href="{{ url_for('auth.login') }}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+        </ul>
+
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <ul>
+        <li><a href="{{ url_for('public.index') }}"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="{{ url_for('public.about') }}"><i class="fas fa-info-circle"></i> About</a></li>
+        <li><a href="{{ url_for('public.contact') }}"><i class="fas fa-envelope"></i> Contact</a></li>
+        <li><a href="{{ url_for('auth.login') }}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+    </ul>
+</div>
+
+<!-- Hero Section -->
+<section class="contact-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1>Get in Touch</h1>
+                <p class="lead">
+                    Have questions about ADD, wealth creation programs, or membership? We're here to help.
+                    Reach out to us through any of the channels below.
+                </p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div style="font-size: 120px; color: rgba(212, 44, 44, 0.1);">
+                    <i class="fas fa-comments"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Information -->
+<section class="section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h4>Phone</h4>
+                    <p>+260 211 123 456</p>
+                    <p style="font-size: 14px;">Monday - Friday<br>8:00 AM - 5:00 PM</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h4>Email</h4>
+                    <p>info@addzambia.com</p>
+                    <p style="font-size: 14px;">We'll respond within 24 hours</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h4>Headquarters</h4>
+                    <p>ADD Headquarters<br>Plot 123, Independence Avenue<br>Lusaka, Zambia</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form -->
+<section class="section" style="background: var(--gray-light);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="form-card">
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <h2 style="font-weight: 800; color: var(--dark); margin-bottom: 16px;">Send us a Message</h2>
+                        <p style="color: var(--gray); font-size: 18px;">
+                            Whether you're interested in joining, volunteering, or learning about our wealth creation initiatives
+                        </p>
+                    </div>
+
+                    <form id="contactForm">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="subject" class="form-label">Subject</label>
+                                <select class="form-select" id="subject" required>
+                                    <option value="">Select a subject</option>
+                                    <option value="membership">Membership Inquiry</option>
+                                    <option value="entrepreneurship">Entrepreneurship Programs</option>
+                                    <option value="events">Event Information</option>
+                                    <option value="volunteer">Volunteer Opportunities</option>
+                                    <option value="support">Technical Support</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label for="message" class="form-label">Message</label>
+                                <textarea class="form-control" id="message" rows="5" required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="text-center" style="margin-top: 32px;">
+                            <button type="submit" class="btn-modern btn-primary">
+                                <i class="fas fa-paper-plane"></i> Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- USSD Section -->
+<section class="ussd-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 style="font-weight: 800; margin-bottom: 24px; font-size: 2.5rem;">Quick Registration via USSD</h2>
+                <p style="font-size: 1.125rem; margin-bottom: 24px; opacity: 0.9;">
+                    No internet? No problem! Register as an ADD member and start your journey to wealth creation
+                    using USSD from any mobile phone across Zambia.
+                </p>
+                <div style="display: flex; align-items: center; gap: 20px; background: rgba(255, 255, 255, 0.1); padding: 24px; border-radius: 16px;">
+                    <i class="fas fa-mobile-alt" style="font-size: 48px;"></i>
+                    <div>
+                        <h5 style="margin-bottom: 8px; font-weight: 700;">Dial *388*3#</h5>
+                        <p style="margin: 0; opacity: 0.9;">Works on all networks • Available 24/7</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="ussd-card">
+                    <i class="fas fa-mobile-alt" style="font-size: 80px; margin-bottom: 20px;"></i>
+                    <div class="ussd-code">*388*3#</div>
+                    <p style="font-size: 18px; margin: 0; opacity: 0.9;">Simple • Fast • Accessible</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Social Media Section -->
+<section class="social-section">
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 60px;">
+            <h2 style="font-weight: 800; color: var(--dark); margin-bottom: 16px; font-size: 2.5rem;">Connect With Us</h2>
+            <p style="color: var(--gray); font-size: 18px;">
+                Follow us on social media for updates, events, and entrepreneurship opportunities
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="social-card">
+                    <div class="social-icon">
+                        <i class="fab fa-facebook-f"></i>
+                    </div>
+                    <h5 style="font-weight: 700; color: var(--dark); margin-bottom: 12px;">Facebook</h5>
+                    <p style="color: var(--gray); margin-bottom: 20px;">40,000+ Followers</p>
+                    <a href="https://www.facebook.com/p/Charles-Lubasi-Milupi-100025627500028/"
+                       target="_blank"
+                       class="btn-modern btn-primary"
+                       style="font-size: 14px; padding: 12px 24px;">
+                        <i class="fab fa-facebook-f"></i> Follow Us
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="social-card">
+                    <div class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </div>
+                    <h5 style="font-weight: 700; color: var(--dark); margin-bottom: 12px;">Twitter</h5>
+                    <p style="color: var(--gray); margin-bottom: 20px;">Latest Updates</p>
+                    <a href="#"
+                       class="btn-modern btn-primary"
+                       style="font-size: 14px; padding: 12px 24px;">
+                        <i class="fab fa-twitter"></i> Follow Us
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="social-card">
+                    <div class="social-icon">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                    <h5 style="font-weight: 700; color: var(--dark); margin-bottom: 12px;">Instagram</h5>
+                    <p style="color: var(--gray); margin-bottom: 20px;">Visual Stories</p>
+                    <a href="#"
+                       class="btn-modern btn-primary"
+                       style="font-size: 14px; padding: 12px 24px;">
+                        <i class="fab fa-instagram"></i> Follow Us
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+// Mobile menu toggle
+const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+const mobileMenu = document.getElementById('mobileMenu');
+
+if (mobileMenuToggle && mobileMenu) {
+    mobileMenuToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        mobileMenu.classList.toggle('active');
+        const icon = this.querySelector('i');
+        if (icon) {
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.top-nav') && !e.target.closest('.mobile-menu')) {
+            mobileMenu.classList.remove('active');
+            const icon = mobileMenuToggle.querySelector('i');
+            if (icon) {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+    });
+}
+
+// Contact form submission
+$('#contactForm').on('submit', function(e) {
+    e.preventDefault();
+
+    Swal.fire({
+        icon: 'success',
+        title: 'Message Sent!',
+        text: 'Thank you for contacting ADD. We will respond to your inquiry within 24 hours.',
+        confirmButtonColor: '#d42c2c',
+        confirmButtonText: 'OK'
+    }).then(() => {
+        // Reset form
+        this.reset();
+    });
+});
+</script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

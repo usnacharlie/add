@@ -1,0 +1,835 @@
+{
+	"info": {
+		"_postman_id": "da41a0f8-ec37-45e5-b9ce-b6730cf7f713",
+		"name": "cGrate Webservice API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "688123"
+	},
+	"item": [
+		{
+			"name": "Get Account Balance",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <kon:getAccountBalance/>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Zesco - Meter Number Look Up",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <kon:getBillCustomerName>\r\n            <serviceProvider>Zesco</serviceProvider>\r\n            <billPaymentAccountNumber>74002404239</billPaymentAccountNumber>\r\n        </kon:getBillCustomerName>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Successful",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/soap+xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <kon:getBillCustomerName>\r\n            <serviceProvider>Zesco</serviceProvider>\r\n            <billPaymentAccountNumber>74002404239</billPaymentAccountNumber>\r\n        </kon:getBillCustomerName>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/Konik/KonikWs",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"Konik",
+								"KonikWs"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "xml",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Apache-Coyote/1.1"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Servlet 2.5; JBoss-5.0/JBossWeb-2.1"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 27 Oct 2024 18:48:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/xml;charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "407"
+						}
+					],
+					"cookie": [],
+					"body": "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>\n    <env:Header></env:Header>\n    <env:Body>\n        <ns2:getBillCustomerNameResponse xmlns:ns2=\"http://konik.cgrate.com\">\n            <return>\n                <responseCode>0</responseCode>\n                <responseMessage>Bill Customer Name retrieved successfully</responseMessage>\n                <billCustomerName>N:KELVIN SEPETE</billCustomerName>\n            </return>\n        </ns2:getBillCustomerNameResponse>\n    </env:Body>\n</env:Envelope>"
+				}
+			]
+		},
+		{
+			"name": "Zesco - Purchase Token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n      <kon:purchaseZescoVoucher>\r\n         <Voucher>\r\n            <isFixed>false</isFixed>\r\n            <receipient>74002404239</receipient>\r\n            <serviceProvider>Zesco</serviceProvider>\r\n            <transactionReference>{{$guid}}</transactionReference>\r\n            <!-- <transactionReference>txn-281020240800</transactionReference> -->\r\n            <voucherType>Token</voucherType>\r\n            <voucherValue>1000</voucherValue>\r\n         </Voucher>\r\n      </kon:purchaseZescoVoucher>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>\r\n",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Airtel - Direct Top Up",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <kon:purchaseVoucher>\r\n            <Voucher xmlns=\"\">\r\n                <isFixed>false</isFixed>\r\n                <receipient>0978967132</receipient>\r\n                <serviceProvider>Airtel</serviceProvider>\r\n                <voucherType>Direct-Topup</voucherType>\r\n                <voucherValue>100</voucherValue>\r\n            </Voucher>\r\n        </kon:purchaseVoucher>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>\r\n",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MTN - Direct Top Up",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <kon:purchaseVoucher>\r\n            <Voucher xmlns=\"\">\r\n                <isFixed>false</isFixed>\r\n                <receipient>0961453688</receipient>\r\n                <serviceProvider>MTN</serviceProvider>\r\n                <voucherType>Direct-Topup</voucherType>\r\n                <voucherValue>100</voucherValue>\r\n            </Voucher>\r\n        </kon:purchaseVoucher>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>\r\n",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ZRA",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <kon:purchaseVoucher>\r\n            <Voucher xmlns=\"\">\r\n                <receipient>212410924311</receipient>\r\n                <serviceProvider>ZRA</serviceProvider>\r\n                <voucherType>Tax-Payment</voucherType>\r\n                <voucherValue>1</voucherValue>\r\n            </Voucher>\r\n        </kon:purchaseVoucher>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>\r\n",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Zamtel - Direct Top Up",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <kon:purchaseVoucher>\r\n            <Voucher xmlns=\"\">\r\n                <isFixed>false</isFixed>\r\n                <receipient>0952964685</receipient>\r\n                <serviceProvider>Zamtel</serviceProvider>\r\n                <voucherType>Direct-Topup</voucherType>\r\n                <voucherValue>100</voucherValue>\r\n            </Voucher>\r\n        </kon:purchaseVoucher>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>\r\n",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Zedmobile - Direct Top Up",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <kon:purchaseVoucher>\r\n            <Voucher xmlns=\"\">\r\n                <isFixed>false</isFixed>\r\n                <receipient>0980077945</receipient>\r\n                <serviceProvider>ZedMobile</serviceProvider>\r\n                <voucherType>Direct-Topup</voucherType>\r\n                <voucherValue>100</voucherValue>\r\n            </Voucher>\r\n        </kon:purchaseVoucher>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>\r\n",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LiquidTelecom",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <kon:purchaseVoucher>\r\n            <Voucher xmlns=\"\">\r\n                <isFixed>true</isFixed>\r\n                <receipient>260630875428</receipient>\r\n                <serviceProvider>LiquidTelecom</serviceProvider>\r\n                <voucherType>LiTESPEED</voucherType>\r\n                <voucherValue>5000</voucherValue>\r\n                <voucherId>EZPB41RQ5</voucherId>\r\n            </Voucher>\r\n        </kon:purchaseVoucher>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>\r\n",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Customer Payment - Process",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <kon:processCustomerPayment>\r\n            <transactionAmount>5</transactionAmount>\r\n            <customerMobile>0978967132</customerMobile> \r\n            <paymentReference>{{$guid}}</paymentReference>\r\n        </kon:processCustomerPayment>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Successful",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/soap+xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <kon:processCustomerPayment>\r\n            <transactionAmount>5</transactionAmount>\r\n            <!-- MUNDIA ZAMTEL ONE - 12345 -->\r\n            <customerMobile>0952964685</customerMobile> \r\n            <paymentReference>{{$guid}}</paymentReference>\r\n        </kon:processCustomerPayment>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/Konik/KonikWs",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"Konik",
+								"KonikWs"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "xml",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Apache-Coyote/1.1"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Servlet 2.5; JBoss-5.0/JBossWeb-2.1"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/xml;charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 27 Oct 2024 18:27:07 GMT"
+						},
+						{
+							"key": "X-Cache",
+							"value": "MISS from test.543.cgrate.co.zm"
+						},
+						{
+							"key": "X-Cache-Lookup",
+							"value": "MISS from test.543.cgrate.co.zm:9001"
+						},
+						{
+							"key": "Via",
+							"value": "1.0 test.543.cgrate.co.zm:9001 (squid/2.6.STABLE21)"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "<env:Envelope xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>\n    <env:Header></env:Header>\n    <env:Body>\n        <ns2:processCustomerPaymentResponse xmlns:ns2=\"http://konik.cgrate.com\">\n            <return>\n                <responseCode>0</responseCode>\n                <responseMessage>Successful</responseMessage>\n                <paymentID>XYAFNAFMU6B8</paymentID>\n            </return>\n        </ns2:processCustomerPaymentResponse>\n    </env:Body>\n</env:Envelope>"
+				}
+			]
+		},
+		{
+			"name": "Customer Payment - Query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <kon:queryCustomerPayment>\r\n            <paymentReference>123456789</paymentReference>\r\n        </kon:queryCustomerPayment>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cash Deposit - Process",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <!-- Charge of K5 -->\r\n        <kon:processCashDeposit>\r\n            <transactionAmount>5</transactionAmount>\r\n            <customerAccount>0956485998</customerAccount>\r\n            <issuerName>543</issuerName>\r\n            <depositorReference>{{$guid}}</depositorReference>\r\n        </kon:processCashDeposit>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cash Deposit - Get Issuers",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n      <kon:getAvailableCashDepositIssuers>\r\n      </kon:getAvailableCashDepositIssuers>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Transaction - Query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n      <kon:queryTransactionStatus>\r\n         <!--Optional:-->\r\n         <transactionReference>txn-281020240800</transactionReference>\r\n      </kon:queryTransactionStatus>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Data TopUp",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"UsernameToken-1\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <purchaseVoucher xmlns=\"http://konik.cgrate.com\">\r\n            <!-- <Voucher xmlns=\"\">\r\n                <isFixed>true</isFixed>\r\n                <receipient>0978967132</receipient>\r\n                <serviceProvider>Airtel</serviceProvider>\r\n                <voucherType>Pin-Topup</voucherType>\r\n                <voucherValue>100</voucherValue>\r\n                <voucherId>EGOD5BCQ0</voucherId>\r\n            </Voucher> -->\r\n            <Voucher xmlns=\"\">\r\n                <isFixed>true</isFixed>\r\n                <receipient>0762200229</receipient>\r\n                <serviceProvider>MTN</serviceProvider>\r\n                <voucherType>Data(Weekly)</voucherType>\r\n                <voucherValue>1000</voucherValue>\r\n                <!-- <voucherId>E2QL3LRW0</voucherId> -->\r\n            </Voucher>\r\n        </purchaseVoucher>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Vouchers",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"UsernameToken-1\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <kon:getVouchers/>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Provider Vouchers",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"UsernameToken-1\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <kon:getServiceProviderVouchersWithUnits>\r\n            <!-- <serviceProvider>LiquidTelecom</serviceProvider> -->\r\n            <!-- <serviceProvider>MTN</serviceProvider> -->\r\n            <!-- <serviceProvider>ZedMobile</serviceProvider> -->\r\n            <!-- <serviceProvider>GOtv</serviceProvider> -->\r\n            <!-- <serviceProvider>DStv</serviceProvider> -->\r\n            <!-- <serviceProvider>Multichoice-Hardware</serviceProvider> -->\r\n            <!-- <serviceProvider>FISP</serviceProvider> -->\r\n            <!-- <serviceProvider>WorkersCompensation</serviceProvider> -->\r\n            <!-- <serviceProvider>ZRA</serviceProvider> -->\r\n            <serviceProvider>Topstar</serviceProvider>\r\n        </kon:getServiceProviderVouchersWithUnits>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Multichoice-Hardware",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"UsernameToken-1\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <purchaseVoucher xmlns=\"http://konik.cgrate.com\">\r\n            <Voucher xmlns=\"\">\r\n                <isFixed>false</isFixed>\r\n                <receipient>123456789</receipient>\r\n                <serviceProvider>Multichoice-Hardware</serviceProvider>\r\n                <voucherType>DStv-Invoice-Payment</voucherType>\r\n                <voucherValue>100</voucherValue>\r\n                <voucherId>E65MYAK49</voucherId>\r\n            </Voucher>\r\n        </purchaseVoucher>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FISP",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"UsernameToken-1\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <purchaseVoucher xmlns=\"http://konik.cgrate.com\">\r\n            <Voucher xmlns=\"\">\r\n                <isFixed>false</isFixed>\r\n                <receipient>123456</receipient>\r\n                <serviceProvider>FISP</serviceProvider>\r\n                <voucherType>ATD</voucherType>\r\n                <voucherValue>10000</voucherValue>\r\n                <voucherId>E65MYAK49</voucherId>\r\n            </Voucher>\r\n        </purchaseVoucher>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getPRNData",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <kon:getBillPaymentBalanceDue>\r\n            <serviceProvider>ZRA</serviceProvider>\r\n            <billPaymentAccountNumber>9825832999127</billPaymentAccountNumber>\r\n        </kon:getBillPaymentBalanceDue>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "processZRAPayment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:kon=\"http://konik.cgrate.com\">\r\n    <soapenv:Header>\r\n        <wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soapenv:mustUnderstand=\"1\">\r\n            <wsse:UsernameToken xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"{{USERNAME}}\">\r\n                <wsse:Username>{{USERNAME}}</wsse:Username>\r\n                <wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{{PASSWORD}}</wsse:Password>\r\n            </wsse:UsernameToken>\r\n        </wsse:Security>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <kon:processZRAPayment>\r\n            <prn>212410924311</prn>\r\n            <!-- <customerMobile>0978967132</customerMobile> -->\r\n            <!-- <paymentReference>PD200000000132</paymentReference> -->\r\n            <paymentReference>{{$guid}}</paymentReference>\r\n        </kon:processZRAPayment>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/Konik/KonikWs",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"Konik",
+						"KonikWs"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
