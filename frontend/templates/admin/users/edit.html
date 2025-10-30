@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Edit System User - Member Registry System{% endblock %}
+
+{% block page_title %}Edit System User{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    {% if user %}
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="mb-2"><i class="fas fa-user-edit me-2"></i>Edit System User</h2>
+                            <p class="text-muted mb-0">Update user information and permissions</p>
+                        </div>
+                        <a href="{{ url_for('users.list_users') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Users
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <form method="POST">
+        <div class="row g-4">
+            <!-- User Information -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 pb-0">
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-id-card text-primary me-2"></i>User Information
+                        </h4>
+                    </div>
+                    <div class="card-body pt-3">
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-semibold">
+                                Full Name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control form-control-lg" id="name" name="name" value="{{ user.full_name }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">User ID</label>
+                            <input type="text" class="form-control form-control-lg" value="#{{ user.id }}" disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Email</label>
+                            <input type="text" class="form-control form-control-lg" value="{{ user.email }}" disabled>
+                            <small class="text-muted">Email cannot be changed</small>
+                        </div>
+
+                        <div class="mb-0">
+                            <label class="form-label fw-semibold">Phone</label>
+                            <input type="text" class="form-control form-control-lg" value="{{ user.phone if user.phone else 'N/A' }}" disabled>
+                            <small class="text-muted">Phone cannot be changed</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Role Settings -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 pb-0">
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-shield-alt text-success me-2"></i>Role & Permissions
+                        </h4>
+                    </div>
+                    <div class="card-body pt-3">
+                        <div class="mb-3">
+                            <label for="role" class="form-label fw-semibold">
+                                Role <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select form-select-lg" id="role" name="role" required>
+                                <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin - Full system access</option>
+                                <option value="coordinator" {% if user.role == 'coordinator' %}selected{% endif %}>Coordinator - Manage members and events</option>
+                                <option value="viewer" {% if user.role == 'viewer' %}selected{% endif %}>Viewer - Read-only access</option>
+                            </select>
+                        </div>
+
+                        <div class="alert alert-warning border-0">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Warning:</strong> Changing a user's role will affect their access permissions immediately.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4 text-center">
+                        <button type="submit" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-save me-2"></i>Save Changes
+                        </button>
+                        <a href="{{ url_for('users.list_users') }}" class="btn btn-outline-secondary btn-lg px-5 ms-3">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    {% else %}
+    <!-- User Not Found -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-user-slash fa-4x text-muted mb-4" style="opacity: 0.3;"></i>
+                    <h3 class="mb-3">User Not Found</h3>
+                    <p class="text-muted mb-4">The system user you're trying to edit doesn't exist.</p>
+                    <a href="{{ url_for('users.list_users') }}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Users List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.form-label {
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 8px;
+}
+
+.form-control,
+.form-select {
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.card-header h4 {
+    font-size: 18px;
+    padding: 1rem 0;
+}
+
+.btn {
+    border-radius: 8px;
+    font-weight: 600;
+}
+</style>
+{% endblock %}

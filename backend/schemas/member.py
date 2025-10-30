@@ -18,8 +18,9 @@ class MemberBase(BaseModel):
     date_of_birth: Optional[date] = None
     age: Optional[int] = None  # Keep for backward compatibility
     nrc: Optional[str] = None
-    voters_id: Optional[str] = None
+    voters_id: str  # Required and must be unique
     contact: Optional[str] = None
+    profile_picture: Optional[str] = None
     ward_id: int
 
 
@@ -35,6 +36,7 @@ class MemberUpdate(BaseModel):
     nrc: Optional[str] = None
     voters_id: Optional[str] = None
     contact: Optional[str] = None
+    profile_picture: Optional[str] = None
     ward_id: Optional[int] = None
 
 

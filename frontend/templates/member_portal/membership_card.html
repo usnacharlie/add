@@ -1,0 +1,748 @@
+{% extends "base.html" %}
+
+{% block title %}Membership Card - Member Registry System{% endblock %}
+
+{% block page_title %}My Membership Card{% endblock %}
+
+{% block extra_css %}
+<style>
+    .membership-card-preview {
+        max-width: 900px;
+        margin: 0 auto;
+        perspective: 1000px;
+        position: relative;
+        height: 550px;
+    }
+
+    .card-side {
+        position: absolute;
+        width: 100%;
+        height: 550px;
+        backface-visibility: hidden;
+        transition: transform 0.6s;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-front {
+        background: white;
+        color: #333;
+        padding: 30px;
+        border: 3px solid #047857;
+    }
+
+    .card-back {
+        background: white;
+        color: #333;
+        padding: 30px;
+        transform: rotateY(180deg);
+        border: 3px solid #047857;
+    }
+
+    .membership-card-preview.flipped .card-front {
+        transform: rotateY(180deg);
+    }
+
+    .membership-card-preview.flipped .card-back {
+        transform: rotateY(0deg);
+    }
+
+    .card-header-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 3px solid #059669;
+    }
+
+    .party-logo img {
+        width: 90px;
+        height: 90px;
+        border-radius: 8px;
+        padding: 8px;
+        object-fit: contain;
+        background: #f8fafc;
+        border: 2px solid #059669;
+    }
+
+    .party-name {
+        font-size: 18px;
+        font-weight: 700;
+        margin: 0;
+        color: #047857;
+    }
+
+    .party-info {
+        flex: 1;
+        text-align: center;
+    }
+
+    .card-type {
+        font-size: 16px;
+        font-weight: 800;
+        letter-spacing: 3px;
+        margin: 5px 0;
+        color: #059669;
+    }
+
+    .alliance-badge-front {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin: 5px 0 0 0;
+        color: #64748b;
+    }
+
+    .top-section {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .member-photo {
+        flex-shrink: 0;
+        width: 130px !important;
+        height: 170px !important;
+        overflow: hidden;
+        border-radius: 10px;
+        border: 3px solid #059669;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        background: #e2e8f0;
+        position: relative;
+    }
+
+    .member-photo img,
+    .member-photo div {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center !important;
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: none !important;
+        max-height: none !important;
+        min-width: 100% !important;
+        min-height: 100% !important;
+    }
+
+    .member-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .detail-row {
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .detail-row label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #047857;
+        white-space: nowrap;
+        min-width: 130px;
+    }
+
+    .detail-row .value {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1e293b;
+        flex: 1;
+    }
+
+    .membership-number {
+        font-family: 'Courier New', monospace;
+        font-size: 16px;
+        letter-spacing: 1px;
+        color: #047857;
+    }
+
+    .qr-section-front {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .qr-section-front .qr-code {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 8px;
+        background: white;
+        border-radius: 8px;
+        padding: 8px;
+        border: 2px solid #059669;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    .qr-section-front .qr-text small {
+        font-size: 10px;
+        color: #047857;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .location-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 20px;
+        margin-top: 0;
+    }
+
+    .location-details .detail-row {
+        margin-bottom: 0;
+    }
+
+    .location-details .detail-row label {
+        min-width: 100px;
+        font-size: 11px;
+    }
+
+    .location-details .detail-row .value {
+        font-size: 14px;
+    }
+
+    .barcode-section {
+        margin-top: 20px;
+        padding: 12px;
+        background: #ffffff;
+        border: 2px solid #059669;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .barcode-section svg {
+        max-width: 80%;
+        height: auto;
+    }
+
+    .barcode-text {
+        margin-top: 5px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #047857;
+        text-align: center;
+        font-family: 'Courier New', monospace;
+        text-transform: uppercase;
+    }
+
+    /* Back Side Styles */
+    .back-header {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        color: white;
+        padding: 15px;
+        margin: -30px -30px 20px -30px;
+        text-align: center;
+        border-bottom: 3px solid #047857;
+    }
+
+    .back-header h5 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        color: white;
+    }
+
+    .alliance-badge {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.9);
+    }
+
+    .back-content {
+        font-size: 13px;
+        display: flex;
+        gap: 20px;
+    }
+
+    .back-left {
+        flex: 1;
+    }
+
+    .back-right {
+        width: 180px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    .back-logos {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .back-logo-item {
+        width: 140px;
+        height: 140px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8fafc;
+        border: 2px solid #059669;
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    .back-logo-item img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .info-section {
+        margin-bottom: 20px;
+    }
+
+    .info-section h6 {
+        font-size: 14px;
+        font-weight: 700;
+        color: #047857;
+        margin-bottom: 10px;
+    }
+
+    .info-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        padding: 4px 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #047857;
+        min-width: 110px;
+        flex-shrink: 0;
+        font-size: 12px;
+    }
+
+    .info-value {
+        flex: 1;
+        color: #1e293b;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .terms-list {
+        font-size: 12px;
+        padding-left: 0;
+        list-style: none;
+    }
+
+    .terms-list li {
+        padding: 6px 0 6px 20px;
+        position: relative;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .terms-list li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #059669;
+        font-weight: bold;
+    }
+
+    .contact-info {
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 2px solid #059669;
+        font-size: 12px;
+        color: #1e293b;
+    }
+
+    .contact-info p {
+        margin-bottom: 5px;
+    }
+
+    .contact-info i {
+        color: #059669;
+    }
+
+    @media print {
+        @page {
+            size: landscape;
+            margin: 0.5cm;
+        }
+
+        body * {
+            visibility: hidden;
+        }
+
+        .no-print,
+        .sidebar,
+        .topbar,
+        nav,
+        header,
+        footer,
+        .card-controls,
+        .btn {
+            display: none !important;
+        }
+
+        .membership-card-container,
+        .membership-card-container *,
+        .membership-card-preview,
+        .membership-card-preview * {
+            visibility: visible !important;
+        }
+
+        .membership-card-container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+
+        .card-side {
+            box-shadow: none !important;
+            page-break-inside: avoid;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid membership-card-container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-sm no-print">
+                <div class="card-header d-flex justify-content-between align-items-center bg-white">
+                    <h5 class="mb-0"><i class="fas fa-id-card me-2 text-success"></i>Digital Membership Card</h5>
+                    <div>
+                        <button class="btn btn-success btn-sm me-2" onclick="downloadCard()">
+                            <i class="fas fa-download me-1"></i> Download PDF
+                        </button>
+                        <a href="{{ url_for('member_portal.dashboard') }}" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-arrow-left me-1"></i> Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Preview -->
+            <div class="membership-card-preview mt-3">
+                <!-- Front Side -->
+                <div class="card-side card-front">
+                    <div class="card-header-section">
+                        <div class="party-logo">
+                            <img src="{{ url_for('static', filename='img/logoadd.jpeg') }}" alt="ADD Logo">
+                        </div>
+                        <div class="party-info">
+                            <h4 class="party-name">Alliance for Democracy and Development (ADD)</h4>
+                            <p class="card-type">MEMBER CARD</p>
+                            <p class="alliance-badge-front"><i class="fas fa-handshake me-1"></i>In Alliance with UPND</p>
+                        </div>
+                        <div class="party-logo">
+                            <img src="{{ url_for('static', filename='img/upnd-logo.png') }}" alt="UPND Logo" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+
+                    <div class="top-section">
+                        <div class="member-photo">
+                            {% if member.profile_picture %}
+                            <img src="{{ url_for('static', filename=member.profile_picture) }}" alt="{{ member.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            {% else %}
+                            <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #059669 0%, #047857 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 60px; font-weight: bold;">
+                                {{ member.name[0] if member.name else 'M' }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="member-details">
+                            <div class="detail-row">
+                                <label>Full Name</label>
+                                <div class="value">{{ member.name or 'N/A' }}</div>
+                            </div>
+                            <div class="detail-row">
+                                <label>Membership No.</label>
+                                <div class="value membership-number">{{ verification_code }}</div>
+                            </div>
+                            <div class="detail-row">
+                                <label>Date of Registration</label>
+                                <div class="value">{% if member.created_at %}{{ member.created_at[:10] if member.created_at is string else member.created_at.strftime('%d/%m/%Y') }}{% else %}N/A{% endif %}</div>
+                            </div>
+                            <div class="detail-row">
+                                <label>Status</label>
+                                <div class="value">
+                                    <span class="badge bg-success">Active</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="qr-section-front">
+                            <div class="qr-code" id="qrCodeContainer"></div>
+                            <div class="qr-text">
+                                <small>Scan to Verify</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="location-details">
+                        <div class="detail-row">
+                            <label>Province:</label>
+                            <div class="value">{{ province_name }}</div>
+                        </div>
+                        <div class="detail-row">
+                            <label>District:</label>
+                            <div class="value">{{ district_name }}</div>
+                        </div>
+                        <div class="detail-row">
+                            <label>Constituency:</label>
+                            <div class="value">{{ constituency_name }}</div>
+                        </div>
+                        <div class="detail-row">
+                            <label>Ward:</label>
+                            <div class="value">{{ ward_name }}</div>
+                        </div>
+                    </div>
+
+                    <div class="barcode-section">
+                        <svg id="memberBarcode"></svg>
+                        <div class="barcode-text" id="barcodeText"></div>
+                    </div>
+                </div>
+
+                <!-- Back Side -->
+                <div class="card-side card-back">
+                    <div class="back-header">
+                        <h5>Important Information</h5>
+                        <p class="alliance-badge mb-0 mt-2"><i class="fas fa-handshake me-1"></i> In Alliance with UPND</p>
+                    </div>
+                    <div class="back-content">
+                        <div class="back-left">
+                            <div class="info-section">
+                                <h6><i class="fas fa-user-circle me-2"></i>Member Information</h6>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">NRC/Passport:</span>
+                                        <span class="info-value">{{ member.nrc or 'N/A' }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Voter's ID:</span>
+                                        <span class="info-value">{{ member.voters_id or 'N/A' }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Date of Birth:</span>
+                                        <span class="info-value">{% if member.date_of_birth %}{{ member.date_of_birth.strftime('%d/%m/%Y') if member.date_of_birth is not string else member.date_of_birth }}{% else %}N/A{% endif %}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Phone:</span>
+                                        <span class="info-value">{{ member.contact or 'N/A' }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="info-section">
+                                <h6><i class="fas fa-map-marker-alt me-2"></i>Location</h6>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">Ward:</span>
+                                        <span class="info-value">{{ ward_name }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Constituency:</span>
+                                        <span class="info-value">{{ constituency_name }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">District:</span>
+                                        <span class="info-value">{{ district_name }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="info-section">
+                                <h6><i class="fas fa-shield-alt me-2"></i>Terms & Conditions</h6>
+                                <ul class="terms-list">
+                                    <li>This card is non-transferable</li>
+                                    <li>Report lost cards immediately to the secretariat</li>
+                                    <li>Present this card at party events and meetings</li>
+                                    <li>Renewal required annually</li>
+                                </ul>
+                            </div>
+                            <div class="contact-info">
+                                <p><i class="fas fa-phone me-2"></i>Hotline: +260 XXX XXX XXX</p>
+                                <p><i class="fas fa-envelope me-2"></i>info@add.org.zm</p>
+                                <p class="mb-0"><i class="fas fa-globe me-2"></i>www.addzambia.com</p>
+                            </div>
+                        </div>
+                        <div class="back-right">
+                            <div class="back-logos">
+                                <div class="back-logo-item">
+                                    <img src="{{ url_for('static', filename='img/logoadd.jpeg') }}" alt="ADD Logo">
+                                </div>
+                                <div class="back-logo-item">
+                                    <img src="{{ url_for('static', filename='img/upnd-logo.png') }}" alt="UPND Logo" onerror="this.style.display='none'">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Controls -->
+            <div class="card-controls mt-4 text-center no-print">
+                <button class="btn btn-success btn-lg me-2" onclick="flipCard()">
+                    <i class="fas fa-sync-alt me-1"></i> Flip Card
+                </button>
+                <button class="btn btn-outline-primary btn-lg" onclick="window.print()">
+                    <i class="fas fa-print me-1"></i> Print
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+    // Generate QR Code
+    document.addEventListener('DOMContentLoaded', function() {
+        const membershipNumber = '{{ verification_code }}';
+        const verificationData = {
+            member_id: {{ member.id }},
+            name: '{{ member.name }}',
+            membership_number: membershipNumber,
+            verification_url: window.location.origin + '/verify/' + membershipNumber
+        };
+
+        new QRCode(document.getElementById('qrCodeContainer'), {
+            text: JSON.stringify(verificationData),
+            width: 90,
+            height: 90,
+            colorDark: "#047857",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+
+        // Generate Barcode
+        const barcodeData = membershipNumber + '{{ member.name[:10] | upper }}{{ ward_name[:3] | upper }}';
+        document.getElementById('barcodeText').textContent = barcodeData;
+
+        if (document.getElementById('memberBarcode')) {
+            JsBarcode("#memberBarcode", barcodeData, {
+                format: "CODE128",
+                width: 1.5,
+                height: 50,
+                displayValue: false,
+                margin: 4,
+                background: "#ffffff",
+                lineColor: "#047857"
+            });
+        }
+    });
+
+    // Flip Card
+    function flipCard() {
+        document.querySelector('.membership-card-preview').classList.toggle('flipped');
+    }
+
+    // Download PDF
+    async function downloadCard() {
+        alert('Generating PDF... Please wait.');
+
+        try {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF({
+                orientation: 'landscape',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            const frontCard = document.querySelector('.card-front');
+            const backCard = document.querySelector('.card-back');
+
+            // Save original state
+            const preview = document.querySelector('.membership-card-preview');
+            const wasFlipped = preview.classList.contains('flipped');
+
+            // Generate front side
+            frontCard.style.position = 'relative';
+            frontCard.style.transform = 'none';
+            backCard.style.display = 'none';
+
+            const frontCanvas = await html2canvas(frontCard, {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff'
+            });
+
+            const frontImgData = frontCanvas.toDataURL('image/jpeg', 0.95);
+            const imgWidth = 277;
+            const imgHeight = (frontCanvas.height * imgWidth) / frontCanvas.width;
+
+            pdf.addImage(frontImgData, 'JPEG', 10, 10, imgWidth, imgHeight);
+
+            // Generate back side
+            frontCard.style.display = 'none';
+            backCard.style.display = 'block';
+            backCard.style.position = 'relative';
+            backCard.style.transform = 'none';
+
+            const backCanvas = await html2canvas(backCard, {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff'
+            });
+
+            const backImgData = backCanvas.toDataURL('image/jpeg', 0.95);
+            pdf.addPage();
+            pdf.addImage(backImgData, 'JPEG', 10, 10, imgWidth, imgHeight);
+
+            // Restore original styles
+            frontCard.style.position = 'absolute';
+            frontCard.style.display = 'block';
+            backCard.style.position = 'absolute';
+            backCard.style.display = 'block';
+
+            if (wasFlipped) {
+                frontCard.style.transform = 'rotateY(180deg)';
+                backCard.style.transform = 'rotateY(0deg)';
+            } else {
+                frontCard.style.transform = '';
+                backCard.style.transform = 'rotateY(180deg)';
+            }
+
+            // Save the PDF
+            pdf.save('ADD_Membership_Card_{{ verification_code }}.pdf');
+
+            alert('Download complete!');
+        } catch (error) {
+            console.error('PDF generation error:', error);
+            alert('Unable to generate PDF. Please try the print option instead.');
+        }
+    }
+</script>
+{% endblock %}

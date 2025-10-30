@@ -9,7 +9,7 @@ import os
 # Database URL from environment variable or default
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://postgres:postgres@localhost:5432/member_registry"
+    "sqlite:///member_registry.db"
 )
 
 # Create SQLAlchemy engine

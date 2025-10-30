@@ -162,6 +162,29 @@
                     <span>Dashboard</span>
                 </a>
 
+                <div class="nav-section-title">My Portal</div>
+                <a href="{{ url_for('member_portal.dashboard') }}" class="nav-link {% if request.endpoint == 'member_portal.dashboard' %}active{% endif %}">
+                    <i class="fas fa-user-circle"></i>
+                    <span>My Dashboard</span>
+                </a>
+                <a href="{{ url_for('member_portal.profile') }}" class="nav-link {% if request.endpoint == 'member_portal.profile' or request.endpoint == 'member_portal.edit_profile' %}active{% endif %}">
+                    <i class="fas fa-id-card"></i>
+                    <span>My Profile</span>
+                </a>
+                <a href="{{ url_for('member_portal.my_events') }}" class="nav-link {% if request.endpoint == 'member_portal.my_events' %}active{% endif %}">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>My Events</span>
+                </a>
+                <a href="{{ url_for('member_portal.my_referrals') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('member_portal.') and 'referral' in request.endpoint %}active{% endif %}">
+                    <i class="fas fa-user-friends"></i>
+                    <span>My Referrals</span>
+                </a>
+                <a href="{{ url_for('member_portal.membership_card') }}" class="nav-link {% if request.endpoint == 'member_portal.membership_card' %}active{% endif %}">
+                    <i class="fas fa-id-badge"></i>
+                    <span>Membership Card</span>
+                </a>
+
+                {% if session.user_role in ['admin', 'coordinator'] %}
                 <div class="nav-section-title">Management</div>
                 <a href="{{ url_for('members.new_member') }}" class="nav-link {% if request.endpoint == 'members.new_member' %}active{% endif %}">
                     <i class="fas fa-user-plus"></i>
@@ -183,18 +206,27 @@
                     <i class="fas fa-map-marked-alt"></i>
                     <span>Locations</span>
                 </a>
+                {% endif %}
 
+                {% if session.user_role == 'admin' %}
                 <div class="nav-section-title">Administration</div>
+                <a href="{{ url_for('users.list_users') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('users.') %}active{% endif %}">
+                    <i class="fas fa-user-shield"></i>
+                    <span>System Users</span>
+                </a>
                 <a href="{{ url_for('roles.list_roles') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('roles.') %}active{% endif %}">
                     <i class="fas fa-shield-alt"></i>
                     <span>Roles & Permissions</span>
                 </a>
+                {% endif %}
 
+                {% if session.user_role in ['admin', 'coordinator'] %}
                 <div class="nav-section-title">Reports</div>
                 <a href="{{ url_for('reports.reports_home') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('reports.') %}active{% endif %}">
                     <i class="fas fa-file-export"></i>
                     <span>Generate Reports</span>
                 </a>
+                {% endif %}
 
                 <div class="nav-section-title">Account</div>
                 <a href="{{ url_for('auth.logout') }}" class="nav-link">

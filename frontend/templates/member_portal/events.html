@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}My Events - Member Registry System{% endblock %}
+
+{% block page_title %}My Events{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="mb-2"><i class="fas fa-calendar-check me-2"></i>My Events</h2>
+                            <p class="text-muted mb-0">Events you're registered for</p>
+                        </div>
+                        <a href="{{ url_for('events.list_events') }}" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i>Browse Events
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Events -->
+    {% if upcoming %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 p-4">
+                    <h5 class="mb-0"><i class="fas fa-clock me-2 text-info"></i>Upcoming Events ({{ upcoming|length }})</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        {% for registration in upcoming %}
+                        {% set event = registration.event %}
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <h5 class="fw-bold mb-0">{{ event.title }}</h5>
+                                        <span class="badge bg-info">Upcoming</span>
+                                    </div>
+                                    {% if event.description %}
+                                    <p class="text-muted small mb-3">{{ event.description[:100] }}...</p>
+                                    {% endif %}
+                                    <div class="mb-2">
+                                        <i class="fas fa-calendar text-primary me-2"></i>
+                                        <small>{{ event.start_date[:16].replace('T', ' ') }}</small>
+                                    </div>
+                                    {% if event.location %}
+                                    <div class="mb-2">
+                                        <i class="fas fa-map-marker-alt text-success me-2"></i>
+                                        <small>{{ event.location }}</small>
+                                    </div>
+                                    {% endif %}
+                                    <div class="mt-3">
+                                        <a href="{{ url_for('events.view_event', event_id=event.id) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye me-1"></i>View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Ongoing Events -->
+    {% if ongoing %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 p-4">
+                    <h5 class="mb-0"><i class="fas fa-play-circle me-2 text-success"></i>Ongoing Events ({{ ongoing|length }})</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        {% for registration in ongoing %}
+                        {% set event = registration.event %}
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm h-100 border-success" style="border-left: 4px solid #10b981 !important;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <h5 class="fw-bold mb-0">{{ event.title }}</h5>
+                                        <span class="badge bg-success">Ongoing</span>
+                                    </div>
+                                    {% if event.description %}
+                                    <p class="text-muted small mb-3">{{ event.description[:100] }}...</p>
+                                    {% endif %}
+                                    <div class="mb-2">
+                                        <i class="fas fa-calendar text-primary me-2"></i>
+                                        <small>{{ event.start_date[:16].replace('T', ' ') }}</small>
+                                    </div>
+                                    {% if event.location %}
+                                    <div class="mb-2">
+                                        <i class="fas fa-map-marker-alt text-success me-2"></i>
+                                        <small>{{ event.location }}</small>
+                                    </div>
+                                    {% endif %}
+                                    <div class="mt-3">
+                                        <a href="{{ url_for('events.view_event', event_id=event.id) }}" class="btn btn-sm btn-outline-success">
+                                            <i class="fas fa-eye me-1"></i>View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Completed Events -->
+    {% if completed %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 p-4">
+                    <h5 class="mb-0"><i class="fas fa-check-circle me-2 text-secondary"></i>Completed Events ({{ completed|length }})</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        {% for registration in completed %}
+                        {% set event = registration.event %}
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm h-100 bg-light">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <h5 class="fw-bold mb-0">{{ event.title }}</h5>
+                                        <span class="badge bg-secondary">Completed</span>
+                                    </div>
+                                    {% if event.description %}
+                                    <p class="text-muted small mb-3">{{ event.description[:100] }}...</p>
+                                    {% endif %}
+                                    <div class="mb-2">
+                                        <i class="fas fa-calendar text-muted me-2"></i>
+                                        <small>{{ event.start_date[:16].replace('T', ' ') }}</small>
+                                    </div>
+                                    {% if registration.registration_status == 'attended' %}
+                                    <div class="mb-2">
+                                        <span class="badge bg-success"><i class="fas fa-check me-1"></i>You Attended</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Empty State -->
+    {% if not upcoming and not ongoing and not completed %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-calendar-x fa-4x mb-4 text-muted" style="opacity: 0.3;"></i>
+                    <h4 class="mb-3">No Events Yet</h4>
+                    <p class="text-muted mb-4">You haven't registered for any events. Browse available events to get started.</p>
+                    <a href="{{ url_for('events.list_events') }}" class="btn btn-primary">
+                        <i class="fas fa-search me-2"></i>Browse Events
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

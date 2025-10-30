@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Add System User - Member Registry System{% endblock %}
+
+{% block page_title %}Add New System User{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="mb-2"><i class="fas fa-user-plus me-2"></i>Add New System User</h2>
+                            <p class="text-muted mb-0">Create a new admin or staff account</p>
+                        </div>
+                        <a href="{{ url_for('users.list_users') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Users
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <form method="POST">
+        <div class="row g-4">
+            <!-- Personal Information -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 pb-0">
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-id-card text-primary me-2"></i>User Information
+                        </h4>
+                    </div>
+                    <div class="card-body pt-3">
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-semibold">
+                                Full Name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control form-control-lg" id="name" name="name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-semibold">
+                                Email Address <span class="text-danger">*</span>
+                            </label>
+                            <input type="email" class="form-control form-control-lg" id="email" name="email" required>
+                            <small class="text-muted">This will be used as a login identifier</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label fw-semibold">
+                                Phone Number <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control form-control-lg" id="phone" name="phone" required>
+                            <small class="text-muted">Can also be used as a login identifier</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Settings -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 pb-0">
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-key text-success me-2"></i>Account Settings
+                        </h4>
+                    </div>
+                    <div class="card-body pt-3">
+                        <div class="mb-3">
+                            <label for="pin" class="form-label fw-semibold">
+                                PIN <span class="text-danger">*</span>
+                            </label>
+                            <input type="password" class="form-control form-control-lg" id="pin" name="pin" required minlength="4" maxlength="6">
+                            <small class="text-muted">4-6 digit PIN for login</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="role" class="form-label fw-semibold">
+                                Role <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select form-select-lg" id="role" name="role" required>
+                                <option value="">Select Role</option>
+                                <option value="admin">Admin - Full system access</option>
+                                <option value="coordinator">Coordinator - Manage members and events</option>
+                                <option value="viewer">Viewer - Read-only access</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="member_id" class="form-label fw-semibold">
+                                Link to Member (Optional)
+                            </label>
+                            <select class="form-select form-select-lg" id="member_id" name="member_id">
+                                <option value="">Not linked to a member</option>
+                                {% for member in members %}
+                                <option value="{{ member.id }}">{{ member.name }} ({{ member.nrc }})</option>
+                                {% endfor %}
+                            </select>
+                            <small class="text-muted">Link this system user to an existing member record</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4 text-center">
+                        <button type="submit" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-check me-2"></i>Create System User
+                        </button>
+                        <a href="{{ url_for('users.list_users') }}" class="btn btn-outline-secondary btn-lg px-5 ms-3">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+.form-label {
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 8px;
+}
+
+.form-control,
+.form-select {
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.card-header h4 {
+    font-size: 18px;
+    padding: 1rem 0;
+}
+
+.btn {
+    border-radius: 8px;
+    font-weight: 600;
+}
+</style>
+{% endblock %}

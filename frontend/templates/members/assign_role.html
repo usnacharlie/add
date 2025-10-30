@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block title %}Assign Role - Member Registry System{% endblock %}
+
+{% block page_title %}Assign Role to Member{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    {% if member %}
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="mb-2"><i class="fas fa-user-tag me-2"></i>Assign Role to Member</h2>
+                            <p class="text-muted mb-0">Grant special permissions and responsibilities</p>
+                        </div>
+                        <a href="{{ url_for('members.view_member', member_id=member.id) }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Member
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Member Info Card -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(37, 99, 235, 0.08) 100%);">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="user-avatar-large me-3">
+                            <i class="fas fa-user fa-2x"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-1 fw-bold">{{ member.name }}</h4>
+                            <div class="d-flex gap-2">
+                                <span class="badge bg-secondary">ID: {{ member.id }}</span>
+                                {% if member.nrc %}
+                                <span class="badge bg-info">NRC: {{ member.nrc }}</span>
+                                {% endif %}
+                                {% if member.voters_id %}
+                                <span class="badge bg-success">Voter's ID: {{ member.voters_id }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Role Form -->
+    <form method="POST">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 pb-0">
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-shield-alt text-primary me-2"></i>Select Role
+                        </h4>
+                    </div>
+                    <div class="card-body pt-3">
+                        {% if roles %}
+                        <div class="mb-4">
+                            <label for="role_id" class="form-label fw-semibold">
+                                Role <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select form-select-lg" id="role_id" name="role_id" required>
+                                <option value="">Select a role...</option>
+                                {% for role in roles %}
+                                <option value="{{ role.id }}">
+                                    {{ role.name }}
+                                    {% if role.description %}- {{ role.description }}{% endif %}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="alert alert-info border-0">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Available Roles:</strong>
+                            <ul class="mb-0 mt-2">
+                                {% for role in roles %}
+                                <li><strong>{{ role.name }}</strong>
+                                    {% if role.description %}- {{ role.description }}{% endif %}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-warning border-0">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Important:</strong> Assigning a role to a member will grant them additional permissions and responsibilities within the system. Make sure you're assigning the correct role.
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{{ url_for('members.view_member', member_id=member.id) }}" class="btn btn-secondary btn-lg px-5">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                <i class="fas fa-check me-2"></i>Assign Role
+                            </button>
+                        </div>
+
+                        {% else %}
+                        <div class="alert alert-warning border-0">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            No roles available. Please create roles first in the Roles & Permissions section.
+                        </div>
+                        <a href="{{ url_for('roles.list_roles') }}" class="btn btn-primary">
+                            <i class="fas fa-shield-alt me-2"></i>Go to Roles & Permissions
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    {% else %}
+    <!-- Member Not Found -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-user-slash fa-4x text-muted mb-4" style="opacity: 0.3;"></i>
+                    <h3 class="mb-3">Member Not Found</h3>
+                    <p class="text-muted mb-4">The member you're trying to assign a role to doesn't exist.</p>
+                    <a href="{{ url_for('members.list_members') }}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Members List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.user-avatar-large {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+}
+
+.form-label {
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 8px;
+}
+
+.form-select {
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px 16px;
+}
+
+.form-select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.card-header h4 {
+    font-size: 18px;
+    padding: 1rem 0;
+}
+
+.btn {
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.badge {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 12px;
+}
+
+.alert ul {
+    padding-left: 1.2rem;
+}
+
+.alert ul li {
+    margin-bottom: 0.5rem;
+}
+</style>
+{% endblock %}

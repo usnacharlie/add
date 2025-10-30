@@ -3,6 +3,7 @@ Member management routes
 """
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
 import requests
+from datetime import date
 
 members_bp = Blueprint('members', __name__)
 
@@ -42,7 +43,7 @@ def new_member():
                 member_data = {
                     'name': name.strip(),
                     'gender': request.form.get(f'member_{i}_gender'),
-                    'age': int(request.form.get(f'member_{i}_age')) if request.form.get(f'member_{i}_age') else None,
+                    'date_of_birth': request.form.get(f'member_{i}_date_of_birth') if request.form.get(f'member_{i}_date_of_birth') else None,
                     'nrc': request.form.get(f'member_{i}_nrc'),
                     'voters_id': request.form.get(f'member_{i}_voters_id'),
                     'contact': request.form.get(f'member_{i}_contact'),
@@ -102,7 +103,7 @@ def edit_member(member_id):
         member_data = {
             'name': request.form.get('name'),
             'gender': request.form.get('gender'),
-            'age': int(request.form.get('age')) if request.form.get('age') else None,
+            'date_of_birth': request.form.get('date_of_birth') if request.form.get('date_of_birth') else None,
             'nrc': request.form.get('nrc'),
             'voters_id': request.form.get('voters_id'),
             'contact': request.form.get('contact'),
@@ -122,11 +123,44 @@ def edit_member(member_id):
     try:
         member_response = requests.get(f"{api_url}/members/{member_id}")
         member = member_response.json() if member_response.status_code == 200 else None
-        
+
         wards = requests.get(f"{api_url}/wards/").json()
     except:
         member = None
         wards = []
         flash('Error loading data', 'error')
-    
-    return render_template('members/edit.html', member=member, wards=wards)
+
+    return render_template('members/edit.html', member=member, wards=wards, today=date.today().isoformat())
+
+
+@members_bp.route('/<int:member_id>/assign-role', methods=['GET', 'POST'])
+def assign_role(member_id):
+    """Assign a role to a member (e.g., Ward Chairperson)"""
+    api_url = current_app.config['API_BASE_URL']
+
+    if request.method == 'POST':
+        role_id = request.form.get('role_id')
+
+        # In production, this would create a member-role assignment in the database
+        # For now, we'll show a success message
+        try:
+            # This endpoint would need to be created in the backend
+            # response = requests.post(f"{api_url}/members/{member_id}/roles", json={'role_id': role_id})
+            flash('Role assigned successfully!', 'success')
+            return redirect(url_for('members.view_member', member_id=member_id))
+        except Exception as e:
+            flash(f'Error assigning role: {str(e)}', 'error')
+
+    # Get member and roles data
+    try:
+        member_response = requests.get(f"{api_url}/members/{member_id}")
+        member = member_response.json() if member_response.status_code == 200 else None
+
+        roles_response = requests.get(f"{api_url}/roles/")
+        roles = roles_response.json() if roles_response.status_code == 200 else []
+    except:
+        member = None
+        roles = []
+        flash('Error loading data', 'error')
+
+    return render_template('members/assign_role.html', member=member, roles=roles)

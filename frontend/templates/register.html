@@ -1,156 +1,613 @@
 {% extends "base.html" %}
 
-{% block title %}Register - Party Membership System{% endblock %}
+{% block title %}Member Registration - Alliance for Democracy and Development{% endblock %}
 
-{% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0"><i class="bi bi-person-plus"></i> Member Registration</h3>
+{% block public_content %}
+<style>
+/* Modern Color Palette */
+:root {
+    --primary: #d42c2c;
+    --primary-dark: #b91c1c;
+    --primary-light: #f87171;
+    --accent: #fbbf24;
+    --dark: #1a1a1a;
+    --light: #ffffff;
+    --gray: #64748b;
+    --gray-light: #f8fafc;
+    --gray-100: #f1f5f9;
+    --border-color: #e2e8f0;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    min-height: 100vh;
+}
+
+/* Fixed Navigation Bar */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 12px 0;
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.page-logo img {
+    height: 50px;
+    width: auto;
+    transition: all 0.3s ease;
+}
+
+.page-logo:hover img {
+    transform: scale(1.05);
+}
+
+/* Registration Header */
+.registration-header {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    padding: 120px 0 60px;
+    margin-top: 74px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.registration-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 50%, rgba(212, 44, 44, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(251, 191, 36, 0.03) 0%, transparent 50%);
+}
+
+.registration-header h1 {
+    font-size: clamp(2rem, 5vw, 2.5rem);
+    font-weight: 800;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+    color: var(--dark);
+}
+
+.registration-header p {
+    font-size: 18px;
+    color: var(--gray);
+    position: relative;
+    z-index: 1;
+}
+
+/* Main Container */
+.registration-wrapper {
+    max-width: 900px;
+    margin: -40px auto 60px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 10;
+}
+
+/* Info Banner */
+.info-banner {
+    background: linear-gradient(135deg, rgba(212, 44, 44, 0.05) 0%, rgba(251, 191, 36, 0.05) 100%);
+    border: 2px solid rgba(212, 44, 44, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.info-banner-icon {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+}
+
+.info-banner-content h6 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0 0 0.5rem 0;
+}
+
+.info-banner-content p {
+    font-size: 14px;
+    color: var(--gray);
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Form Sections */
+.form-section {
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.form-section:hover {
+    border-color: var(--primary);
+    box-shadow: 0 8px 30px rgba(212, 44, 44, 0.15);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--gray-light);
+}
+
+.section-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0;
+}
+
+.section-subtitle {
+    font-size: 14px;
+    color: var(--gray);
+    margin: 0;
+}
+
+/* Form Fields */
+.form-field {
+    margin-bottom: 1.25rem;
+}
+
+.form-field label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+}
+
+.form-field label .required {
+    color: var(--primary);
+    margin-left: 2px;
+}
+
+.form-field input,
+.form-field select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(212, 44, 44, 0.1);
+}
+
+.form-field small {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 12px;
+    color: var(--gray);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-register {
+    padding: 1rem 2rem;
+    font-size: 16px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 10px 30px rgba(212, 44, 44, 0.3);
+}
+
+.btn-register:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(212, 44, 44, 0.4);
+}
+
+.login-link {
+    text-align: center;
+    padding: 1.25rem;
+    background: var(--gray-light);
+    border-radius: 12px;
+}
+
+.login-link a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    .form-section {
+        padding: 1.5rem;
+    }
+}
+</style>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+    <div class="nav-container">
+        <a href="{{ url_for('main.index') }}" class="page-logo">
+            <img src="{{ url_for('static', filename='img/logoadd.jpeg') }}" alt="Alliance for Democracy and Development">
+        </a>
+    </div>
+</nav>
+
+<!-- Registration Header -->
+<section class="registration-header">
+    <div class="container">
+        <h1>Join the Movement</h1>
+        <p>Become part of Zambia's platform for wealth creators and changemakers</p>
+    </div>
+</section>
+
+<!-- Main Registration Form -->
+<div class="registration-wrapper">
+    <!-- Welcome Banner -->
+    <div class="info-banner">
+        <div class="info-banner-icon">
+            <i class="fas fa-user-plus"></i>
+        </div>
+        <div class="info-banner-content">
+            <h6>Member Registration</h6>
+            <p>Join thousands of Zambians building wealth, creating jobs, and transforming communities. Complete the form below to become a registered member.</p>
+        </div>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" style="border-radius: 12px; margin-bottom: 1.5rem;">
+                    <i class="fas fa-{{ 'exclamation-circle' if category in ['error', 'danger'] else 'check-circle' if category == 'success' else 'info-circle' }} me-2"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ url_for('register') }}">
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label for="first_name" class="form-label">First Name *</label>
-                                <input type="text" class="form-control" id="first_name" name="first_name" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="middle_name" class="form-label">Middle Name</label>
-                                <input type="text" class="form-control" id="middle_name" name="middle_name">
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="last_name" class="form-label">Last Name *</label>
-                                <input type="text" class="form-control" id="last_name" name="last_name" required>
-                            </div>
-                        </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="date_of_birth" class="form-label">Date of Birth *</label>
-                                <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="gender" class="form-label">Gender *</label>
-                                <select class="form-control" id="gender" name="gender" required>
-                                    <option value="">Select Gender</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-                            </div>
-                        </div>
+    <form method="POST" action="{{ url_for('auth.register') }}" id="registerForm">
+        <!-- Personal Information -->
+        <div class="form-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <h5 class="section-title">Personal Information</h5>
+                    <p class="section-subtitle">Provide your basic personal details</p>
+                </div>
+            </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="national_id" class="form-label">National ID *</label>
-                                <input type="text" class="form-control" id="national_id" name="national_id" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="marital_status" class="form-label">Marital Status</label>
-                                <select class="form-control" id="marital_status" name="marital_status">
-                                    <option value="">Select Status</option>
-                                    <option value="Single">Single</option>
-                                    <option value="Married">Married</option>
-                                    <option value="Divorced">Divorced</option>
-                                    <option value="Widowed">Widowed</option>
-                                </select>
-                            </div>
-                        </div>
+            <div class="form-field">
+                <label for="name">Full Name <span class="required">*</span></label>
+                <input type="text" id="name" name="name" placeholder="Enter full name" required>
+                <small>Enter the complete name as it appears on official documents</small>
+            </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="phone_number" class="form-label">Phone Number *</label>
-                                <input type="tel" class="form-control" id="phone_number" name="phone_number" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="alternate_phone" class="form-label">Alternate Phone</label>
-                                <input type="tel" class="form-control" id="alternate_phone" name="alternate_phone">
-                            </div>
-                        </div>
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="gender">Gender <span class="required">*</span></label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="date_of_birth">Date of Birth</label>
+                    <input type="date" id="date_of_birth" name="date_of_birth" max="{{ today }}">
+                </div>
+            </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="email" name="email">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="password" class="form-label">Password *</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                            </div>
-                        </div>
+            <div class="form-field">
+                <label for="contact">Contact Number</label>
+                <input type="tel" id="contact" name="contact" placeholder="e.g., 0977123456">
+                <small>Mobile number for USSD access and notifications</small>
+            </div>
+        </div>
 
-                        <div class="mb-3">
-                            <label for="physical_address" class="form-label">Physical Address *</label>
-                            <textarea class="form-control" id="physical_address" name="physical_address" rows="2" required></textarea>
-                        </div>
+        <!-- Identification Information -->
+        <div class="form-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div>
+                    <h5 class="section-title">Identification (Required)</h5>
+                    <p class="section-subtitle">Your unique identification details</p>
+                </div>
+            </div>
 
-                        <div class="mb-3">
-                            <label for="postal_address" class="form-label">Postal Address</label>
-                            <input type="text" class="form-control" id="postal_address" name="postal_address">
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label for="constituency" class="form-label">Constituency *</label>
-                                <input type="text" class="form-control" id="constituency" name="constituency" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="ward" class="form-label">Ward *</label>
-                                <input type="text" class="form-control" id="ward" name="ward" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="branch" class="form-label">Branch *</label>
-                                <input type="text" class="form-control" id="branch" name="branch" required>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="occupation" class="form-label">Occupation</label>
-                                <input type="text" class="form-control" id="occupation" name="occupation">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="employer" class="form-label">Employer</label>
-                                <input type="text" class="form-control" id="employer" name="employer">
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="education_level" class="form-label">Education Level</label>
-                                <select class="form-control" id="education_level" name="education_level">
-                                    <option value="">Select Level</option>
-                                    <option value="Primary">Primary</option>
-                                    <option value="Secondary">Secondary</option>
-                                    <option value="Diploma">Diploma</option>
-                                    <option value="Bachelor">Bachelor's Degree</option>
-                                    <option value="Masters">Master's Degree</option>
-                                    <option value="PhD">PhD</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="membership_type" class="form-label">Membership Type</label>
-                                <select class="form-control" id="membership_type" name="membership_type">
-                                    <option value="regular">Regular</option>
-                                    <option value="youth">Youth Wing</option>
-                                    <option value="women">Women's League</option>
-                                    <option value="diaspora">Diaspora</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-check-circle"></i> Register
-                            </button>
-                        </div>
-                    </form>
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="voters_id">Voter's ID <span class="required">*</span></label>
+                    <input type="text" id="voters_id" name="voters_id" placeholder="e.g., VID123456" required>
+                    <small>Your unique Voter ID number (must be unique)</small>
+                </div>
+                <div class="form-field">
+                    <label for="nrc">National Registration Card (NRC)</label>
+                    <input type="text" id="nrc" name="nrc" placeholder="e.g., 123456/10/1">
+                    <small>Format: 123456/78/9</small>
                 </div>
             </div>
         </div>
-    </div>
+
+        <!-- Location Information -->
+        <div class="form-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div>
+                    <h5 class="section-title">Location Information</h5>
+                    <p class="section-subtitle">Your constituency and ward details</p>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="province_id">Province <span class="required">*</span></label>
+                    <select id="province_id" name="province_id" required>
+                        <option value="">Select Province</option>
+                        {% for province in provinces %}
+                        <option value="{{ province.id }}">{{ province.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="district_id">District <span class="required">*</span></label>
+                    <select id="district_id" name="district_id" required disabled>
+                        <option value="">Select District</option>
+                        {% for district in districts %}
+                        <option value="{{ district.id }}" data-province="{{ district.province_id }}">{{ district.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="constituency_id">Constituency <span class="required">*</span></label>
+                    <select id="constituency_id" name="constituency_id" required disabled>
+                        <option value="">Select Constituency</option>
+                        {% for constituency in constituencies %}
+                        <option value="{{ constituency.id }}" data-district="{{ constituency.district_id }}">{{ constituency.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="ward_id">Ward <span class="required">*</span></label>
+                    <select id="ward_id" name="ward_id" required disabled>
+                        <option value="">Select Ward</option>
+                        {% for ward in wards %}
+                        <option value="{{ ward.id }}" data-constituency="{{ ward.constituency_id }}">{{ ward.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="submit" class="btn-register">
+                <i class="fas fa-check-circle"></i>
+                Complete Registration
+            </button>
+            <div class="login-link">
+                Already have an account? <a href="{{ url_for('auth.login') }}">Sign in here</a>
+            </div>
+        </div>
+    </form>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Wait for DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Client-side cascading dropdowns for location selection (faster, no network calls)
+        const provinceSelect = document.getElementById('province_id');
+        if (!provinceSelect) {
+            console.error('Province select element not found');
+            return;
+        }
+
+        // Province change handler
+        provinceSelect.addEventListener('change', function() {
+            const provinceId = this.value;
+            const districtSelect = document.getElementById('district_id');
+            const constituencySelect = document.getElementById('constituency_id');
+            const wardSelect = document.getElementById('ward_id');
+
+            // Reset dependent dropdowns
+            districtSelect.value = '';
+            constituencySelect.value = '';
+            wardSelect.value = '';
+            constituencySelect.disabled = true;
+            wardSelect.disabled = true;
+
+            if (provinceId) {
+                districtSelect.disabled = false;
+                // Filter districts by province using client-side filtering
+                Array.from(districtSelect.options).forEach(option => {
+                    if (option.value === '') {
+                        option.style.display = 'block';
+                    } else {
+                        option.style.display = option.dataset.province === provinceId ? 'block' : 'none';
+                    }
+                });
+            } else {
+                districtSelect.disabled = true;
+                // Show all districts when province is cleared
+                Array.from(districtSelect.options).forEach(option => {
+                    option.style.display = 'none';
+                    if (option.value === '') {
+                        option.style.display = 'block';
+                    }
+                });
+            }
+        });
+
+        // District change handler
+        const districtSelect = document.getElementById('district_id');
+        if (districtSelect) {
+            districtSelect.addEventListener('change', function() {
+                const districtId = this.value;
+                const constituencySelect = document.getElementById('constituency_id');
+                const wardSelect = document.getElementById('ward_id');
+
+                // Reset dependent dropdowns
+                constituencySelect.value = '';
+                wardSelect.value = '';
+                wardSelect.disabled = true;
+
+                if (districtId) {
+                    constituencySelect.disabled = false;
+                    // Filter constituencies by district using client-side filtering
+                    Array.from(constituencySelect.options).forEach(option => {
+                        if (option.value === '') {
+                            option.style.display = 'block';
+                        } else {
+                            option.style.display = option.dataset.district === districtId ? 'block' : 'none';
+                        }
+                    });
+                } else {
+                    constituencySelect.disabled = true;
+                    // Hide all constituencies when district is cleared
+                    Array.from(constituencySelect.options).forEach(option => {
+                        option.style.display = 'none';
+                        if (option.value === '') {
+                            option.style.display = 'block';
+                        }
+                    });
+                }
+            });
+        }
+
+        // Constituency change handler
+        const constituencySelect = document.getElementById('constituency_id');
+        if (constituencySelect) {
+            constituencySelect.addEventListener('change', function() {
+                const constituencyId = this.value;
+                const wardSelect = document.getElementById('ward_id');
+
+                // Reset ward dropdown
+                wardSelect.value = '';
+
+                if (constituencyId) {
+                    wardSelect.disabled = false;
+                    // Filter wards by constituency using client-side filtering
+                    Array.from(wardSelect.options).forEach(option => {
+                        if (option.value === '') {
+                            option.style.display = 'block';
+                        } else {
+                            option.style.display = option.dataset.constituency === constituencyId ? 'block' : 'none';
+                        }
+                    });
+                } else {
+                    wardSelect.disabled = true;
+                    // Hide all wards when constituency is cleared
+                    Array.from(wardSelect.options).forEach(option => {
+                        option.style.display = 'none';
+                        if (option.value === '') {
+                            option.style.display = 'block';
+                        }
+                    });
+                }
+            });
+        }
+
+        // Form validation
+        const registerForm = document.getElementById('registerForm');
+        if (registerForm) {
+            registerForm.addEventListener('submit', function(e) {
+                const votersId = document.getElementById('voters_id').value;
+
+                if (!votersId || votersId.trim() === '') {
+                    e.preventDefault();
+                    alert('Voter\'s ID is required and cannot be empty.');
+                    document.getElementById('voters_id').focus();
+                    return false;
+                }
+            });
+        }
+    }); // End DOMContentLoaded
+</script>
 {% endblock %}

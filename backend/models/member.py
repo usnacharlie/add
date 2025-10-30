@@ -17,8 +17,9 @@ class Member(Base):
     date_of_birth = Column(Date, nullable=True)
     age = Column(Integer, nullable=True)  # Keep for backward compatibility, can be calculated
     nrc = Column(String(50), nullable=True, index=True)  # National Registration Card
-    voters_id = Column(String(50), nullable=True, index=True)
+    voters_id = Column(String(50), nullable=False, unique=True, index=True)  # Voter's ID - Required and Unique
     contact = Column(String(50), nullable=True)
+    profile_picture = Column(String(500), nullable=True)  # Path to profile picture
     ward_id = Column(Integer, ForeignKey("wards.id"), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())

@@ -9,6 +9,8 @@ from .reports import reports_bp
 from .roles import roles_bp
 from .events import events_bp
 from .referrals import referrals_bp
+from .member_portal import member_portal_bp
+from .users import users_bp
 
 
 def register_routes(app):
@@ -21,3 +23,5 @@ def register_routes(app):
     app.register_blueprint(roles_bp)
     app.register_blueprint(events_bp)
     app.register_blueprint(referrals_bp)
+    app.register_blueprint(member_portal_bp)
+    app.register_blueprint(users_bp)

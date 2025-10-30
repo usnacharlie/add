@@ -434,3 +434,51 @@ def cancel_registration(event_id: int, member_id: int, db: Session = Depends(get
     db.commit()
 
     return None
+
+
+@router.get("/registrations/member/{member_id}")
+def get_member_registrations(member_id: int, db: Session = Depends(get_db)):
+    """
+    Get all event registrations for a specific member
+    """
+    # Verify member exists
+    member = db.query(Member).filter(Member.id == member_id).first()
+    if not member:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Member with id {member_id} not found"
+        )
+
+    # Query registrations with event details
+    registrations = db.query(EventRegistration, Event).join(
+        Event, EventRegistration.event_id == Event.id
+    ).filter(
+        EventRegistration.member_id == member_id,
+        EventRegistration.registration_status != 'cancelled'
+    ).order_by(Event.start_date.desc()).all()
+
+    # Build response
+    result = []
+    for reg, event in registrations:
+        result.append({
+            "id": reg.id,
+            "member_id": reg.member_id,
+            "registration_status": reg.registration_status,
+            "registered_at": reg.registered_at,
+            "attendance_marked_at": reg.attendance_marked_at,
+            "notes": reg.notes,
+            "event": {
+                "id": event.id,
+                "title": event.title,
+                "description": event.description,
+                "start_date": event.start_date.isoformat() if event.start_date else None,
+                "end_date": event.end_date.isoformat() if event.end_date else None,
+                "location": event.location,
+                "venue": event.venue,
+                "event_type": event.event_type,
+                "status": event.status,
+                "max_attendees": event.max_attendees
+            }
+        })
+
+    return result

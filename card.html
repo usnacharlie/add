@@ -1,0 +1,782 @@
+{% extends "layouts/member_base.html" %}
+
+{% block page_title %}Membership Card{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <!-- Card Display Section -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-id-card me-2"></i>Digital Membership Card</h5>
+                <button class="btn btn-primary btn-sm" onclick="downloadCard()">
+                    <i class="fas fa-download me-1"></i> Download PDF
+                </button>
+            </div>
+            <div class="card-body p-4">
+                <!-- Card Preview -->
+                <div id="membershipCard" class="membership-card-preview">
+                    <!-- Front Side -->
+                    <div class="card-side card-front">
+                        <div class="card-header-section">
+                            <div class="party-logo">
+                                <img src="/static/img/logoadd.jpeg" alt="ADD Logo" onerror="this.style.display='none'">
+                            </div>
+                            <div class="party-info">
+                                <h4 class="party-name">Alliance for Democracy and Development (ADD)</h4>
+                                <p class="card-type">MEMBER CARD</p>
+                                <p class="alliance-badge-front"><i class="fas fa-handshake me-1"></i>In Alliance with UPND</p>
+                            </div>
+                            <div class="party-logo">
+                                <img src="/static/img/upnd-logo.png" alt="UPND Logo" onerror="this.src='/static/img/upnd-logo.jpg'">
+                            </div>
+                        </div>
+
+                        <div class="card-content">
+                            <div class="top-section">
+                                <div class="member-photo">
+                                    <img src="{{ member.photo_url if member.photo_url else '/static/img/default-avatar.png' }}"
+                                         alt="Member Photo"
+                                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22150%22%3E%3Crect width=%22150%22 height=%22150%22 fill=%22%23e2e8f0%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23475569%22 font-size=%2260%22%3E{{ member.first_name[0] if member.first_name else 'M' }}%3C/text%3E%3C/svg%3E'">
+                                </div>
+                                <div class="member-details">
+                                    <div class="detail-row">
+                                        <label>Full Name</label>
+                                        <div class="value">{{ session.user_name or (member.first_name ~ ' ' ~ member.last_name) or 'N/A' }}</div>
+                                    </div>
+                                    <div class="detail-row">
+                                        <label>Membership No.</label>
+                                        <div class="value membership-number">{{ session.membership_number or member.membership_number or 'N/A' }}</div>
+                                    </div>
+                                    <div class="detail-row">
+                                        <label>Date of Registration</label>
+                                        <div class="value">{{ member.created_at.strftime('%d/%m/%Y') if member.created_at else 'N/A' }}</div>
+                                    </div>
+                                    <div class="detail-row">
+                                        <label>Status</label>
+                                        <div class="value">
+                                            <span class="badge bg-success">{{ member.membership_status or 'Active' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="qr-section-front">
+                                    <div class="qr-code" id="qrCodeContainer">
+                                        <!-- QR Code will be generated here -->
+                                    </div>
+                                    <div class="qr-text">
+                                        <small>Scan to verify</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="location-details">
+                                {% if member.province and member.district and member.constituency and member.ward %}
+                                <div class="detail-row">
+                                    <label>Province:</label>
+                                    <div class="value">{{ member.province }}</div>
+                                </div>
+                                <div class="detail-row">
+                                    <label>District:</label>
+                                    <div class="value">{{ member.district }}</div>
+                                </div>
+                                <div class="detail-row">
+                                    <label>Constituency:</label>
+                                    <div class="value">{{ member.constituency }}</div>
+                                </div>
+                                <div class="detail-row">
+                                    <label>Ward:</label>
+                                    <div class="value">{{ member.ward }}</div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="barcode-section">
+                                <svg id="memberBarcode"></svg>
+                                <div class="barcode-text">
+                                    {{ member.last_name or '' }}{{ member.first_name or '' }}{% if member.constituency %}{{ member.constituency[:3]|upper }}{% endif %}{{ member.membership_number or '' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Back Side -->
+                    <div class="card-side card-back">
+                        <div class="back-header">
+                            <h5>Important Information</h5>
+                            <p class="alliance-badge mb-0 mt-2"><i class="fas fa-handshake me-1"></i> In Alliance with UPND</p>
+                        </div>
+                        <div class="back-content">
+                            <div class="back-left">
+                                <div class="info-section">
+                                    <h6><i class="fas fa-user-circle me-2"></i>Member Information</h6>
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <span class="info-label">NRC/Passport:</span>
+                                            <span class="info-value">{{ member.national_id or 'N/A' }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Date of Birth:</span>
+                                            <span class="info-value">{% if member.date_of_birth %}{{ member.date_of_birth if member.date_of_birth is string else member.date_of_birth.strftime('%d/%m/%Y') }}{% else %}N/A{% endif %}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Phone:</span>
+                                            <span class="info-value">{{ member.phone_number or 'N/A' }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Email:</span>
+                                            <span class="info-value">{{ member.email or 'N/A' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="info-section">
+                                    <h6><i class="fas fa-map-marker-alt me-2"></i>Address</h6>
+                                    <div class="address-block">
+                                        {% if member.physical_address %}
+                                        <p class="mb-1">{{ member.physical_address }}</p>
+                                        {% endif %}
+                                        {% if member.constituency or member.ward %}
+                                        <p class="mb-1">{{ member.constituency or '' }}{% if member.constituency and member.ward %}, {% endif %}{{ member.ward or '' }}</p>
+                                        {% endif %}
+                                        {% if member.branch %}
+                                        <p class="mb-0">{{ member.branch }}</p>
+                                        {% endif %}
+                                        {% if not member.physical_address and not member.constituency and not member.ward and not member.branch %}
+                                        <p class="mb-0">N/A</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="info-section">
+                                    <h6><i class="fas fa-shield-alt me-2"></i>Terms & Conditions</h6>
+                                    <ul class="terms-list">
+                                        <li>This card is non-transferable</li>
+                                        <li>Report lost cards immediately to the nearest Police Station or Call the Secretariat</li>
+                                        <li>Present this card at party events</li>
+                                        <li>Renewal required annually</li>
+                                    </ul>
+                                </div>
+                                <div class="contact-info">
+                                    <p class="mb-2"><i class="fas fa-phone me-2"></i>Hotline: +260 XXX XXX XXX</p>
+                                    <p class="mb-2"><i class="fas fa-envelope me-2"></i>info@add.org.zm</p>
+                                    <p class="mb-0"><i class="fas fa-globe me-2"></i>www.addzambia.com</p>
+                                </div>
+                            </div>
+                            <div class="back-right">
+                                <div class="back-logos">
+                                    <div class="back-logo-item">
+                                        <img src="/static/img/logoadd.jpeg" alt="ADD Logo" onerror="this.style.display='none'">
+                                    </div>
+                                    <div class="back-logo-item">
+                                        <img src="/static/img/upnd-logo.png" alt="UPND Logo" onerror="this.src='/static/img/upnd-logo.jpg'">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Controls -->
+                <div class="card-controls mt-4 text-center">
+                    <button class="btn btn-outline-primary me-2" onclick="flipCard()">
+                        <i class="fas fa-sync-alt me-1"></i> Flip Card
+                    </button>
+                    <button class="btn btn-outline-secondary" onclick="printCard()">
+                        <i class="fas fa-print me-1"></i> Print
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Actions -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h6 class="mb-3"><i class="fas fa-info-circle me-2"></i>About Your Membership Card</h6>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="feature-box">
+                            <i class="fas fa-qrcode fa-2x text-primary mb-2"></i>
+                            <h6>QR Code Verification</h6>
+                            <p class="text-muted small">Your card includes a QR code for instant verification at events and meetings.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-box">
+                            <i class="fas fa-download fa-2x text-success mb-2"></i>
+                            <h6>Digital & Printable</h6>
+                            <p class="text-muted small">Download as PDF or print directly. Your digital card is always accessible online.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-box">
+                            <i class="fas fa-shield-check fa-2x text-info mb-2"></i>
+                            <h6>Secure & Valid</h6>
+                            <p class="text-muted small">Your membership card is secured and linked to your verified member profile.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .membership-card-preview {
+        max-width: 800px;
+        margin: 0 auto;
+        perspective: 1000px;
+        position: relative;
+        height: 500px;
+    }
+
+    .card-side {
+        position: absolute;
+        width: 100%;
+        height: 500px;
+        backface-visibility: hidden;
+        transition: transform 0.6s;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-front {
+        background: white;
+        color: #333;
+        padding: 30px;
+        border: 2px solid #cbd5e1;
+    }
+
+    .card-back {
+        background: white;
+        color: #333;
+        padding: 30px;
+        transform: rotateY(180deg);
+        border: 2px solid #cbd5e1;
+    }
+
+    .membership-card-preview.flipped .card-front {
+        transform: rotateY(180deg);
+    }
+
+    .membership-card-preview.flipped .card-back {
+        transform: rotateY(0deg);
+    }
+
+    .card-header-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .party-logo img {
+        width: 90px;
+        height: 90px;
+        border-radius: 8px;
+        padding: 8px;
+        object-fit: contain;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+    }
+
+    .party-name {
+        font-size: 18px;
+        font-weight: 700;
+        margin: 0;
+        color: #1e293b;
+    }
+
+    .party-info {
+        flex: 1;
+        text-align: center;
+    }
+
+    .card-type {
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 3px;
+        margin: 0;
+        color: #475569;
+    }
+
+    .alliance-badge-front {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin: 5px 0 0 0;
+        color: #64748b;
+    }
+
+    .card-content {
+        display: block;
+        margin-bottom: 25px;
+    }
+
+    .top-section {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .member-photo {
+        flex-shrink: 0;
+    }
+
+    .member-photo img {
+        width: 130px;
+        height: 170px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 2px solid #cbd5e1;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        display: block;
+    }
+
+    .member-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .detail-row {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .detail-row label {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #64748b;
+        white-space: nowrap;
+        min-width: 110px;
+    }
+
+    .detail-row .value {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1e293b;
+        flex: 1;
+    }
+
+    .membership-number {
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        letter-spacing: 1px;
+    }
+
+    .qr-section-front {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .qr-section-front .qr-code {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 8px;
+    }
+
+    .qr-section-front .qr-text small {
+        font-size: 10px;
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    .location-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 20px;
+        margin-top: 0;
+    }
+
+    .location-details .detail-row {
+        margin-bottom: 0;
+    }
+
+    .location-details .detail-row label {
+        min-width: 90px;
+        font-size: 11px;
+    }
+
+    .location-details .detail-row .value {
+        font-size: 13px;
+    }
+
+    .barcode-section {
+        margin-top: 15px;
+        padding: 10px;
+        background: #ffffff;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .barcode-section svg {
+        max-width: 75%;
+        height: auto;
+    }
+
+    .barcode-text {
+        margin-top: 5px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        color: #1e293b;
+        text-align: center;
+        font-family: 'Courier New', monospace;
+        text-transform: uppercase;
+    }
+
+    /* Back Side Styles */
+    .back-header {
+        background: #f1f5f9;
+        color: #1e293b;
+        padding: 15px;
+        margin: -30px -30px 20px -30px;
+        text-align: center;
+        border-bottom: 2px solid #cbd5e1;
+    }
+
+    .back-header h5 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e293b;
+    }
+
+    .alliance-badge {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: #475569;
+    }
+
+    .back-content {
+        font-size: 13px;
+        display: flex;
+        gap: 20px;
+    }
+
+    .back-left {
+        flex: 1;
+    }
+
+    .back-right {
+        width: 180px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 0;
+    }
+
+    .back-logos {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .back-logo-item {
+        width: 140px;
+        height: 140px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    .back-logo-item img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .info-section {
+        margin-bottom: 20px;
+    }
+
+    .info-section h6 {
+        font-size: 14px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 10px;
+    }
+
+    .info-section ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .info-section ul li {
+        padding: 5px 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .info-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        padding: 4px 0;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #64748b;
+        min-width: 110px;
+        flex-shrink: 0;
+        font-size: 12px;
+    }
+
+    .info-value {
+        flex: 1;
+        color: #1e293b;
+        font-size: 12px;
+        font-weight: 500;
+        word-break: break-word;
+    }
+
+    .address-block {
+        font-size: 12px;
+        color: #1e293b;
+        line-height: 1.5;
+    }
+
+    .address-block p {
+        margin: 0;
+        padding: 2px 0;
+    }
+
+    .terms-list {
+        font-size: 12px;
+    }
+
+    .terms-list li {
+        padding-left: 20px;
+        position: relative;
+    }
+
+    .terms-list li::before {
+        content: "•";
+        position: absolute;
+        left: 5px;
+        color: #64748b;
+    }
+
+    .contact-info {
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 2px solid #e2e8f0;
+        font-size: 12px;
+    }
+
+    .contact-info p {
+        margin-bottom: 5px;
+    }
+
+    .qr-code {
+        background: white;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+        border: 2px solid #cbd5e1;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    .qr-code canvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .feature-box {
+        text-align: center;
+        padding: 20px;
+    }
+
+    @media print {
+        .card-header, .card-controls, .card:last-child, nav, .topbar {
+            display: none !important;
+        }
+
+        .membership-card-preview {
+            page-break-inside: avoid;
+        }
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+    // Generate QR Code
+    document.addEventListener('DOMContentLoaded', function() {
+        const membershipNumber = '{{ session.membership_number or "UNKNOWN" }}';
+        const verificationUrl = window.location.origin + '/verify/' + membershipNumber;
+
+        const qrcode = new QRCode(document.getElementById('qrCodeContainer'), {
+            text: verificationUrl,
+            width: 90,
+            height: 90,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+
+        // Generate Barcode
+        const lastName = '{{ member.last_name or "" }}';
+        const firstName = '{{ member.first_name or "" }}';
+        const constituency = '{{ member.constituency or "" }}';
+        const constituencyCode = constituency ? constituency.substring(0, 3).toUpperCase() : '';
+        const cardNumber = '{{ member.membership_number or "" }}';
+
+        // Combine all info for barcode
+        const barcodeData = lastName + firstName + constituencyCode + cardNumber;
+
+        if (barcodeData && document.getElementById('memberBarcode')) {
+            JsBarcode("#memberBarcode", barcodeData, {
+                format: "CODE128",
+                width: 1.5,
+                height: 45,
+                displayValue: false,
+                margin: 4,
+                background: "#ffffff",
+                lineColor: "#000000"
+            });
+        }
+    });
+
+    // Flip Card
+    function flipCard() {
+        document.querySelector('.membership-card-preview').classList.toggle('flipped');
+    }
+
+    // Download PDF
+    async function downloadCard() {
+        Swal.fire({
+            title: 'Generating PDF...',
+            text: 'Please wait while we prepare your membership card.',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        try {
+            const cardPreview = document.querySelector('.membership-card-preview');
+            const frontCard = document.querySelector('.card-front');
+            const backCard = document.querySelector('.card-back');
+
+            // Save original state
+            const wasFlipped = cardPreview.classList.contains('flipped');
+
+            // Create a new jsPDF instance
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF({
+                orientation: 'landscape',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            // Temporarily modify styles for PDF generation
+            frontCard.style.position = 'relative';
+            frontCard.style.transform = 'none';
+            backCard.style.position = 'relative';
+            backCard.style.transform = 'none';
+            backCard.style.display = 'none';
+
+            // Generate front side
+            const frontCanvas = await html2canvas(frontCard, {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff'
+            });
+
+            const frontImgData = frontCanvas.toDataURL('image/jpeg', 0.98);
+            const imgWidth = 277; // A4 landscape width in mm (minus margins)
+            const imgHeight = (frontCanvas.height * imgWidth) / frontCanvas.width;
+
+            pdf.addImage(frontImgData, 'JPEG', 10, 10, imgWidth, imgHeight);
+
+            // Generate back side
+            frontCard.style.display = 'none';
+            backCard.style.display = 'block';
+
+            const backCanvas = await html2canvas(backCard, {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff'
+            });
+
+            const backImgData = backCanvas.toDataURL('image/jpeg', 0.98);
+            pdf.addPage();
+            pdf.addImage(backImgData, 'JPEG', 10, 10, imgWidth, imgHeight);
+
+            // Restore original styles
+            frontCard.style.position = 'absolute';
+            frontCard.style.display = 'block';
+            backCard.style.position = 'absolute';
+            backCard.style.display = 'block';
+            if (wasFlipped) {
+                frontCard.style.transform = 'rotateY(180deg)';
+                backCard.style.transform = 'rotateY(0deg)';
+            } else {
+                frontCard.style.transform = '';
+                backCard.style.transform = 'rotateY(180deg)';
+            }
+
+            // Save the PDF
+            pdf.save('ADD_Membership_Card_{{ session.membership_number or "card" }}.pdf');
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Download Complete!',
+                text: 'Your membership card has been downloaded as PDF.',
+                confirmButtonColor: '#2563eb'
+            });
+        } catch (error) {
+            console.error('PDF generation error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Download Failed',
+                text: 'Unable to generate PDF. Please try again or use the print option.',
+                confirmButtonColor: '#ef4444'
+            });
+        }
+    }
+
+    // Print Card
+    function printCard() {
+        window.print();
+    }
+</script>
+{% endblock %}

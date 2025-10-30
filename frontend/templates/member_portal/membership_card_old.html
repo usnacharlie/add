@@ -1,0 +1,458 @@
+{% extends "base.html" %}
+
+{% block title %}My Membership Card - Member Registry System{% endblock %}
+
+{% block page_title %}My Membership Card{% endblock %}
+
+{% block extra_css %}
+<style>
+    @media print {
+        @page {
+            size: landscape;
+            margin: 0.5cm;
+        }
+
+        /* Hide everything except the card */
+        body * {
+            visibility: hidden;
+        }
+
+        .no-print,
+        .sidebar,
+        .topbar,
+        .app-container,
+        .main-wrapper,
+        .nav-link,
+        nav,
+        header,
+        footer {
+            display: none !important;
+        }
+
+        /* Show only the membership card */
+        .membership-card-container,
+        .membership-card-container *,
+        .membership-card,
+        .membership-card * {
+            visibility: visible !important;
+        }
+
+        /* Position the card for printing */
+        .membership-card-container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .membership-card {
+            box-shadow: none !important;
+            border: 2px solid #047857 !important;
+            page-break-inside: avoid;
+            margin: 0 auto;
+            max-width: 900px;
+        }
+
+        .container-fluid {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .row {
+            margin: 0 !important;
+        }
+
+        .col-lg-10 {
+            max-width: 100% !important;
+            padding: 0 !important;
+        }
+    }
+
+    .membership-card {
+        max-width: 900px;
+        margin: 0 auto;
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        border-radius: 20px;
+        padding: 2.5rem;
+        color: white;
+        box-shadow: 0 20px 60px rgba(5, 150, 105, 0.3);
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 220px 1fr 220px;
+        gap: 2rem;
+        align-items: center;
+        min-height: 350px;
+    }
+
+    .membership-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 0.5; }
+        50% { opacity: 1; }
+    }
+
+    .card-left-section {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .organization-logo {
+        width: 80px;
+        height: 80px;
+        background: white;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .organization-logo img {
+        max-width: 70px;
+        max-height: 70px;
+        object-fit: contain;
+    }
+
+    .organization-name {
+        font-size: 1rem;
+        font-weight: 700;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        text-align: center;
+    }
+
+    .membership-type {
+        font-size: 0.7rem;
+        opacity: 0.9;
+        margin: 0.5rem 0 0 0;
+        text-align: center;
+    }
+
+    .member-photo {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        font-size: 3rem;
+        color: #059669;
+        font-weight: 700;
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+    }
+
+    .member-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .card-center-section {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .member-details {
+        position: relative;
+        z-index: 1;
+        margin-bottom: 1rem;
+    }
+
+    .member-name {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .member-id {
+        font-size: 1rem;
+        opacity: 0.9;
+        margin-bottom: 1rem;
+        font-family: 'Courier New', monospace;
+        letter-spacing: 1px;
+    }
+
+    .member-info {
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 1rem;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.4rem 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        font-size: 0.85rem;
+        opacity: 0.85;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-value {
+        font-size: 0.95rem;
+        font-weight: 600;
+    }
+
+    .card-right-section {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .qr-code-section {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .qr-code-section img {
+        max-width: 150px;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .qr-code-label {
+        color: #059669;
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin-top: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .verification-code {
+        background: rgba(0,0,0,0.2);
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        margin-top: 1rem;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-align: center;
+    }
+
+    .card-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .card-actions .btn {
+        flex: 1;
+        border-radius: 12px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .validity-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.3);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        z-index: 2;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .membership-card {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            max-width: 400px;
+        }
+
+        .card-left-section,
+        .card-center-section,
+        .card-right-section {
+            text-align: center;
+        }
+
+        .member-photo {
+            margin: 1rem auto;
+        }
+
+        .member-details {
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid membership-card-container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Digital Membership Card -->
+            <div class="membership-card">
+                <div class="validity-badge">
+                    <i class="fas fa-check-circle me-1"></i> Active Member
+                </div>
+
+                <!-- Left Section: Logo and Photo -->
+                <div class="card-left-section">
+                    <div class="organization-logo">
+                        <img src="{{ url_for('static', filename='img/logoadd.jpeg') }}" alt="ADD Zambia Logo">
+                    </div>
+                    <h2 class="organization-name">ADD Zambia</h2>
+                    <p class="membership-type">Alliance for Democracy and Development</p>
+
+                    <div class="member-photo">
+                        {% if member.profile_picture %}
+                        <img src="{{ url_for('static', filename=member.profile_picture) }}" alt="{{ member.name }}">
+                        {% else %}
+                        {{ member.name[0] if member.name else 'M' }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Center Section: Member Details -->
+                <div class="card-center-section">
+                    <div class="member-details">
+                        <h3 class="member-name">{{ member.name }}</h3>
+                        <p class="member-id">{{ verification_code }}</p>
+                    </div>
+
+                    <div class="member-info">
+                        <div class="info-row">
+                            <span class="info-label">NRC Number</span>
+                            <span class="info-value">{{ member.nrc or 'N/A' }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Contact</span>
+                            <span class="info-value">{{ member.contact or 'N/A' }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Ward</span>
+                            <span class="info-value">{{ ward_name }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Constituency</span>
+                            <span class="info-value">{{ constituency_name }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">District</span>
+                            <span class="info-value">{{ district_name }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Section: QR Code -->
+                <div class="card-right-section">
+                    <div class="qr-code-section">
+                        <img src="data:image/png;base64,{{ qr_code }}" alt="Membership QR Code">
+                        <p class="qr-code-label">Scan to Verify</p>
+                    </div>
+
+                    <div class="verification-code">
+                        {{ verification_code }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Actions -->
+            <div class="card-actions no-print">
+                <button onclick="window.print()" class="btn btn-primary">
+                    <i class="fas fa-print me-2"></i>Print Card
+                </button>
+                <button onclick="downloadCard()" class="btn btn-success">
+                    <i class="fas fa-download me-2"></i>Download
+                </button>
+                <a href="{{ url_for('member_portal.dashboard') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+
+            <!-- Information Card -->
+            <div class="card mt-4 no-print">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-info-circle text-primary me-2"></i>About Your Membership Card</h5>
+                    <p class="card-text">
+                        Your digital membership card contains a unique QR code that can be scanned to verify your membership status and identity.
+                        Keep this card accessible on your mobile device or print it for physical verification.
+                    </p>
+                    <hr>
+                    <h6><i class="fas fa-qrcode text-success me-2"></i>QR Code Information</h6>
+                    <p class="card-text small">
+                        The QR code contains the following information:
+                    </p>
+                    <ul class="small">
+                        <li>Member ID: {{ member.id }}</li>
+                        <li>Full Name: {{ member.name }}</li>
+                        <li>NRC Number: {{ member.nrc or 'N/A' }}</li>
+                        <li>Contact: {{ member.contact or 'N/A' }}</li>
+                        <li>Verification Code: {{ verification_code }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+    function downloadCard() {
+        const card = document.querySelector('.membership-card');
+
+        html2canvas(card, {
+            backgroundColor: null,
+            scale: 2
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'membership-card-{{ verification_code }}.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    }
+</script>
+{% endblock %}

@@ -2,20 +2,43 @@
 Member service layer
 """
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from typing import List, Optional
 from backend.models.member import Member
 from backend.schemas.member import MemberCreate, MemberUpdate
+from fastapi import HTTPException
 
 
 class MemberService:
     @staticmethod
     def create_member(db: Session, member: MemberCreate) -> Member:
         """Create a new member"""
-        db_member = Member(**member.model_dump())
-        db.add(db_member)
-        db.commit()
-        db.refresh(db_member)
-        return db_member
+        # Check if voters_id already exists
+        existing_member = db.query(Member).filter(Member.voters_id == member.voters_id).first()
+        if existing_member:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Voter ID '{member.voters_id}' is already registered to {existing_member.name}"
+            )
+
+        # Check if NRC already exists (if provided)
+        if member.nrc:
+            existing_nrc = db.query(Member).filter(Member.nrc == member.nrc).first()
+            if existing_nrc:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"NRC '{member.nrc}' is already registered to {existing_nrc.name}"
+                )
+
+        try:
+            db_member = Member(**member.model_dump())
+            db.add(db_member)
+            db.commit()
+            db.refresh(db_member)
+            return db_member
+        except IntegrityError as e:
+            db.rollback()
+            raise HTTPException(status_code=400, detail="Database integrity error: Duplicate voter ID or NRC")
 
     @staticmethod
     def get_member(db: Session, member_id: int) -> Optional[Member]:
@@ -53,10 +76,40 @@ class MemberService:
         db_member = db.query(Member).filter(Member.id == member_id).first()
         if db_member:
             update_data = member_update.model_dump(exclude_unset=True)
-            for key, value in update_data.items():
-                setattr(db_member, key, value)
-            db.commit()
-            db.refresh(db_member)
+
+            # Check for duplicate voters_id if updating
+            if 'voters_id' in update_data and update_data['voters_id']:
+                existing_voter = db.query(Member).filter(
+                    Member.voters_id == update_data['voters_id'],
+                    Member.id != member_id
+                ).first()
+                if existing_voter:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Voter ID '{update_data['voters_id']}' is already registered to {existing_voter.name}"
+                    )
+
+            # Check for duplicate NRC if updating
+            if 'nrc' in update_data and update_data['nrc']:
+                existing_nrc = db.query(Member).filter(
+                    Member.nrc == update_data['nrc'],
+                    Member.id != member_id
+                ).first()
+                if existing_nrc:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"NRC '{update_data['nrc']}' is already registered to {existing_nrc.name}"
+                    )
+
+            try:
+                for key, value in update_data.items():
+                    setattr(db_member, key, value)
+                db.commit()
+                db.refresh(db_member)
+            except IntegrityError:
+                db.rollback()
+                raise HTTPException(status_code=400, detail="Database integrity error: Duplicate voter ID or NRC")
+
         return db_member
 
     @staticmethod

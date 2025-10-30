@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Member Details - Member Registry System{% endblock %}
+{% block title %}My Profile - Member Registry System{% endblock %}
 
-{% block page_title %}Member Profile{% endblock %}
+{% block page_title %}My Profile{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
     {% if member %}
-    <!-- Member Header Card -->
+    <!-- Profile Header -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="card border-0 shadow-sm profile-header">
@@ -33,14 +33,11 @@
                                 {% endif %}
                             </div>
                             <div class="d-flex gap-2">
-                                <a href="{{ url_for('members.edit_member', member_id=member.id) }}" class="btn btn-primary">
+                                <a href="{{ url_for('member_portal.edit_profile') }}" class="btn btn-primary">
                                     <i class="fas fa-edit me-2"></i>Edit Profile
                                 </a>
-                                <a href="{{ url_for('members.assign_role', member_id=member.id) }}" class="btn btn-success">
-                                    <i class="fas fa-user-tag me-2"></i>Assign Role
-                                </a>
-                                <a href="{{ url_for('members.list_members') }}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                                <a href="{{ url_for('member_portal.dashboard') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
                                 </a>
                             </div>
                         </div>
@@ -53,7 +50,7 @@
     <div class="row g-4">
         <!-- Personal Information -->
         <div class="col-lg-6">
-            <div class="card border-0 shadow-sm h-100 modern-card">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="card-header bg-white border-0 pb-0">
                     <h4 class="mb-0 fw-bold">
                         <i class="fas fa-id-card text-primary me-2"></i>Personal Information
@@ -104,6 +101,18 @@
                             </div>
                         </div>
                         {% endif %}
+
+                        {% if member.email %}
+                        <div class="info-item">
+                            <div class="info-icon" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Email</div>
+                                <div class="info-value">{{ member.email }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -111,7 +120,7 @@
 
         <!-- Identification & Location -->
         <div class="col-lg-6">
-            <div class="card border-0 shadow-sm h-100 modern-card">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="card-header bg-white border-0 pb-0">
                     <h4 class="mb-0 fw-bold">
                         <i class="fas fa-map-marker-alt text-success me-2"></i>Identification & Location
@@ -124,7 +133,7 @@
                                 <i class="fas fa-vote-yea"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Voter's ID (Required)</div>
+                                <div class="info-label">Voter's ID</div>
                                 <div class="info-value">{{ member.voters_id or 'N/A' }}</div>
                             </div>
                         </div>
@@ -156,7 +165,7 @@
                                 <i class="fas fa-calendar-alt"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Registration Date</div>
+                                <div class="info-label">Member Since</div>
                                 <div class="info-value">
                                     {% if member.created_at %}
                                         {{ member.created_at[:10] if member.created_at is string else member.created_at }}
@@ -172,75 +181,17 @@
         </div>
     </div>
 
-    <!-- Action Cards -->
-    <div class="row g-4 mt-2">
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm action-card" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">
-                <div class="card-body text-white text-center p-4">
-                    <i class="fas fa-edit fa-3x mb-3" style="opacity: 0.9;"></i>
-                    <h5 class="fw-bold mb-3">Edit Information</h5>
-                    <p class="mb-3 small">Update member details and information</p>
-                    <a href="{{ url_for('members.edit_member', member_id=member.id) }}" class="btn btn-light btn-sm">
-                        <i class="fas fa-edit me-2"></i>Edit Profile
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm action-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                <div class="card-body text-white text-center p-4">
-                    <i class="fas fa-file-pdf fa-3x mb-3" style="opacity: 0.9;"></i>
-                    <h5 class="fw-bold mb-3">Generate Report</h5>
-                    <p class="mb-3 small">Export member information as PDF</p>
-                    <a href="{{ url_for('reports.reports_home') }}" class="btn btn-light btn-sm">
-                        <i class="fas fa-download me-2"></i>Go to Reports
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm action-card" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
-                <div class="card-body text-white text-center p-4">
-                    <i class="fas fa-user-tag fa-3x mb-3" style="opacity: 0.9;"></i>
-                    <h5 class="fw-bold mb-3">Assign Role</h5>
-                    <p class="mb-3 small">Grant special permissions and access</p>
-                    <a href="{{ url_for('members.assign_role', member_id=member.id) }}" class="btn btn-light btn-sm">
-                        <i class="fas fa-shield-alt me-2"></i>Assign Role
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Additional Actions -->
-    <div class="row g-4 mt-2">
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm action-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
-                <div class="card-body text-white text-center p-4">
-                    <i class="fas fa-users fa-3x mb-3" style="opacity: 0.9;"></i>
-                    <h5 class="fw-bold mb-3">All Members</h5>
-                    <p class="mb-3 small">View and manage all members</p>
-                    <a href="{{ url_for('members.list_members') }}" class="btn btn-light btn-sm">
-                        <i class="fas fa-arrow-right me-2"></i>View All
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
     {% else %}
-    <!-- Member Not Found -->
+    <!-- Error State -->
     <div class="row">
         <div class="col-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center py-5">
-                    <i class="fas fa-user-slash fa-4x text-muted mb-4" style="opacity: 0.3;"></i>
-                    <h3 class="mb-3">Member Not Found</h3>
-                    <p class="text-muted mb-4">The member you're looking for doesn't exist or has been removed.</p>
-                    <a href="{{ url_for('members.list_members') }}" class="btn btn-primary">
-                        <i class="fas fa-arrow-left me-2"></i>Back to Members List
+                    <i class="fas fa-exclamation-triangle fa-4x text-warning mb-4" style="opacity: 0.3;"></i>
+                    <h3 class="mb-3">Profile Not Found</h3>
+                    <p class="text-muted mb-4">Unable to load your profile information</p>
+                    <a href="{{ url_for('member_portal.dashboard') }}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
                     </a>
                 </div>
             </div>
@@ -252,7 +203,6 @@
 <style>
 .profile-header {
     background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(37, 99, 235, 0.08) 100%);
-    transition: all 0.3s ease;
 }
 
 .profile-avatar {
@@ -264,16 +214,6 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-.modern-card {
-    transition: all 0.3s ease;
-    overflow: hidden;
-}
-
-.modern-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12) !important;
 }
 
 .info-list {
@@ -328,22 +268,6 @@
     font-size: 16px;
     color: #1f2937;
     font-weight: 600;
-}
-
-.action-card {
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.action-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2) !important;
-}
-
-.badge {
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
 }
 
 .card-header h4 {
