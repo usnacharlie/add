@@ -31,6 +31,14 @@ if [ ! -f .env ]; then
     cp .env.example .env
 fi
 
+# Ensure upload directories exist
+if [ ! -d "frontend/static/uploads/profiles" ]; then
+    echo "Creating upload directories..."
+    mkdir -p frontend/static/uploads/profiles
+    chmod 755 frontend/static/uploads
+    chmod 755 frontend/static/uploads/profiles
+fi
+
 # Initialize database if needed
 echo "Initializing database..."
 cd backend

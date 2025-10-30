@@ -100,14 +100,41 @@ echo "✓ Database initialized"
 deactivate
 cd ..
 
+# Create upload directories
+echo "Creating upload directories..."
+mkdir -p frontend/static/uploads/profiles
+chmod 755 frontend/static/uploads
+chmod 755 frontend/static/uploads/profiles
+echo "✓ Upload directories created"
+
+# Run migrations
+echo "Running database migrations..."
+cd backend
+source venv/bin/activate
+
+# Check if migrations are needed
+if python3 -c "from sqlalchemy import inspect; from backend.config.database import engine; inspector = inspect(engine); print('voters_id' not in [c['name'] for c in inspector.get_columns('members')])" 2>/dev/null | grep -q "True"; then
+    echo "Running voter_id migration..."
+    cd ..
+    python3 migrate_voters_id.py --auto
+    cd backend
+fi
+
+deactivate
+cd ..
+
 # Seed sample data
 echo "Would you like to seed sample data? (y/n)"
 read -r response
 if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-    cd database
-    python3 seed_data.py
-    echo "✓ Sample data seeded"
-    cd ..
+    if [ -d "database" ]; then
+        cd database
+        python3 seed_data.py
+        echo "✓ Sample data seeded"
+        cd ..
+    else
+        echo "⚠ Sample data seed script not found, skipping..."
+    fi
 fi
 
 echo ""
